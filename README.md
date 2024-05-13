@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sche-Zoom
 
-## Getting Started
+## 디자인 노트
 
-First, run the development server:
+- Next.js 14의 App Router와 RSC를 사용하였습니다.
+- RSC의 경우 ServerActions, RCC는 React-Query를 사용하여 데이터를 처리하였습니다.
+- TailwindCSS와 Shadcn-Ui를 사용하여 디자인을 구성하였습니다.
+
+## 개발 환경 설정
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+npm install -global pnpm
+pnpm i
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 폴더 구조
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 파일명: `kebab-case`
+- 컴포넌트: export default function `PascalCase`
+- 컴포넌트 내 함수: arrow function `camelCase`
+- 전역 함수: arrow function `camelCase`
+- 상수: `UPPER_SNAKE_CASE`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+├─.husky # Github Hook
+│  └─_
+├─.next # Next.js
+├─.vscode # vscode setting
+├─public # static file
+│  └─fonts
+└─src
+    ├─app # page routing
+    ├─components
+    │  ├─ui # atomic component
+    │  ├─page # page component
+    │  └─"pageName" # page component
+    ├─hooks
+    ├─store # global state management
+    ├─types # api request, response type
+    └─lib # utility
+```
