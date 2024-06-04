@@ -23,6 +23,7 @@
     // Code style
     "indent": ["error", 2],
     "quotes": ["error", "double"],
+    "jsx-quotes": ["error", "prefer-double"],
     "semi": ["error", "always"],
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
@@ -42,6 +43,7 @@
 
     // React
     "react/react-in-jsx-scope": 0,
+    "react/prop-types": "off",
     "react/jsx-first-prop-new-line": "error",
     "react/self-closing-comp": ["error", {
       "component": true,
