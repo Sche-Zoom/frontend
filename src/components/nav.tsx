@@ -5,23 +5,12 @@ import Link from "next/link";
 import React from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUserStore } from "@/store/user";
 
+import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-
-
-
 
 export default function Nav() {
   const user = useUserStore();
@@ -32,77 +21,64 @@ export default function Nav() {
         <TooltipProvider>
           {/* 개인 일정 메뉴 및 그룹 별 메뉴*/}
           <div className="flex flex-1  flex-col items-center space-y-2 overflow-auto">
-            <button className="size-12 rounded-full  bg-white p-2 hover:bg-gray-300">
-              <CalendarDays size={32} />
-            </button>
-          
+            <Button variant={"icon"} size={"icon"}>
+              <CalendarDays />
+            </Button>
+
             {/* 그룹 아이콘 목록 */}
             {user.groups.map((group) => {
               return (
-                <Tooltip key={group.gid}>
-                  <TooltipTrigger>                    
-                    <Link  href={`/group/${group.gid}`}>
+                <Tooltip key={group.gid} delayDuration={0}>
+                  <TooltipTrigger>
+                    <Link href={`/group/${group.gid}`}>
                       {/* 그룹 썸네일 이미지 */}
-                      <div className="flex size-12 items-center rounded-full bg-white p-1 hover:bg-gray-300">    
-                        {group.thumbnail !== null 
-                          ? <Avatar>
-                            <AvatarImage src={group.thumbnail} />
-                            <AvatarFallback>{`${group.name}_thumbnail`}</AvatarFallback>
-                          </Avatar>
-                          : <div className="truncate">{group.name}</div>                          
-                        }        
-                      </div>                
+                      <Avatar className="size-12 bg-white p-1 hover:bg-gray-300">
+                        <AvatarImage src={group.thumbnail ?? ""} />
+                        <AvatarFallback className="justify-start truncate bg-white">{`${group.name}_thumbnail`}</AvatarFallback>
+                      </Avatar>
                     </Link>
                   </TooltipTrigger>
-                    
+
                   {/* 마우스 hover 시 그룹 이름 노출 */}
-                  <TooltipContent className="absolute z-20 translate-x-7"><p>{group.name}</p></TooltipContent>
-                </Tooltip>        
+                  <TooltipContent side="right" align="start">
+                    <p>{group.name}</p>
+                  </TooltipContent>
+                </Tooltip>
               );
             })}
           </div>
 
           {/* 공통 메뉴 부분: 사용자 프로필, 설정, 알림 */}
-          <div className="flex flex-col items-center space-y-1" >
-
+          <div className="flex flex-col items-center gap-y-1">
             {/* 사용자 정보 Popover */}
             <Popover>
               <PopoverTrigger>
-                {user.thumnail !== null 
-                  ? <Avatar className="size-12 bg-gray-100">
-                    <AvatarImage src={user.thumnail} />
-                    <AvatarFallback>{`${user.nickname}_thumbnail`}</AvatarFallback>
-                  </Avatar>
-                  : <div className="flex size-12 items-center justify-center rounded-full bg-gray-100">                
-                    <UserRound size={32} color="dimgray" />
-                  </div>
-                }
-
+                <Avatar className="text-muted size-12">
+                  <AvatarImage src={user.thumbnail ?? ""} />
+                  <AvatarFallback>
+                    <UserRound className="text-muted-foreground size-8" />
+                  </AvatarFallback>
+                </Avatar>
               </PopoverTrigger>
               <PopoverContent className="w-80">
-                <div className="mb-3 flex space-x-6">
+                <div className="mb-3 flex items-center space-x-6">
                   {/* 사용자 썸네일 이미지 */}
-                  {user.thumnail !== null 
-                    ? <Avatar className="size-16 bg-gray-100">
-                      <AvatarImage src={user.thumnail} />
-                      <AvatarFallback>{`${user.nickname}_thumbnail`}</AvatarFallback>
-                    </Avatar>
-                    : <div className="flex size-16 items-center justify-center rounded-full bg-gray-100">                
-                      <UserRound size={48} color="dimgray" />
-                    </div>
-                  }
+                  <Avatar className="size-16 bg-gray-100">
+                    <AvatarImage src={user.thumbnail || ""} />
+                    <AvatarFallback>
+                      <UserRound size={48} className="text-muted-foreground" />
+                    </AvatarFallback>
+                  </Avatar>
 
                   {/* 사용자 정보 */}
-                  <div className="flex flex-1 flex-col justify-center">
+                  <div>
                     <p className="text-lg font-medium">{user.nickname}</p>
                     <p className="text-sm text-gray-400">{user.email}</p>
                   </div>
                 </div>
 
                 {/* 사용자 설명 부분 */}
-                <p className="rounded-sm border bg-gray-100 p-2 text-sm">
-                  {user.description}
-                </p>
+                <p className="rounded-sm border bg-gray-100 p-2 text-sm">{user.description}</p>
 
                 <Separator className="mb-2 mt-4" />
 
@@ -118,17 +94,17 @@ export default function Nav() {
                   </li>
                 </ul>
               </PopoverContent>
-            </Popover>           
-            
+            </Popover>
+
             {/* 알림 내용이 없는 경우 노출 (알림 기능 구현 이후 보완 예정) */}
-            <button className="flex size-12 items-center justify-center">                
+            <Button variant={"ghost"} size={"icon"} className="rounded-full">
               <Bell size={32} color="dimgray" />
-            </button>
+            </Button>
 
             {/* 설정 아이콘 (이후 기능 추가 예정) */}
-            <button className="flex size-12 items-center justify-center">                
+            <Button variant={"ghost"} size={"icon"} className="rounded-full">
               <Settings size={32} color="dimgray" />
-            </button>
+            </Button>
           </div>
         </TooltipProvider>
       </nav>

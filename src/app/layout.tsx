@@ -8,15 +8,8 @@ import React from "react";
 import MobileNav from "@/components/mobile-nav";
 import Nav from "@/components/nav";
 import Providers from "@/components/providers";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-
 
 const pretendard = localFont({
   src: [
@@ -53,40 +46,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="ko">
-      <body className={cn(
-        pretendard.className,
-        "antialiased"
-      )}>
+      <body className={cn(pretendard.className, "antialiased")}>
         <Providers>
-          <div className="relative px-0">
-            <header className="sticky left-0 top-0 z-10 grid h-9 grid-cols-3 content-center border border-b-gray-400 bg-gray-200 px-4 py-0 lg:grid-cols-1">
-              {/* 1024 이하 화면에서 노출 되는 nav 메뉴 */}
-              <Sheet>
-                <SheetTrigger>
-                  <Menu size={21} className="lg:hidden" />
-                </SheetTrigger>
-                <SheetContent side="left" className="flex w-4/5 flex-col sm:w-[540px]">
-                  <SheetHeader>
-                    <SheetTitle>메뉴</SheetTitle>
-                  </SheetHeader>
+          <header className="sticky left-0 top-0 z-10 grid h-9 grid-cols-3 content-center border-b border-b-gray-400 bg-gray-200 px-4 py-0 lg:grid-cols-1">
+            {/* 1024 이하 화면에서 노출 되는 nav 메뉴 */}
+            <Sheet>
+              <SheetTrigger>
+                <Menu size={21} className="lg:hidden" />
+              </SheetTrigger>
+              <SheetContent side="left" className="flex w-4/5 flex-col sm:w-[540px]">
+                <SheetHeader>
+                  <SheetTitle>메뉴</SheetTitle>
+                </SheetHeader>
 
-                  <MobileNav />
-                </SheetContent>
-              </Sheet>
+                <MobileNav />
+              </SheetContent>
+            </Sheet>
 
-              {/* 임시 로고 */}
-              <div className="self-center text-center text-base font-medium lg:text-left">Rich Calendar</div>
-            </header>
+            {/* 임시 로고 */}
+            <h1 className="text-center font-medium lg:text-left">Rich Calendar</h1>
+          </header>
 
-            <div className="relative flex px-0">
-              <Nav />
-              <main className="flex-1">
-                {children}
-              </main>
-            </div>
+          <div className="relative flex px-0">
+            <Nav />
+            <main className="flex-1">{children}</main>
           </div>
         </Providers>
       </body>

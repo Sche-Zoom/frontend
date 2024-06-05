@@ -1,26 +1,23 @@
 import { create } from "zustand";
 
 interface UserStore {
-  id: number
-  userId: string
-  description: string
-  email: string
-  thumnail: string | null
-  nickname: string
+  id: number;
+  userId: string;
+  description: string;
+  email: string;
+  thumbnail: string | null;
+  nickname: string;
   groups: {
-    gid: number,
-    name: string,
-    is_admin:boolean,
+    gid: number;
+    name: string;
+    isAdmin: boolean;
     channels: {
-      type: "chat" | "voice" | "announe",
-      name: string
-    }[],
-    thumbnail: string | null
+      type: "chat" | "voice" | "announce";
+      name: string;
+    }[];
+    thumbnail: string | null;
   }[];
 }
-
-
-
 
 export const useUserStore = create<UserStore>(() => ({
   // groups: [],
@@ -30,13 +27,13 @@ export const useUserStore = create<UserStore>(() => ({
   userId: "edstvb3356",
   description: "웹개발을 좋아합니다.",
   email: "yiccfee@naver.com",
-  thumnail: null,
+  thumbnail: null,
   nickname: "bob",
   groups: [
     {
       gid: 123,
       name: "Study Group",
-      is_admin:true,
+      isAdmin: true,
       channels: [
         {
           type: "chat",
@@ -47,17 +44,17 @@ export const useUserStore = create<UserStore>(() => ({
           name: "Voice Channel",
         },
         {
-          type: "announe",
+          type: "announce",
           name: "Announcements",
         },
       ],
-      "thumbnail": null,
+      thumbnail: null,
     },
     {
-      "gid": 456,
+      gid: 456,
       name: "Fitness Club",
-      "is_admin":false,
-      "channels": [
+      isAdmin: false,
+      channels: [
         {
           type: "chat",
           name: "General Chat",
@@ -67,11 +64,11 @@ export const useUserStore = create<UserStore>(() => ({
           name: "Voice Channel",
         },
         {
-          type: "announe",
+          type: "announce",
           name: "Announcements",
         },
       ],
-      "thumbnail": null,
+      thumbnail: null,
     },
   ],
 }));
