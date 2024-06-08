@@ -1,22 +1,24 @@
 import { create } from "zustand";
 
-interface UserStore {
+export interface UserStore {
   id: number;
   userId: string;
   description: string;
   email: string;
   thumbnail: string | null;
   nickname: string;
-  groups: {
-    gid: number;
+  groups: MyGroup[];
+}
+
+export interface MyGroup {
+  gid: number;
+  name: string;
+  isAdmin: boolean;
+  channels: {
+    type: "chat" | "voice" | "announce";
     name: string;
-    isAdmin: boolean;
-    channels: {
-      type: "chat" | "voice" | "announce";
-      name: string;
-    }[];
-    thumbnail: string | null;
   }[];
+  thumbnail: string | null;
 }
 
 export const useUserStore = create<UserStore>(() => ({
