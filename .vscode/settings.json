@@ -6,6 +6,7 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
+  "typescript.preferences.importModuleSpecifier": "non-relative", // path alias 사용 시
   "cSpell.ignoreWords": [
     "Pretendard",
     "lucide",
