@@ -23,7 +23,7 @@ export default function GroupIcon({ group }: Props) {
       </TooltipTrigger>
 
       {/* 그룹 이름 tooltip */}
-      <TooltipContent side="right" align="start">
+      <TooltipContent side="right" align="center">
         <p>{group.name}</p>
       </TooltipContent>
     </Tooltip>

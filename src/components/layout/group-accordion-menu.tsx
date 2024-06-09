@@ -21,7 +21,7 @@ export default function GroupAccordionMenu({ group }: Props) {
           {/* 관리 권한이 있는 경우 관리자 메뉴 노출 */}
           {group.isAdmin && (
             <>
-              <div className="text-muted mb-1.5 ml-1 mt-3 font-medium">관리자 메뉴</div>
+              <div className="text-muted-foreground mb-2 ml-1 mt-4 text-xs font-medium">관리자 메뉴</div>
               <ul>
                 <li className="mb-2 ml-2">일정 관리</li>
                 <li className="mb-2 ml-2">일정 투표 관리</li>
