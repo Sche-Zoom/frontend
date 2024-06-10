@@ -2,7 +2,10 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import React from "react";
 
+import Header from "@/components/layout/header";
+import Nav from "@/components/layout/nav";
 import Providers from "@/components/providers";
 import { cn } from "@/lib/utils";
 
@@ -43,14 +46,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={cn(
-        pretendard.className,
-        "antialiased"
-      )}>
+      <body className={cn(pretendard.className, "antialiased")}>
         <Providers>
-          <main>
-            {children}
-          </main>
+          <Header />
+
+          <div className="relative flex">
+            <Nav />
+            <main className="flex-1">{children}</main>
+          </div>
         </Providers>
       </body>
     </html>

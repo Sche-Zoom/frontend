@@ -1,11 +1,13 @@
 {
   "extends": [
     "next/core-web-vitals",
+    "eslint-config-prettier",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:tailwindcss/recommended"
   ],
   "plugins": [
+    "prettier",
     "simple-import-sort",
     "unused-imports",
     "tailwindcss"
@@ -21,19 +23,28 @@
   },
   "rules": {
     // Code style
-    "indent": ["error", 2],
-    "quotes": ["error", "double"],
-    "jsx-quotes": ["error", "prefer-double"],
-    "semi": ["error", "always"],
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "never",
-      "exports": "never",
-      "functions": "never"
+    "prettier/prettier": [
+      "error",
+      {
+        "useTabs": false,
+        "printWidth": 120,
+        "tabWidth": 2,
+        "singleQuote": false,
+        "jsxSingleQuote": false,
+        "semi": true,
+        "bracketSpacing": true,
+        "jsxBracketSameLine": false,
+        "quoteProps": "as-needed",
+        "trailingComma": "all",
+        "arrowParens": "always",
+        "proseWrap": "never",
+        "endOfLine": "auto"
+      }
+    ],
+
+    "no-console": ["error", {
+      "allow": ["warn", "error"]
     }],
-    "comma-spacing": ["error", { "before": false, "after": true }],
-    "no-console": "warn",
     "tailwindcss/no-custom-classname": "off",
 
     // import / export
