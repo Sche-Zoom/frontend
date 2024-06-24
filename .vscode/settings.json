@@ -12,6 +12,15 @@
     "lucide",
     "clsx",
     "zustand",
-    "tailwindcss"
+    "tailwindcss",
+    "fullcalendar",
+    "daygrid",
+    "timegrid"
+  ],
+  "cSpell.words": [
+    "cmdk",
+    "noti",
+    "sche",
+    "tanstack"
   ]
 }
