@@ -4,6 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePerSchFilterStore } from "@/store/per-schedule-filter";
+
 export default function PerScheduleFilter() {
   const { isLoading, error, checkedTags, totalFilter, checkTag, unCheckTag, checkTags, unCheckTags } =
     usePerSchFilterStore();

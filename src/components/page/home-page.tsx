@@ -1,6 +1,7 @@
 import { ClipboardList } from "lucide-react";
 
-import PersonalFullCalendar from "@/components/per-calendar";
+import PersonalFullCalendar from "@/components/calendar";
+import ErrorBoundary from "@/components/error-boundary";
 import { Button } from "@/components/ui/button";
 
 export default async function HomePage() {
@@ -14,7 +15,9 @@ export default async function HomePage() {
         </Button>
       </div>
 
-      <PersonalFullCalendar />
+      <ErrorBoundary>
+        <PersonalFullCalendar />
+      </ErrorBoundary>
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
-import { PerScheduleFilter } from "@/types/api/per-schedule";
-
 export interface PerSchFilterStore {
   isLoading: boolean;
   error: Error | null;

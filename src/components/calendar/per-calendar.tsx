@@ -1,20 +1,40 @@
 import { EventSourceInput } from "@fullcalendar/core/index.js";
+import { RefObject } from "@fullcalendar/core/preact.js";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { RefObject } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 
-import { PerSchedule } from "@/types/api/per-schedule";
+import { getPerSchedule } from "@/api/per-schedule";
+import { getMonthDateRange } from "@/lib/date";
+import { usePerSchFilterStore } from "@/store/per-schedule-filter";
 
-interface Props {
+interface PerCalendarProps {
   calendarRef: RefObject<FullCalendar>;
-  schedules: PerSchedule[];
 }
 
-export default function PerCalendar({ calendarRef, schedules }: Props) {
+export default function PerCalendar({ calendarRef }: PerCalendarProps) {
+  const { checkedTags } = usePerSchFilterStore();
+
+  // 개인 일정 내용 조회
+  const { data: schedules } = useSuspenseQuery({
+    queryKey: ["per_schedule", "list", checkedTags],
+    queryFn: async () => {
+      const [start_date, end_date] = getMonthDateRange(dayjs().format());
+      return getPerSchedule({
+        start_date,
+        end_date,
+        tags: Array.from(checkedTags ?? []),
+      });
+    },
+  });
+
+  if (!schedules) return;
+
   // 캘린더에 등록할 개인 일정 배열
-  const calendarSchedules: EventSourceInput = schedules.flatMap((sch) => {
+  const calendarSchedules: EventSourceInput = schedules.schedules.flatMap((sch) => {
     return sch.dates.map(({ start_date, end_date }, index) => ({
       id: `${sch.id}-${index}`,
       groupId: sch.id.toString(),
