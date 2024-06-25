@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { RefObject } from "react";
 
-import { getPerSchedule, getPerScheduleFilters } from "@/api/per-schedule";
+import { getPerSchedule, getScheduleTags } from "@/api/per-schedule";
 import { getMonthDateRange, getWeekDateRange } from "@/lib/date";
 import { usePerSchFilterStore } from "@/store/per-schedule-filter";
 
@@ -22,9 +22,9 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
 
   // 개인 일정 필터 조회
   const { refetch: tagDataRefetch } = useQuery({
-    queryKey: ["per_schedule_filter", "list"],
+    queryKey: ["per_schedule_filter", "list", checkedTags],
     enabled: false, // 초기 로딩 제한을 위해 enabled: false 설정, 이후 조회가 필요한 경우에 refetch 메서드를 활용
-    queryFn: getPerScheduleFilters,
+    queryFn: getScheduleTags,
   });
 
   // 현재 캘린더 view 기준 시작과 끝 날짜 반환 함수

@@ -1,9 +1,9 @@
-export interface FilterTag {
+interface FilterTag {
   id: number;
   name: string;
 }
 
-export interface PerScheduleFilter {
+interface PerScheduleFilter {
   per_tags: FilterTag[];
   groups: {
     id: number;
@@ -12,13 +12,13 @@ export interface PerScheduleFilter {
   }[];
 }
 
-export interface GetPerScheduleReq {
+interface GetPerScheduleReq {
   start_date: string; // ISO8601
   end_date: String; // ISO8601
   tags?: number[];
 }
 
-export interface PerSchedule {
+interface PerSchedule {
   id: number;
   title: string;
   type: "Group" | "Personal";
@@ -29,8 +29,8 @@ export interface PerSchedule {
   }[];
 }
 
-export interface GetPerScheduleRes {
+interface GetPerScheduleRes {
   schedules: PerSchedule[];
 }
 
-export interface GetPerScheduleFiltersRes extends PerScheduleFilter {}
+interface GetPerScheduleFiltersRes extends PerScheduleFilter {}
