@@ -6,7 +6,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { RefObject } from "react";
 
-import { getPerSchedule } from "@/api/per-schedule";
+import { getPersonalSchedules } from "@/api/personal-schedule";
 
 interface Props {
   calendarRef: RefObject<FullCalendar>;
@@ -20,7 +20,7 @@ export default function CalendarContent({ calendarRef, currentDate, uncheckedTag
   // 캘린더에 사용할 일정 목록 요청 로직
   const { data: personalSchedulesData } = useSuspenseQuery({
     queryKey: ["personal_schedule", "list", uncheckedTagIds, startDate, endDate],
-    queryFn: () => getPerSchedule({ start_date: startDate, end_date: endDate, tags: uncheckedTagIds }),
+    queryFn: () => getPersonalSchedules({ start_date: startDate, end_date: endDate, tags: uncheckedTagIds }),
   });
 
   // 캘린더에 등록할 개인 일정 배열

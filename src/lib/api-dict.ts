@@ -10,17 +10,17 @@ interface ApiEndpointInfo {
 
 // API Req, Res 타입 정의
 export interface ApiEndpoint {
-  getPerSchedule: HttpReqRes<GetPerScheduleReq, GetPerScheduleRes>;
-  getScheduleTags: HttpReqRes<null, GetPerScheduleFiltersRes>;
+  getPersonalSchedules: HttpReqRes<GetPersonalSchedulesReq, GetPersonalSchedulesRes>;
+  getPersonalTags: HttpReqRes<null, GetPersonalTagsRes>;
 }
 
 // API Endpoint 정보
 export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
-  getPerSchedule: {
+  getPersonalSchedules: {
     url: "/api/per-schedule/view",
     method: "POST",
   },
-  getScheduleTags: {
+  getPersonalTags: {
     url: "/api/per-schedule/total-tags",
     method: "GET",
   },

@@ -1,7 +1,7 @@
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { getScheduleTags } from "@/api/per-schedule";
+import { getPersonalTags } from "@/api/personal-schedule";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,12 +21,12 @@ export default function CalendarFilter(props: Props) {
     props;
 
   // 필터링용 태그 목록 요청 로직
-  const { data: personalFilterData } = useSuspenseQuery({
-    queryKey: ["personal_schedule_filter", "list", uncheckedTagIds, startDate, endDate],
-    queryFn: getScheduleTags,
+  const { data: personalTagsData } = useSuspenseQuery({
+    queryKey: ["personal_tag", "list", uncheckedTagIds, startDate, endDate],
+    queryFn: getPersonalTags,
   });
 
-  const { per_tags, groups } = personalFilterData;
+  const { per_tags, groups } = personalTagsData;
 
   return (
     <Select>
