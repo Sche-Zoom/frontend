@@ -22,7 +22,7 @@ export function getMonthDateRange(date: Date | string) {
   // 달력의 마지막 날짜 (마지막 주 토요일)
   const calendarMothEndDate = endOfMonth.endOf("week").format("YYYY-MM-DD");
 
-  return [calendarMothStartDate, calendarMothEndDate];
+  return { startDate: calendarMothStartDate, endDate: calendarMothEndDate };
 }
 
 // 입력받은 특정 날짜의 해당 주의 시작과 끝 날짜 반환 함수
@@ -36,5 +36,5 @@ export function getWeekDateRange(date: Date | string) {
   // 해당 주의 마지막 날
   const calendarWeekEndDate = currentDate.endOf("week").format("YYYY-MM-DD");
 
-  return [calendarWeekStartDate, calendarWeekEndDate];
+  return { startDate: calendarWeekStartDate, endDate: calendarWeekEndDate };
 }

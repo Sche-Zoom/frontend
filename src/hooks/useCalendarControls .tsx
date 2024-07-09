@@ -1,117 +1,248 @@
 import FullCalendar from "@fullcalendar/react";
-import { useQuery } from "@tanstack/react-query";
+import { CheckedState } from "@radix-ui/react-checkbox";
 import dayjs from "dayjs";
-import { RefObject } from "react";
+import { RefObject, useState } from "react";
 
-import { getPerSchedule, getScheduleTags } from "@/api/per-schedule";
 import { getMonthDateRange, getWeekDateRange } from "@/lib/date";
-import { usePerSchFilterStore } from "@/store/per-schedule-filter";
 
+type ChangeCalendarView = "dayGridMonth" | "timeGridWeek" | "timeGridDay";
+
+interface CalendarDateState {
+  startDate: string;
+  endDate: string;
+  currentDate: string;
+}
+
+/**
+  캘린더 관련 상태 및 제어 메서드를 제공하는 커스텀 훅
+  @param calendarRef: FullCalendar 컴포넌트의 Ref
+ */
 export default function useCalendarControls(calendarRef: RefObject<FullCalendar>) {
-  const { checkedTags, setFilters } = usePerSchFilterStore();
+  // 현재 캘린더 view 형식
+  const [viewType, setViewType] = useState<ChangeCalendarView>("dayGridMonth");
 
-  //  개인 일정 조회
-  const { refetch: scheduleDataRefetch } = useQuery({
-    queryKey: ["per_schedule", "list", checkedTags],
-    enabled: false, // 초기 로딩 제한을 위해 enabled: false 설정, 이후 조회가 필요한 경우에 refetch 메서드를 활용
-    queryFn: () => {
-      const [start, end] = getDateRange();
-      return getPerSchedule({ start_date: start, end_date: end, tags: Array.from(checkedTags ?? []) });
-    },
+  // 필터에서 체크 해재된 태그 id 목록
+  const [uncheckedTagIds, setUncheckedTagIds] = useState<number[]>([]);
+
+  // 캘린더 헤더에 노출될 날짜형식의 title ex) 2024년 06월, 2024년 06월 30일 ~ 07월 06일
+  const [calendarTitle, setCalendarTitle] = useState(dayjs().format("YYYY년 MM월"));
+
+  // 캘린더에서 사용될 객체형식의 날짜 데이터
+  const [dateObj, setDateObj] = useState<CalendarDateState>(() => {
+    const today = dayjs().format("YYYY-MM-DD");
+    return {
+      currentDate: today,
+      ...getMonthDateRange(today),
+    };
   });
 
-  // 개인 일정 필터 조회
-  const { refetch: tagDataRefetch } = useQuery({
-    queryKey: ["per_schedule_filter", "list", checkedTags],
-    enabled: false, // 초기 로딩 제한을 위해 enabled: false 설정, 이후 조회가 필요한 경우에 refetch 메서드를 활용
-    queryFn: getScheduleTags,
-  });
+  const { currentDate, startDate, endDate } = dateObj;
 
-  // 현재 캘린더 view 기준 시작과 끝 날짜 반환 함수
-  const getDateRange = () => {
-    let [start, end] = getMonthDateRange(dayjs().format()); // 기본값
+  /**
+  주어진 캘린더 정보에 맞게 `calendarTitle` state 를 업데이트하는 함수
+  @param dateObj: 캘린더 날짜 데이터 객체
+  @param mode: 캘린더 view type
+ */
+  const updateCalendarTitle = (dateObj: CalendarDateState, mode: ChangeCalendarView) => {
+    const { currentDate, startDate, endDate } = dateObj;
+    const currentDayjs = dayjs(currentDate);
 
-    if (calendarRef.current) {
-      const calApi = calendarRef.current.getApi();
-      const viewName = calApi.view.type; // full view name  ex) "dayGridMonth"
+    // 주어진 view type 에 맞게 각각 calendarTitle 설정 함수 구현
+    const viewTypeHandlers: Record<string, () => void> = {
+      Day: () => setCalendarTitle(currentDayjs.format("YYYY년 MM월 DD일")),
+      Week: () =>
+        setCalendarTitle(`${dayjs(startDate).format("YYYY년 MM월 DD일")} ~ ${dayjs(endDate).format("MM월 DD일")}`),
+      Month: () => setCalendarTitle(currentDayjs.format("YYYY년 MM월")),
+    };
 
-      // 일 view 기준 날짜 시작과 끝 날짜 지정
-      if (viewName.indexOf("Day")) start = end = calApi.getDate().toString();
-      // 주 view 기준 날짜 시작과 끝 날짜 지정
-      else if (viewName.indexOf("Week")) [start, end] = getWeekDateRange(calApi.getDate());
-      // 월 view 기준 날짜 시작과 끝 날짜 지정
-      else [start, end] = getMonthDateRange(calApi.getDate());
-    }
-
-    return [start, end];
+    // view type 에 맞게 calendarTitle 설정 함수 실행
+    const handler = Object.keys(viewTypeHandlers).find((key) => mode.includes(key));
+    handler && viewTypeHandlers[handler]();
   };
 
-  // 캘린더 일정 목록 및 필터 내용 업데이트 함수
-  const updateCalendar = () => {
-    // 필터 내용 재조회 및 store 업데이트
-    tagDataRefetch().then(({ data, isSuccess }) => isSuccess && setFilters(data));
+  /**
+  주어진 콜백함수로 `uncheckedTagIds` state 를 `Set` 형태로 변환하여 수정 후 다시 배열의 형태로 state 업데이트하는 함수
+  @param callback Set 형태의 인자를 받아 처리하는 콜백함수
+  @param mode 캘린더 view type
+ */
+  const updateUncheckedTagIds = (callback: (set: Set<number>) => void) => {
+    // uncheckedTagIds state 를 Set 으로 변환하여 uncheckedTagIdsSet 변수에 저장
+    const uncheckedTagIdsSet = new Set(uncheckedTagIds);
 
-    // 일정 재조회 및 캘린더 일정 업데이트
-    scheduleDataRefetch().then(({ data, isSuccess }) => {
-      if (calendarRef.current && isSuccess) {
-        const calApi = calendarRef.current.getApi();
+    //uncheckedTagIdsSet 를 콜백함수의 매개변수로 전달
+    callback(uncheckedTagIdsSet);
 
-        // 캘린더에 기존 일정 내용 초기화
-        calApi.removeAllEvents();
+    // uncheckedTagIdsSet 을 다시 배열의 형태로 state 업데이트
+    setUncheckedTagIds(Array.from(uncheckedTagIdsSet));
+  };
 
-        // 새로 캘린더 일정 업데이트
-        data.schedules.forEach((sch) => {
-          sch.dates.forEach(({ start_date, end_date }, index) => {
-            calApi.addEvent({
-              id: `${sch.id}-${index}`,
-              groupId: sch.id.toString(),
-              title: sch.title,
-              start: start_date,
-              end: end_date,
-              backgroundColor: sch.color,
-              editable: sch.type === "Personal",
-              extendedProps: {
-                isRepeat: sch.dates.length > 1,
-                type: sch.type,
-              },
-            });
-          });
-        });
+  /**
+  특정 태그 선택 및 해제 여부에 따라 `uncheckedTagIds` state 를 업데이트하는 함수
+  @param checked 태그 선택 및 해제 여부
+  @param id 해당하는 태그 `id`
+ */
+  const setTagChecked = (checked: CheckedState, id: number) => {
+    updateUncheckedTagIds((set) => (checked ? set.delete(id) : set.add(id)));
+  };
+
+  /**
+  특정 태그 목록의 전체 선택 및 해제 여부에 따라 `uncheckedTagIds` state 를 업데이트하는 함수
+  @param checked 태그 선택 여부
+  @param ids 해당하는 하위 태그들의 `id` 목록
+ */
+  const setAllSubtagsChecked = (checked: CheckedState, ids: number[]) => {
+    updateUncheckedTagIds((set) => {
+      if (checked) {
+        ids.forEach((id) => set.delete(id));
+      } else {
+        ids.forEach((id) => set.add(id));
       }
     });
   };
 
-  // 현재 view 기준 다음 view 이동 함수
+  /**
+  특정 태그 목록 모두 선택된 상태인지 여부를 boolean 값 으로 반환하는 함수
+  @param ids 특정 태그들의 `id` 목록
+ */
+  const getTagAllChecked = (ids: number[]) => {
+    const uncheckedTagIdsSet = new Set(uncheckedTagIds);
+    return ids.every((id) => !uncheckedTagIdsSet.has(id));
+  };
+
+  /**
+  특정 태그가 선택된 상태인지 여부를 boolean 값 으로 반환하는 함수
+  @param id 특정 태그의 `id` 값
+ */
+  const getTagChecked = (id: number) => {
+    const uncheckedTagIdsSet = new Set(uncheckedTagIds);
+    return !uncheckedTagIdsSet.has(id);
+  };
+
+  /** 현재 캘린더 `viewType` 기준 다음 (월/주/일) 로 이동 및 관련 state 업데이트 함수 */
   const goNext = () => {
-    if (calendarRef.current) {
-      calendarRef.current.getApi().next();
-      updateCalendar();
-    }
+    if (!calendarRef.current) return;
+
+    calendarRef.current.getApi().next(); // 캘린더에서 다음 (월/주/일) 이동
+
+    // `viewType` 별 사용할 실제 날짜 데이터 및 캘린더 제목 등 state 업데이트 로직
+    const viewTypeHandlers: Record<string, () => void> = {
+      Day: () =>
+        setDateObj((prev) => {
+          const nextDay = dayjs(prev.currentDate).add(1, "day").format("YYYY-MM-DD");
+          const updatedDateObj = { currentDate: nextDay, startDate: nextDay, endDate: nextDay };
+          updateCalendarTitle(updatedDateObj, viewType);
+          return updatedDateObj;
+        }),
+      Week: () =>
+        setDateObj((prev) => {
+          const nextWeek = dayjs(prev.currentDate).add(1, "week").startOf("week").format("YYYY-MM-DD");
+          const updatedDateObj = { currentDate: nextWeek, ...getWeekDateRange(nextWeek) };
+          updateCalendarTitle(updatedDateObj, viewType);
+          return updatedDateObj;
+        }),
+      Month: () =>
+        setDateObj((prev) => {
+          const nextMonth = dayjs(prev.currentDate).add(1, "month").startOf("month").format("YYYY-MM-DD");
+          const updatedDateObj = { currentDate: nextMonth, ...getMonthDateRange(nextMonth) };
+          updateCalendarTitle(updatedDateObj, viewType);
+          return updatedDateObj;
+        }),
+    };
+
+    // 현재 `viewType` state 에 맞는 핸들러 지정해 `handler` 에 저장
+    const handler = Object.keys(viewTypeHandlers).find((key) => viewType.includes(key));
+    handler && viewTypeHandlers[handler]();
   };
 
-  // 이전 view 이동 이전 view 이동 함수
+  /** 현재 캘린더 `viewType` 기준 이전 (월/주/일) 로 이동 및 관련 state 업데이트 함수 */
   const goPrev = () => {
-    if (calendarRef.current) {
-      calendarRef.current.getApi().prev();
-      updateCalendar();
-    }
+    if (!calendarRef.current) return;
+
+    calendarRef.current.getApi().prev(); // 캘린더에서 이전 (월/주/일) 이동
+
+    // `viewType` 별 사용할 실제 날짜 데이터 및 캘린더 제목 등 state 업데이트 로직
+    const viewTypeHandlers: Record<string, () => void> = {
+      Day: () =>
+        setDateObj((prev) => {
+          const prevDay = dayjs(prev.currentDate).subtract(1, "day").format("YYYY-MM-DD");
+          const updatedDateObj = { currentDate: prevDay, startDate: prevDay, endDate: prevDay };
+          updateCalendarTitle(updatedDateObj, viewType);
+          return updatedDateObj;
+        }),
+      Week: () =>
+        setDateObj((prev) => {
+          const prevWeek = dayjs(prev.currentDate).subtract(1, "week").startOf("week").format("YYYY-MM-DD");
+          const updatedDateObj = { currentDate: prevWeek, ...getWeekDateRange(prevWeek) };
+          updateCalendarTitle(updatedDateObj, viewType);
+          return updatedDateObj;
+        }),
+      Month: () =>
+        setDateObj((prev) => {
+          const prevMonth = dayjs(prev.currentDate).subtract(1, "month").startOf("month").format("YYYY-MM-DD");
+          const updatedDateObj = { currentDate: prevMonth, ...getMonthDateRange(prevMonth) };
+          updateCalendarTitle(updatedDateObj, viewType);
+          return updatedDateObj;
+        }),
+    };
+
+    // 현재 `viewType` state 에 맞는 핸들러 지정해 `handler` 에 저장
+    const handler = Object.keys(viewTypeHandlers).find((key) => viewType.includes(key));
+    handler && viewTypeHandlers[handler]();
   };
 
-  // 캘린더 특정 view 변경
-  const changeView = (mode: string) => {
-    if (calendarRef.current) calendarRef.current.getApi().changeView(mode);
-  };
+  /**
+  캘린더 `viewType` 변경 함수
+  @param mode 변경될 `viewType`
+ */
+  const changeView = (mode: ChangeCalendarView) => {
+    if (!calendarRef.current) return;
 
-  const changeMonthView = () => changeView("dayGridMonth"); // 월 view 로 변경
-  const changeWeekView = () => changeView("timeGridWeek"); // 주 view 로 변경
-  const changeDayView = () => changeView("timeGridDay"); //일 view 로 변경
+    calendarRef.current.getApi().changeView(mode); // 캘린더에서 view 변경
+    setViewType(mode); // `viewType` state 변경
+
+    // `viewType` 별 사용할 실제 날짜 데이터 및 캘린더 제목 등 state 업데이트 로직
+    const viewTypeHandlers: Record<string, () => void> = {
+      Day: () =>
+        setDateObj((prev) => {
+          const updatedDateObj = { ...prev, startDate: prev.currentDate, endDate: prev.currentDate };
+          updateCalendarTitle(updatedDateObj, mode);
+          return updatedDateObj;
+        }),
+      Week: () =>
+        setDateObj((prev) => {
+          const updatedDateObj = {
+            currentDate: dayjs(prev.currentDate).startOf("week").format("YYYY-MM-DD"),
+            ...getWeekDateRange(prev.currentDate),
+          };
+          updateCalendarTitle(updatedDateObj, mode);
+          return updatedDateObj;
+        }),
+      Month: () =>
+        setDateObj((prev) => {
+          const updatedDateObj = { ...prev, ...getMonthDateRange(prev.currentDate) };
+          updateCalendarTitle(updatedDateObj, mode);
+          return updatedDateObj;
+        }),
+    };
+
+    // // 현재 `viewType` state 에 맞는 핸들러 지정해 `handler` 에 저장
+    const handler = Object.keys(viewTypeHandlers).find((key) => mode.includes(key));
+    handler && viewTypeHandlers[handler]();
+  };
 
   return {
+    viewType,
+    uncheckedTagIds,
+    currentDate,
+    startDate,
+    endDate,
+    calendarTitle,
     goNext,
     goPrev,
     changeView,
-    changeMonthView,
-    changeWeekView,
-    changeDayView,
+    setTagChecked,
+    setAllSubtagsChecked,
+    getTagChecked,
+    getTagAllChecked,
   };
 }

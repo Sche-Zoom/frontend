@@ -1,7 +1,8 @@
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, Loader } from "lucide-react";
+import { Suspense } from "react";
 
-import PersonalFullCalendar from "@/components/calendar";
 import ErrorBoundary from "@/components/error-boundary";
+import PersonalCalendar from "@/components/home/personal-calendar";
 import { Button } from "@/components/ui/button";
 
 export default async function HomePage() {
@@ -16,7 +17,15 @@ export default async function HomePage() {
       </div>
 
       <ErrorBoundary>
-        <PersonalFullCalendar />
+        <Suspense
+          fallback={
+            <div className="flex h-screen flex-col items-center justify-center">
+              <Loader className="size-8 animate-spin" />
+            </div>
+          }
+        >
+          <PersonalCalendar />
+        </Suspense>
       </ErrorBoundary>
     </div>
   );
