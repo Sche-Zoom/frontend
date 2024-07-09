@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import React from "react";
 
+import ClientMsw from "@/components/clientMsw";
 import Header from "@/components/layout/header";
 import Nav from "@/components/layout/nav";
 import Providers from "@/components/providers";
@@ -47,6 +48,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={cn(pretendard.className, "antialiased")}>
+        <ClientMsw />
         <Providers>
           <Header />
 
