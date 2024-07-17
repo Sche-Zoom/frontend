@@ -4,13 +4,13 @@ const API_URL = "api/per-schedule";
 
 export const PersonalScheduleHandlers = [
   //개인 일정(개인 일정 + 본인 참가 그룹 일정) 조회
-  http.post<any, GetPersonalSchedulesReq, GetPersonalSchedulesRes>(`${API_URL}/view`, ({ request }) => {
+  http.get<GetPersonalSchedulesReq, any, GetPersonalSchedulesRes>(`${API_URL}/view`, ({ request }) => {
     return HttpResponse.json({
       schedules: [
         {
           id: 1234,
           title: "Weekly Team Meeting",
-          type: "Group",
+          type: "group",
           color: "#ffe12e",
           dates: [
             {
@@ -22,7 +22,7 @@ export const PersonalScheduleHandlers = [
         {
           id: 234,
           title: "Gym Session",
-          type: "Personal",
+          type: "personal",
           color: "#ffe12e",
           dates: [
             {
@@ -34,7 +34,7 @@ export const PersonalScheduleHandlers = [
         {
           id: 24,
           title: "Team Lunch",
-          type: "Personal",
+          type: "personal",
           color: "#ffe12e",
           dates: [
             {

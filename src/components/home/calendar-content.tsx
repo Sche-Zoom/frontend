@@ -20,7 +20,8 @@ export default function CalendarContent({ calendarRef, currentDate, uncheckedTag
   // 캘린더에 사용할 일정 목록 요청 로직
   const { data: personalSchedulesData } = useSuspenseQuery({
     queryKey: ["personal_schedule", "list", uncheckedTagIds, startDate, endDate],
-    queryFn: () => getPersonalSchedules({ start_date: startDate, end_date: endDate, tags: uncheckedTagIds }),
+    queryFn: () =>
+      getPersonalSchedules({ start_date: startDate, end_date: endDate, tag_ids: uncheckedTagIds ?? undefined }),
   });
 
   // 캘린더에 등록할 개인 일정 배열
@@ -32,7 +33,7 @@ export default function CalendarContent({ calendarRef, currentDate, uncheckedTag
       start: start_date,
       end: end_date,
       backgroundColor: sch.color,
-      editable: sch.type === "Personal",
+      editable: sch.type === "personal",
       extendedProps: {
         isRepeat: sch.dates.length > 1,
         type: sch.type,

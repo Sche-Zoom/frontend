@@ -18,7 +18,7 @@ export interface ApiEndpoint {
 export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   getPersonalSchedules: {
     url: "/api/per-schedule/view",
-    method: "POST",
+    method: "GET",
   },
   getPersonalTags: {
     url: "/api/per-schedule/total-tags",
