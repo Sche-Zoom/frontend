@@ -11,17 +11,17 @@ import { getPersonalSchedules } from "@/api/personal-schedule";
 interface Props {
   calendarRef: RefObject<FullCalendar>;
   currentDate: string;
-  uncheckedTagIds: number[];
+  checkedTagIds: number[] | null;
   startDate: string;
   endDate: string;
 }
 
-export default function CalendarContent({ calendarRef, currentDate, uncheckedTagIds, startDate, endDate }: Props) {
+export default function CalendarContent({ calendarRef, currentDate, checkedTagIds, startDate, endDate }: Props) {
   // 캘린더에 사용할 일정 목록 요청 로직
   const { data: personalSchedulesData } = useSuspenseQuery({
-    queryKey: ["personal_schedule", "list", uncheckedTagIds, startDate, endDate],
+    queryKey: ["personal_schedule", "list", checkedTagIds, startDate, endDate],
     queryFn: () =>
-      getPersonalSchedules({ start_date: startDate, end_date: endDate, tag_ids: uncheckedTagIds ?? undefined }),
+      getPersonalSchedules({ start_date: startDate, end_date: endDate, tag_ids: checkedTagIds ?? undefined }),
   });
 
   // 캘린더에 등록할 개인 일정 배열

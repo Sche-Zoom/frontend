@@ -1,6 +1,7 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
+import { Loader } from "lucide-react";
 import { Suspense, useRef } from "react";
 
 import {
@@ -21,12 +22,13 @@ export default function PersonalCalendar() {
 
   // 캘린더 정보 및 제어를 위한 커스텀 훅 호출
   const {
-    uncheckedTagIds,
+    checkedTagIds,
     startDate,
     endDate,
     calendarTitle,
     currentDate,
     viewType,
+    setCheckedTagIds,
     goPrev,
     goNext,
     getTagChecked,
@@ -37,59 +39,68 @@ export default function PersonalCalendar() {
   } = useCalendarControls(calendarRef);
 
   return (
-    <main className="p-4">
-      {/* 캘린더 조작을 위한 header 부분 */}
-      <CalendarHeader>
-        <CalendarHeaderContent>
-          {/* 캘린더 view 이동 버튼 */}
-          <CalendarPrev onClick={goPrev} />
-          <CalendarNext onClick={goNext} />
+    <div className="flex p-4">
+      <div className="w-full">
+        {/* 캘린더 조작을 위한 header 부분 */}
+        <CalendarHeader>
+          <CalendarHeaderContent>
+            {/* 캘린더 view 이동 버튼 */}
+            <CalendarPrev onClick={goPrev} />
+            <CalendarNext onClick={goNext} />
 
-          {/* 필터링을 위한 태그 체크박스 목록 */}
-          <ErrorBoundary>
-            <Suspense>
-              <CalendarFilter
-                uncheckedTagIds={uncheckedTagIds}
-                startDate={startDate}
-                endDate={endDate}
-                getTagChecked={getTagChecked}
-                getTagAllChecked={getTagAllChecked}
-                setTagChecked={setTagChecked}
-                setAllSubtagsChecked={setAllSubtagsChecked}
-              />
-            </Suspense>
-          </ErrorBoundary>
+            {/* 필터링을 위한 태그 체크박스 목록 */}
+            <ErrorBoundary>
+              <Suspense>
+                <CalendarFilter
+                  checkedTagIds={checkedTagIds}
+                  startDate={startDate}
+                  endDate={endDate}
+                  getTagChecked={getTagChecked}
+                  getTagAllChecked={getTagAllChecked}
+                  setCheckedTagIds={setCheckedTagIds}
+                  setTagChecked={setTagChecked}
+                  setAllSubtagsChecked={setAllSubtagsChecked}
+                />
+              </Suspense>
+            </ErrorBoundary>
 
-          {/* 캘린더 title */}
-          <CalendarHeaderTitle>{calendarTitle}</CalendarHeaderTitle>
-        </CalendarHeaderContent>
+            {/* 캘린더 title */}
+            <CalendarHeaderTitle>{calendarTitle}</CalendarHeaderTitle>
+          </CalendarHeaderContent>
 
-        {/* view 모드 변경 버튼 목록 */}
-        <CalendarHeaderContent>
-          <CalendarViewButton primary={viewType === "dayGridMonth"} onClick={() => changeView("dayGridMonth")}>
-            월
-          </CalendarViewButton>
-          <CalendarViewButton primary={viewType === "timeGridWeek"} onClick={() => changeView("timeGridWeek")}>
-            주
-          </CalendarViewButton>
-          <CalendarViewButton primary={viewType === "timeGridDay"} onClick={() => changeView("timeGridDay")}>
-            일
-          </CalendarViewButton>
-        </CalendarHeaderContent>
-      </CalendarHeader>
+          {/* view 모드 변경 버튼 목록 */}
+          <CalendarHeaderContent>
+            <CalendarViewButton primary={viewType === "dayGridMonth"} onClick={() => changeView("dayGridMonth")}>
+              월
+            </CalendarViewButton>
+            <CalendarViewButton primary={viewType === "timeGridWeek"} onClick={() => changeView("timeGridWeek")}>
+              주
+            </CalendarViewButton>
+            <CalendarViewButton primary={viewType === "timeGridDay"} onClick={() => changeView("timeGridDay")}>
+              일
+            </CalendarViewButton>
+          </CalendarHeaderContent>
+        </CalendarHeader>
 
-      <ErrorBoundary>
-        <Suspense>
-          {/* 실제 일정이 노출될 content 부분 */}
-          <CalendarContent
-            calendarRef={calendarRef}
-            currentDate={currentDate}
-            uncheckedTagIds={uncheckedTagIds}
-            startDate={startDate}
-            endDate={endDate}
-          />
-        </Suspense>
-      </ErrorBoundary>
-    </main>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <div className="flex h-screen flex-col items-center justify-center">
+                <Loader className="size-8 animate-spin" />
+              </div>
+            }
+          >
+            {/* 실제 일정이 노출될 content 부분 */}
+            <CalendarContent
+              calendarRef={calendarRef}
+              currentDate={currentDate}
+              checkedTagIds={checkedTagIds}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+    </div>
   );
 }

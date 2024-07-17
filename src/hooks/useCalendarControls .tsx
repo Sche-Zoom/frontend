@@ -21,8 +21,9 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
   // 현재 캘린더 view 형식
   const [viewType, setViewType] = useState<ChangeCalendarView>("dayGridMonth");
 
-  // 필터에서 체크 해재된 태그 id 목록
-  const [uncheckedTagIds, setUncheckedTagIds] = useState<number[]>([]);
+  // 필터에서 체크된 태그 id 목록, 초기값 null 은 초기 모든 태그들이 선택된 상태를 의미하며
+  // 이후 체크 상태가 변경되는 경우 체크된 id 배열로 상태를 유지
+  const [checkedTagIds, setCheckedTagIds] = useState<number[] | null>(null);
 
   // 캘린더 헤더에 노출될 날짜형식의 title ex) 2024년 06월, 2024년 06월 30일 ~ 07월 06일
   const [calendarTitle, setCalendarTitle] = useState(dayjs().format("YYYY년 MM월"));
@@ -61,41 +62,41 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
   };
 
   /**
-  주어진 콜백함수로 `uncheckedTagIds` state 를 `Set` 형태로 변환하여 수정 후 다시 배열의 형태로 state 업데이트하는 함수
+  주어진 콜백함수로 `checkedTagIds` state 를 `Set` 형태로 변환하여 수정 후 다시 배열의 형태로 state 업데이트하는 함수
   @param callback Set 형태의 인자를 받아 처리하는 콜백함수
   @param mode 캘린더 view type
  */
-  const updateUncheckedTagIds = (callback: (set: Set<number>) => void) => {
-    // uncheckedTagIds state 를 Set 으로 변환하여 uncheckedTagIdsSet 변수에 저장
-    const uncheckedTagIdsSet = new Set(uncheckedTagIds);
+  const updateCheckedTagIds = (callback: (set: Set<number>) => void) => {
+    // checkedTagIds state 를 Set 으로 변환하여 checkedTagIdsSet 변수에 저장
+    const checkedTagIdsSet = new Set(checkedTagIds);
 
-    //uncheckedTagIdsSet 를 콜백함수의 매개변수로 전달
-    callback(uncheckedTagIdsSet);
+    //checkedTagIdsSet 를 콜백함수의 매개변수로 전달
+    callback(checkedTagIdsSet);
 
-    // uncheckedTagIdsSet 을 다시 배열의 형태로 state 업데이트
-    setUncheckedTagIds(Array.from(uncheckedTagIdsSet));
+    // checkedTagIdsSet 을 다시 배열의 형태로 state 업데이트
+    setCheckedTagIds(Array.from(checkedTagIdsSet));
   };
 
   /**
-  특정 태그 선택 및 해제 여부에 따라 `uncheckedTagIds` state 를 업데이트하는 함수
+  특정 태그 선택 및 해제 여부에 따라 `checkedTagIds` state 를 업데이트하는 함수
   @param checked 태그 선택 및 해제 여부
   @param id 해당하는 태그 `id`
  */
   const setTagChecked = (checked: CheckedState, id: number) => {
-    updateUncheckedTagIds((set) => (checked ? set.delete(id) : set.add(id)));
+    updateCheckedTagIds((set) => (checked ? set.add(id) : set.delete(id)));
   };
 
   /**
-  특정 태그 목록의 전체 선택 및 해제 여부에 따라 `uncheckedTagIds` state 를 업데이트하는 함수
+  특정 태그 목록의 전체 선택 및 해제 여부에 따라 `checkedTagIds` state 를 업데이트하는 함수
   @param checked 태그 선택 여부
   @param ids 해당하는 하위 태그들의 `id` 목록
  */
   const setAllSubtagsChecked = (checked: CheckedState, ids: number[]) => {
-    updateUncheckedTagIds((set) => {
+    updateCheckedTagIds((set) => {
       if (checked) {
-        ids.forEach((id) => set.delete(id));
-      } else {
         ids.forEach((id) => set.add(id));
+      } else {
+        ids.forEach((id) => set.delete(id));
       }
     });
   };
@@ -105,8 +106,11 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
   @param ids 특정 태그들의 `id` 목록
  */
   const getTagAllChecked = (ids: number[]) => {
-    const uncheckedTagIdsSet = new Set(uncheckedTagIds);
-    return ids.every((id) => !uncheckedTagIdsSet.has(id));
+    // 초기상태의 경우 true 반환
+    if (checkedTagIds === null) return true;
+
+    const checkedTagIdsSet = new Set(checkedTagIds);
+    return ids.every((id) => checkedTagIdsSet.has(id));
   };
 
   /**
@@ -114,8 +118,11 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
   @param id 특정 태그의 `id` 값
  */
   const getTagChecked = (id: number) => {
-    const uncheckedTagIdsSet = new Set(uncheckedTagIds);
-    return !uncheckedTagIdsSet.has(id);
+    // 초기상태의 경우 true 반환
+    if (checkedTagIds === null) return true;
+
+    const checkedTagIdsSet = new Set(checkedTagIds);
+    return checkedTagIdsSet.has(id);
   };
 
   /** 현재 캘린더 `viewType` 기준 다음 (월/주/일) 로 이동 및 관련 state 업데이트 함수 */
@@ -232,11 +239,12 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
 
   return {
     viewType,
-    uncheckedTagIds,
+    checkedTagIds,
     currentDate,
     startDate,
     endDate,
     calendarTitle,
+    setCheckedTagIds,
     goNext,
     goPrev,
     changeView,
