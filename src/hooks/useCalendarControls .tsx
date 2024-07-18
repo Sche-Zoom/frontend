@@ -4,8 +4,7 @@ import dayjs from "dayjs";
 import { RefObject, useState } from "react";
 
 import { getMonthDateRange, getWeekDateRange } from "@/lib/date";
-
-type ChangeCalendarView = "dayGridMonth" | "timeGridWeek" | "timeGridDay";
+import { CalendarViewType } from "@/types/calendar";
 
 interface CalendarDateState {
   startDate: string;
@@ -19,7 +18,7 @@ interface CalendarDateState {
  */
 export default function useCalendarControls(calendarRef: RefObject<FullCalendar>) {
   // 현재 캘린더 view 형식
-  const [viewType, setViewType] = useState<ChangeCalendarView>("dayGridMonth");
+  const [viewType, setViewType] = useState<CalendarViewType>("dayGridMonth");
 
   // 필터에서 체크된 태그 id 목록, 초기값 null 은 초기 모든 태그들이 선택된 상태를 의미하며
   // 이후 체크 상태가 변경되는 경우 체크된 id 배열로 상태를 유지
@@ -44,7 +43,7 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
   @param dateObj: 캘린더 날짜 데이터 객체
   @param mode: 캘린더 view type
  */
-  const updateCalendarTitle = (dateObj: CalendarDateState, mode: ChangeCalendarView) => {
+  const updateCalendarTitle = (dateObj: CalendarDateState, mode: CalendarViewType) => {
     const { currentDate, startDate, endDate } = dateObj;
     const currentDayjs = dayjs(currentDate);
 
@@ -201,7 +200,7 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
   캘린더 `viewType` 변경 함수
   @param mode 변경될 `viewType`
  */
-  const changeView = (mode: ChangeCalendarView) => {
+  const changeView = (mode: CalendarViewType) => {
     if (!calendarRef.current) return;
 
     calendarRef.current.getApi().changeView(mode); // 캘린더에서 view 변경
@@ -237,6 +236,8 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
     handler && viewTypeHandlers[handler]();
   };
 
+  const getIsCurrentView = (mode: CalendarViewType) => mode === viewType;
+
   return {
     viewType,
     checkedTagIds,
@@ -252,5 +253,6 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
     setAllSubtagsChecked,
     getTagChecked,
     getTagAllChecked,
+    getIsCurrentView,
   };
 }

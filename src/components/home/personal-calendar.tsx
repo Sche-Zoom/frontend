@@ -36,6 +36,7 @@ export default function PersonalCalendar() {
     setTagChecked,
     setAllSubtagsChecked,
     changeView,
+    getIsCurrentView,
   } = useCalendarControls(calendarRef);
 
   return (
@@ -70,13 +71,13 @@ export default function PersonalCalendar() {
 
           {/* view 모드 변경 버튼 목록 */}
           <CalendarHeaderContent>
-            <CalendarViewButton primary={viewType === "dayGridMonth"} onClick={() => changeView("dayGridMonth")}>
+            <CalendarViewButton primary={getIsCurrentView("dayGridMonth")} onClick={() => changeView("dayGridMonth")}>
               월
             </CalendarViewButton>
-            <CalendarViewButton primary={viewType === "timeGridWeek"} onClick={() => changeView("timeGridWeek")}>
+            <CalendarViewButton primary={getIsCurrentView("timeGridWeek")} onClick={() => changeView("timeGridWeek")}>
               주
             </CalendarViewButton>
-            <CalendarViewButton primary={viewType === "timeGridDay"} onClick={() => changeView("timeGridDay")}>
+            <CalendarViewButton primary={getIsCurrentView("timeGridDay")} onClick={() => changeView("timeGridDay")}>
               일
             </CalendarViewButton>
           </CalendarHeaderContent>
@@ -94,6 +95,7 @@ export default function PersonalCalendar() {
             <CalendarContent
               calendarRef={calendarRef}
               currentDate={currentDate}
+              viewType={viewType}
               checkedTagIds={checkedTagIds}
               startDate={startDate}
               endDate={endDate}
