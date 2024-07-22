@@ -5,10 +5,11 @@ import ErrorBoundary from "@/components/error-boundary";
 import PersonalCalendar from "@/components/home/personal-calendar";
 import { Button } from "@/components/ui/button";
 
-export default async function HomePage() {
+export default function HomePage() {
   return (
-    <div>
-      <div className="bg-muted sticky left-0 top-9 z-10 flex h-9 items-center justify-between border-b px-2">
+    <div className="flex size-full flex-col">
+      {/* 콘텐츠 title */}
+      <div className="bg-muted flex h-9 items-center justify-between border-b px-2">
         <h3 className="align-middle text-sm">개인 일정</h3>
 
         <Button variant="image-icon-none" size="icon-sm">

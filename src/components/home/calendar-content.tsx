@@ -48,7 +48,7 @@ export default function CalendarContent(props: Props) {
   const eventChange = (arg: EventChangeArg) => {};
 
   return (
-    <div className="text-sm">
+    <div className="flex-1 text-sm">
       <FullCalendar
         initialDate={currentDate}
         ref={calendarRef}
@@ -65,7 +65,8 @@ export default function CalendarContent(props: Props) {
         events={calendarSchedules}
         eventBorderColor="gray"
         // eventChange={(arg) => d}
-        aspectRatio={1.6}
+        expandRows={true}
+        height="100%"
       />
     </div>
   );

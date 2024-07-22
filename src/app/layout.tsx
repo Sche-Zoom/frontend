@@ -46,15 +46,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className={cn(pretendard.className, "antialiased")}>
+    <html lang="ko" className="size-full">
+      <body className={cn(pretendard.className, "size-full antialiased")}>
         <ClientMsw />
         <Providers>
-          <Header />
+          <div className="flex h-full flex-col">
+            <Header />
 
-          <div className="relative flex">
-            <Nav />
-            <main className="flex-1">{children}</main>
+            <div className="relative flex flex-1">
+              <Nav />
+              <main className="flex-1">{children}</main>
+            </div>
           </div>
         </Providers>
       </body>

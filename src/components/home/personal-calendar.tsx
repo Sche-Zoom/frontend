@@ -40,8 +40,9 @@ export default function PersonalCalendar() {
   } = useCalendarControls(calendarRef);
 
   return (
-    <div className="flex p-4">
-      <div className="w-full">
+    <div className="flex flex-1">
+      {/* 캘린더 전체 */}
+      <div className="flex w-full flex-col p-4">
         {/* 캘린더 조작을 위한 header 부분 */}
         <CalendarHeader>
           <CalendarHeaderContent>
