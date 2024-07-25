@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import { RefObject, useState } from "react";
 
 import { getMonthDateRange, getWeekDateRange } from "@/lib/date";
-import { CalendarViewType } from "@/types/calendar";
 
 interface CalendarDateState {
   startDate: string;
@@ -236,6 +235,12 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
     handler && viewTypeHandlers[handler]();
   };
 
+  const updateSize = () => {
+    if (!calendarRef.current) return;
+
+    calendarRef.current.getApi().updateSize(); // 캘린더 size 변경
+  };
+
   const getIsCurrentView = (mode: CalendarViewType) => mode === viewType;
 
   return {
@@ -254,5 +259,6 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
     getTagChecked,
     getTagAllChecked,
     getIsCurrentView,
+    updateSize,
   };
 }

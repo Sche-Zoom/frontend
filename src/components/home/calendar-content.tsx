@@ -7,8 +7,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { RefObject } from "react";
 
 import { getPersonalSchedules } from "@/api/personal-schedule";
-import { CalendarViewType } from "@/types/calendar";
-
 interface Props {
   calendarRef: RefObject<FullCalendar>;
   currentDate: string;
