@@ -1,9 +1,9 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
-import { Loader } from "lucide-react";
-import { Suspense, useRef } from "react";
+import { RefObject, Suspense } from "react";
 
+import BasicLoader from "@/components/basic-loader";
 import {
   CalendarHeader,
   CalendarHeaderContent,
@@ -15,10 +15,16 @@ import {
 import ErrorBoundary from "@/components/error-boundary";
 import CalendarContent from "@/components/home/calendar-content";
 import CalendarFilter from "@/components/home/calendar-filter";
+import PersonalSideMenu from "@/components/home/personal-side-menu";
+import { SideMenuContent } from "@/components/side-menu";
 import useCalendarControls from "@/hooks/useCalendarControls ";
 
-export default function PersonalCalendar() {
-  const calendarRef = useRef<FullCalendar>(null);
+interface Props {
+  calendarRef: RefObject<FullCalendar>;
+}
+
+export default function PersonalCalendar({ calendarRef }: Props) {
+  // const calendarRef = useRef<FullCalendar>(null);
 
   // 캘린더 정보 및 제어를 위한 커스텀 훅 호출
   const {
@@ -85,13 +91,7 @@ export default function PersonalCalendar() {
         </CalendarHeader>
 
         <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className="flex h-screen flex-col items-center justify-center">
-                <Loader className="size-8 animate-spin" />
-              </div>
-            }
-          >
+          <Suspense fallback={<BasicLoader />}>
             {/* 실제 일정이 노출될 content 부분 */}
             <CalendarContent
               calendarRef={calendarRef}
@@ -104,6 +104,19 @@ export default function PersonalCalendar() {
           </Suspense>
         </ErrorBoundary>
       </div>
+
+      {/* 사이드 메뉴 */}
+      <ErrorBoundary>
+        <Suspense
+          fallback={
+            <SideMenuContent>
+              <BasicLoader />
+            </SideMenuContent>
+          }
+        >
+          <PersonalSideMenu currentDate={currentDate} checkedTagIds={checkedTagIds} />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }
