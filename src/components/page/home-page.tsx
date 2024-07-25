@@ -22,12 +22,14 @@ export default function HomePage() {
           <PersonalSideButtons calendarRef={calendarRef} />
         </ContentHeader>
 
-        {/* 전체 캘린더 */}
-        <ErrorBoundary>
-          <Suspense fallback={<BasicLoader />}>
-            <PersonalCalendar calendarRef={calendarRef} />
-          </Suspense>
-        </ErrorBoundary>
+        <div className="relative flex-1">
+          {/* 전체 캘린더 */}
+          <ErrorBoundary>
+            <Suspense fallback={<BasicLoader />}>
+              <PersonalCalendar calendarRef={calendarRef} />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
       </div>
     </PersonalSideMenuProvider>
   );

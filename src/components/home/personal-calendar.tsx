@@ -46,7 +46,7 @@ export default function PersonalCalendar({ calendarRef }: Props) {
   } = useCalendarControls(calendarRef);
 
   return (
-    <div className="flex flex-1">
+    <div className="absolute flex size-full ">
       {/* 캘린더 전체 */}
       <div className="flex w-full flex-col p-4">
         {/* 캘린더 조작을 위한 header 부분 */}

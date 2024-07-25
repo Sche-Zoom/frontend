@@ -50,7 +50,7 @@ export default function RootLayout({
       <body className={cn(pretendard.className, "size-full antialiased")}>
         <ClientMsw />
         <Providers>
-          <div className="flex h-full flex-col">
+          <div className="absolute flex size-full flex-col overflow-hidden">
             <Header />
 
             <div className="relative flex flex-1">
