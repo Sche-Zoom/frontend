@@ -18,9 +18,9 @@ CalendarHeader.displayName = "CalendarHeader";
 const CalendarHeaderTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, children, ...props }, ref) => {
     return (
-      <h2 ref={ref} className={cn("ml-4 text-lg font-medium", className)} {...props}>
+      <h3 ref={ref} className={cn("ml-4 text-lg font-medium", className)} {...props}>
         {children}
-      </h2>
+      </h3>
     );
   },
 );
