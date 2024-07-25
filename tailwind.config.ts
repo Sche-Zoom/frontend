@@ -50,6 +50,46 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        pink: {
+          DEFAULT: "hsl(var(--pink))",
+          background: "hsl(var(--pink-background))",
+        },
+        blue: {
+          DEFAULT: "hsl(var(-blue))",
+          background: "hsl(var(-blue-background))",
+        },
+        green: {
+          DEFAULT: "hsl(var(--green))",
+          background: "hsl(var(--green-background))",
+        },
+        yellow: {
+          DEFAULT: "hsl(var(--yellow))",
+          background: "hsl(var(--yellow-background))",
+        },
+        purple: {
+          DEFAULT: "hsl(var(--purple))",
+          background: "hsl(var(--purple-background))",
+        },
+        orange: {
+          DEFAULT: "hsl(var(--orange))",
+          background: "hsl(var(--orange-background))",
+        },
+        mint: {
+          DEFAULT: "hsl(var(--mint))",
+          background: "hsl(var(--mint-background))",
+        },
+        lavender: {
+          DEFAULT: "hsl(var(--lavender))",
+          background: "hsl(var(--lavender-background))",
+        },
+        beige: {
+          DEFAULT: "hsl(var(--beige))",
+          background: "hsl(var(--beige-background))",
+        },
+        coral: {
+          DEFAULT: "hsl(var(--coral))",
+          background: "hsl(var(--coral-background))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
