@@ -12,6 +12,7 @@ interface ApiEndpointInfo {
 export interface ApiEndpoint {
   getPersonalSchedules: HttpReqRes<GetPersonalSchedulesReq, GetPersonalSchedulesRes>;
   getPersonalTags: HttpReqRes<null, GetPersonalTagsRes>;
+  getPersonalSummarySchedules: HttpReqRes<GetPersonalSummarySchedulesReq, GetPersonalSummarySchedulesRes>;
 }
 
 // API Endpoint 정보
@@ -22,6 +23,10 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   },
   getPersonalTags: {
     url: "/api/per-schedule/total-tags",
+    method: "GET",
+  },
+  getPersonalSummarySchedules: {
+    url: "/api/per-schedule/summary-list",
     method: "GET",
   },
 };

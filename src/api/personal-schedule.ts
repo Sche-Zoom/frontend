@@ -9,3 +9,10 @@ export async function getPersonalSchedules(req: GetPersonalSchedulesReq): Promis
 export async function getPersonalTags(): Promise<GetPersonalTagsRes> {
   return apiRequest("getPersonalTags", null);
 }
+
+// 일자별로 요약된 개인 일정 목록과 다가올 일정 목록 조회
+export async function getPersonalSummarySchedules(
+  req: GetPersonalSummarySchedulesReq,
+): Promise<GetPersonalSummarySchedulesRes> {
+  return apiRequest("getPersonalSummarySchedules", req);
+}
