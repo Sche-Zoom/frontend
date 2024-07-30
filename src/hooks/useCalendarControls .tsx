@@ -4,18 +4,13 @@ import dayjs from "dayjs";
 import { RefObject, useState } from "react";
 
 import { getMonthDateRange, getWeekDateRange } from "@/lib/date";
-
-interface CalendarDateState {
-  startDate: string;
-  endDate: string;
-  currentDate: string;
-}
+import { CalendarControls, CalendarDateState } from "@/types/useCalendarControls";
 
 /**
   캘린더 관련 상태 및 제어 메서드를 제공하는 커스텀 훅
   @param calendarRef: FullCalendar 컴포넌트의 Ref
  */
-export default function useCalendarControls(calendarRef: RefObject<FullCalendar>) {
+export default function useCalendarControls(calendarRef: RefObject<FullCalendar>): CalendarControls {
   // 현재 캘린더 view 형식
   const [viewType, setViewType] = useState<CalendarViewType>("dayGridMonth");
 

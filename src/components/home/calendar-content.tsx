@@ -7,17 +7,13 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { RefObject } from "react";
 
 import { getPersonalSchedules } from "@/api/personal-schedule";
+import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
 interface Props {
   calendarRef: RefObject<FullCalendar>;
-  currentDate: string;
-  viewType: CalendarViewType;
-  checkedTagIds: number[] | null;
-  startDate: string;
-  endDate: string;
 }
 
-export default function CalendarContent(props: Props) {
-  const { calendarRef, currentDate, checkedTagIds, startDate, endDate, viewType } = props;
+export default function CalendarContent({ calendarRef: calendarRef }: Props) {
+  const { currentDate, checkedTagIds, startDate, endDate, viewType } = usePersonalCalendarContext();
 
   // 캘린더에 사용할 일정 목록 요청 로직
   const { data: personalSchedulesData } = useSuspenseQuery({

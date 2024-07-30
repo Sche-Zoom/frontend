@@ -1,18 +1,13 @@
-import FullCalendar from "@fullcalendar/react";
 import { ClipboardList } from "lucide-react";
-import React, { RefObject, useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { SideMenuButtonItem, SideMenuButtons } from "@/components/side-menu";
-import { PersonalSideMenuContext } from "@/contexts/personal-side-menu";
-import useCalendarControls from "@/hooks/useCalendarControls ";
+import { useCalendarContext } from "@/contexts/calendar";
+import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
 
-interface Props {
-  calendarRef: RefObject<FullCalendar>;
-}
-
-export default function PersonalSideButtons({ calendarRef }: Props) {
-  const { menuTab, getIsCurrentMenu, setMenuTab } = useContext(PersonalSideMenuContext);
-  const { updateSize } = useCalendarControls(calendarRef);
+export default function PersonalSideButtons() {
+  const { menuTab, getIsCurrentMenu, setMenuTab } = usePersonalCalendarContext();
+  const { updateSize } = useCalendarContext();
 
   useEffect(() => {
     updateSize();

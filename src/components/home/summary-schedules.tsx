@@ -3,15 +3,12 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPersonalSummarySchedules } from "@/api/personal-schedule";
 import { SideMenuContent, SideMenuSeparator, SideMenuTitle } from "@/components/side-menu";
 import { SCHEDULE_TYPE } from "@/constants";
+import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
 import { getScheduleColorVariable } from "@/lib/calendar";
 
-interface Props {
-  currentDate: string;
-  checkedTagIds: number[] | null;
-}
+function SummarySchedules() {
+  const { checkedTagIds, currentDate } = usePersonalCalendarContext();
 
-function SummarySchedules(props: Props) {
-  const { checkedTagIds, currentDate } = props;
   const { data } = useSuspenseQuery({
     queryKey: ["personal_schedule_summary", "list", checkedTagIds, currentDate],
     queryFn: () => getPersonalSummarySchedules({ selected_date: currentDate, tag_ids: checkedTagIds ?? undefined }),

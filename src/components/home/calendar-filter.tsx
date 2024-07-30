@@ -1,24 +1,13 @@
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Dispatch, SetStateAction } from "react";
 
 import { getPersonalTags } from "@/api/personal-schedule";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
 
-interface Props {
-  checkedTagIds: number[] | null;
-  startDate: string;
-  endDate: string;
-  setCheckedTagIds: Dispatch<SetStateAction<number[] | null>>;
-  getTagChecked: (id: number) => boolean;
-  getTagAllChecked: (ids: number[]) => boolean;
-  setTagChecked: (checked: CheckedState, id: number) => void;
-  setAllSubtagsChecked: (checked: CheckedState, ids: number[]) => void;
-}
-
-export default function CalendarFilter(props: Props) {
+export default function CalendarFilter() {
   const {
     checkedTagIds,
     startDate,
@@ -28,7 +17,7 @@ export default function CalendarFilter(props: Props) {
     getTagAllChecked,
     setTagChecked,
     setAllSubtagsChecked,
-  } = props;
+  } = usePersonalCalendarContext();
 
   // 필터링용 태그 목록 요청 로직
   const { data: personalTagsData } = useSuspenseQuery({

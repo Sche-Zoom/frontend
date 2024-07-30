@@ -1,36 +1,37 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
-import { Suspense, useRef } from "react";
+import { useRef } from "react";
 
-import BasicLoader from "@/components/basic-loader";
 import { ContentHeader, ContentTitle } from "@/components/content-header";
-import ErrorBoundary from "@/components/error-boundary";
 import PersonalCalendar from "@/components/home/personal-calendar";
 import PersonalSideButtons from "@/components/home/personal-side-buttons";
-import { PersonalSideMenuProvider } from "@/contexts/personal-side-menu";
+import PersonalSideMenu from "@/components/home/personal-side-menu";
+import { CalendarProvider } from "@/contexts/calendar";
+import { PersonalCalendarProvider } from "@/contexts/personal-calendar";
 
 export default function HomePage() {
   const calendarRef = useRef<FullCalendar>(null);
   return (
-    <PersonalSideMenuProvider>
-      <div className="flex size-full flex-col">
-        {/* 콘텐츠 title */}
-        <ContentHeader>
-          <ContentTitle>개인 일정</ContentTitle>
+    <CalendarProvider calendarRef={calendarRef}>
+      <PersonalCalendarProvider>
+        <div className="flex size-full flex-col">
+          {/* 콘텐츠 title */}
+          <ContentHeader>
+            <ContentTitle>개인 일정</ContentTitle>
 
-          <PersonalSideButtons calendarRef={calendarRef} />
-        </ContentHeader>
+            <PersonalSideButtons />
+          </ContentHeader>
 
-        <div className="relative flex-1">
-          {/* 전체 캘린더 */}
-          <ErrorBoundary>
-            <Suspense fallback={<BasicLoader />}>
-              <PersonalCalendar calendarRef={calendarRef} />
-            </Suspense>
-          </ErrorBoundary>
+          <div className="flex flex-1">
+            {/* 전체 캘린더 */}
+            <PersonalCalendar calendarRef={calendarRef} />
+
+            {/* 사이드 메뉴 */}
+            <PersonalSideMenu />
+          </div>
         </div>
-      </div>
-    </PersonalSideMenuProvider>
+      </PersonalCalendarProvider>
+    </CalendarProvider>
   );
 }
