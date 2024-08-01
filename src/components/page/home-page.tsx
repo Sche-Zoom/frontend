@@ -7,31 +7,28 @@ import { ContentHeader, ContentTitle } from "@/components/content-header";
 import PersonalCalendar from "@/components/home/personal-calendar";
 import PersonalSideButtons from "@/components/home/personal-side-buttons";
 import PersonalSideMenu from "@/components/home/personal-side-menu";
-import { CalendarProvider } from "@/contexts/calendar";
 import { PersonalCalendarProvider } from "@/contexts/personal-calendar";
 
 export default function HomePage() {
   const calendarRef = useRef<FullCalendar>(null);
   return (
-    <CalendarProvider calendarRef={calendarRef}>
-      <PersonalCalendarProvider>
-        <div className="flex size-full flex-col">
-          {/* 콘텐츠 title */}
-          <ContentHeader>
-            <ContentTitle>개인 일정</ContentTitle>
+    <PersonalCalendarProvider calendarRef={calendarRef}>
+      <div className="flex size-full flex-col">
+        {/* 콘텐츠 title */}
+        <ContentHeader>
+          <ContentTitle>개인 일정</ContentTitle>
 
-            <PersonalSideButtons />
-          </ContentHeader>
+          <PersonalSideButtons />
+        </ContentHeader>
 
-          <div className="flex flex-1">
-            {/* 전체 캘린더 */}
-            <PersonalCalendar calendarRef={calendarRef} />
+        <div className="flex flex-1">
+          {/* 전체 캘린더 */}
+          <PersonalCalendar calendarRef={calendarRef} />
 
-            {/* 사이드 메뉴 */}
-            <PersonalSideMenu />
-          </div>
+          {/* 사이드 메뉴 */}
+          <PersonalSideMenu />
         </div>
-      </PersonalCalendarProvider>
-    </CalendarProvider>
+      </div>
+    </PersonalCalendarProvider>
   );
 }
