@@ -8,6 +8,7 @@ import { RefObject } from "react";
 
 import { getPersonalSchedules } from "@/api/personal-schedule";
 import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
+import { changeDateIfMidnight } from "@/lib/date";
 interface Props {
   calendarRef: RefObject<FullCalendar>;
 }
@@ -28,8 +29,8 @@ export default function CalendarContent({ calendarRef: calendarRef }: Props) {
       id: `${sch.id}-${index}`,
       groupId: sch.id.toString(),
       title: sch.title,
-      start: start_date,
-      end: end_date,
+      start: changeDateIfMidnight(start_date),
+      end: changeDateIfMidnight(end_date),
       backgroundColor: sch.color,
       editable: sch.type === "personal",
       extendedProps: {
@@ -54,7 +55,6 @@ export default function CalendarContent({ calendarRef: calendarRef }: Props) {
             dayHeaderFormat: { month: "numeric", day: "numeric", weekday: "long", omitCommas: true },
           },
         }}
-        editable={true}
         eventResizableFromStart={true}
         events={calendarSchedules}
         eventBorderColor="gray"
