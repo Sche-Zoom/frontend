@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-
 import {
   CalendarHeader,
   CalendarHeaderContent,
@@ -8,7 +6,6 @@ import {
   CalendarPrev,
   CalendarViewButton,
 } from "@/components/calendar/calendar-header";
-import ErrorBoundary from "@/components/error-boundary";
 import CalendarFilter from "@/components/home/calendar-filter";
 import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
 
@@ -23,11 +20,7 @@ export default function PersonalCalendarHeader() {
         <CalendarNext onClick={goNext} />
 
         {/* 필터링을 위한 태그 체크박스 목록 */}
-        <ErrorBoundary>
-          <Suspense>
-            <CalendarFilter />
-          </Suspense>
-        </ErrorBoundary>
+        <CalendarFilter />
 
         {/* 캘린더 title */}
         <CalendarHeaderTitle>{calendarTitle}</CalendarHeaderTitle>
