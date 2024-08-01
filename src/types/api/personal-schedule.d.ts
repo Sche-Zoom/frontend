@@ -10,7 +10,7 @@ type ScheduleType = "group" | "personal";
 interface GetPersonalSchedulesReq {
   start_date: string; // ISO8601
   end_date: string; // ISO8601
-  tag_ids: number[] | undefined;
+  tag_ids?: number[];
 }
 
 interface PersonalSchedule {
@@ -51,7 +51,7 @@ interface PersonalSummarySchedule {
 
 interface GetPersonalSummarySchedulesReq {
   selected_date: string; // ISO8601 (YYYY-MM-DD)
-  tag_ids: number[] | undefined;
+  tag_ids?: number[];
 }
 
 interface GetPersonalSummarySchedulesRes {

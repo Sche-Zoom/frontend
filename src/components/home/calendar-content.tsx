@@ -20,7 +20,11 @@ export default function CalendarContent({ calendarRef: calendarRef }: Props) {
   const { data: personalSchedulesData } = useSuspenseQuery({
     queryKey: ["personal_schedule", "list", checkedTagIds, startDate, endDate],
     queryFn: () =>
-      getPersonalSchedules({ start_date: startDate, end_date: endDate, tag_ids: checkedTagIds ?? undefined }),
+      getPersonalSchedules({
+        start_date: startDate,
+        end_date: endDate,
+        ...(checkedTagIds && { tag_ids: checkedTagIds }),
+      }),
   });
 
   // 캘린더에 등록할 개인 일정 배열

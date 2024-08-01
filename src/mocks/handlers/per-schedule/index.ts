@@ -10,17 +10,17 @@ const API_URL = "api/per-schedule";
 
 export const PersonalScheduleHandlers = [
   //개인 일정(개인 일정 + 본인 참가 그룹 일정) 조회
-  http.get<GetPersonalSchedulesReq, any, GetPersonalSchedulesRes>(`${API_URL}/view`, ({ request }) => {
+  http.get<any, GetPersonalSchedulesReq, GetPersonalSchedulesRes>(`${API_URL}/view`, () => {
     return HttpResponse.json(MOCK_PERSONAL_SCHEDULES);
   }),
 
   // 개인 일정 필터링 내용 조회 (개인 일정 태그 목록 + 그룹 목록 및 각 그룹별 태그 목록)
-  http.get<any, any, GetPersonalTagsRes>(`${API_URL}/total-tags`, ({ request }) => {
+  http.get<any, any, GetPersonalTagsRes>(`${API_URL}/total-tags`, () => {
     return HttpResponse.json(MOCK_PERSONAL_TAGS);
   }),
 
   // 일자별로 요약된 개인 일정 목록과 다가올 일정 목록 조회
-  http.get<GetPersonalSummarySchedulesReq, any, GetPersonalSummarySchedulesRes>(`${API_URL}/summary-list`, () => {
+  http.get<any, GetPersonalSummarySchedulesReq, GetPersonalSummarySchedulesRes>(`${API_URL}/summary-list`, () => {
     return HttpResponse.json(MOCK_PERSONAL_SUMMARY_SCHEDULES);
   }),
 ];

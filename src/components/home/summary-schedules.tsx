@@ -11,7 +11,8 @@ function SummarySchedules() {
 
   const { data } = useSuspenseQuery({
     queryKey: ["personal_schedule_summary", "list", checkedTagIds, currentDate],
-    queryFn: () => getPersonalSummarySchedules({ selected_date: currentDate, tag_ids: checkedTagIds ?? undefined }),
+    queryFn: () =>
+      getPersonalSummarySchedules({ selected_date: currentDate, ...(checkedTagIds && { tag_ids: checkedTagIds }) }),
   });
 
   return (
