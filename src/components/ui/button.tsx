@@ -1,3 +1,4 @@
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -48,4 +49,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+interface LoadingButtonProps extends ButtonProps {
+  loading: boolean;
+}
+
+const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
+  ({ variant, size, className, children, loading, ...props }, ref) => {
+    return (
+      <Button
+        disabled={loading}
+        className={cn(buttonVariants({ variant, size, className }), "space-x-2")}
+        ref={ref}
+        {...props}
+      >
+        {loading ? <ReloadIcon className="size-4 animate-spin" /> : children}
+      </Button>
+    );
+  },
+);
+LoadingButton.displayName = "LoadingButton";
+
+export { Button, buttonVariants, LoadingButton };
