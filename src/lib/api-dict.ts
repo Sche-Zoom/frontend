@@ -5,7 +5,7 @@ interface HttpReqRes<T_Req = unknown, T_Res = unknown> {
 
 interface ApiEndpointInfo {
   url: string;
-  method: "GET" | "POST";
+  method: "GET" | "POST" | "PATCH";
 }
 
 // API Req, Res 타입 정의
@@ -13,6 +13,8 @@ export interface ApiEndpoint {
   getPersonalSchedules: HttpReqRes<GetPersonalSchedulesReq, GetPersonalSchedulesRes>;
   getPersonalTags: HttpReqRes<null, GetPersonalTagsRes>;
   getPersonalSummarySchedules: HttpReqRes<GetPersonalSummarySchedulesReq, GetPersonalSummarySchedulesRes>;
+  modifyPersonalSchedule: HttpReqRes<ModifyPersonalScheduleReq, null>;
+  modifyPersonalRepeatSchedule: HttpReqRes<ModifyPersonalRepeatScheduleReq, null>;
 }
 
 // API Endpoint 정보
@@ -28,5 +30,13 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   getPersonalSummarySchedules: {
     url: "/api/per-schedule/summary-list",
     method: "GET",
+  },
+  modifyPersonalSchedule: {
+    url: "/api/per-schedule",
+    method: "PATCH",
+  },
+  modifyPersonalRepeatSchedule: {
+    url: "/api/per-schedule/repeat",
+    method: "PATCH",
   },
 };

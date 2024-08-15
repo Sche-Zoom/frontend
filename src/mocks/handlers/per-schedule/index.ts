@@ -23,4 +23,19 @@ export const PersonalScheduleHandlers = [
   http.get<any, GetPersonalSummarySchedulesReq, GetPersonalSummarySchedulesRes>(`${API_URL}/summary-list`, () => {
     return HttpResponse.json(MOCK_PERSONAL_SUMMARY_SCHEDULES);
   }),
+
+  // 개인 일정 수정
+  http.patch<ModifyPersonalScheduleParam, ModifyPersonalScheduleReq, any>(`${API_URL}/:sid`, ({ params }) => {
+    // const { sid } = params;
+    return HttpResponse.text("ok");
+  }),
+
+  // 개인 반복 일정 수정
+  http.patch<ModifyPersonalScheduleParam, ModifyPersonalRepeatScheduleReq, any>(
+    `${API_URL}/repeat/:sid`,
+    ({ params }) => {
+      // const { sid } = params;
+      return HttpResponse.text("ok");
+    },
+  ),
 ];

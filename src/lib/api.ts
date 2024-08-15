@@ -37,15 +37,16 @@ const handleApiError = (error: unknown): never => {
 const apiRequest = async <T_Key extends keyof ApiEndpoint>(
   key: T_Key,
   req: ApiEndpoint[T_Key]["req"],
+  pathParam?: string, // path param
 ): Promise<ApiEndpoint[T_Key]["res"]> => {
   const { url, method } = apiEndpoint[key];
 
   try {
     const res = await api.request({
-      url,
       method,
-      data: method !== "GET" ? req : undefined,
-      params: method === "GET" ? req : undefined,
+      url: pathParam ? `${url}/${pathParam}` : url,
+      data: method !== "GET" ? req : undefined, // request body
+      params: method === "GET" ? req : undefined, // query parameter
     });
 
     if (!res.data) throw new CustomError("데이터를 불러오지 못했습니다.");

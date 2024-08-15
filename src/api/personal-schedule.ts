@@ -16,3 +16,13 @@ export async function getPersonalSummarySchedules(
 ): Promise<GetPersonalSummarySchedulesRes> {
   return apiRequest("getPersonalSummarySchedules", req);
 }
+
+// 개인 일정 일부 수정
+export async function modifyPersonalSchedule(req: ModifyPersonalScheduleReq, pathParam: string) {
+  return apiRequest("modifyPersonalSchedule", req, pathParam);
+}
+
+//개인 반복 일정 수정
+export async function modifyPersonalRepeatSchedule(req: ModifyPersonalRepeatScheduleReq, pathParam: string) {
+  return apiRequest("modifyPersonalRepeatSchedule", req, pathParam);
+}

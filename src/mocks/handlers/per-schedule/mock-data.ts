@@ -8,8 +8,8 @@ export const MOCK_PERSONAL_SCHEDULES: GetPersonalSchedulesRes = {
       color: "pink",
       dates: [
         {
-          start_date: "2024-06-10T09:00",
-          end_date: "2024-06-10T10:00",
+          start_date: "2024-06-10T00:00",
+          end_date: "2024-06-13T00:00",
         },
       ],
     },
@@ -32,8 +32,8 @@ export const MOCK_PERSONAL_SCHEDULES: GetPersonalSchedulesRes = {
       color: "green",
       dates: [
         {
-          start_date: "2024-06-8T12:00",
-          end_date: "2024-06-9T13:00",
+          start_date: "2024-06-08T12:00",
+          end_date: "2024-06-09T13:00",
         },
         {
           start_date: "2024-06-15T00:00",
