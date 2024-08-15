@@ -1,11 +1,13 @@
-import dayjs from "dayjs";
+import dayjs, { ConfigType } from "dayjs";
+import duration from "dayjs/plugin/duration";
 import isoWeek from "dayjs/plugin/isoWeek";
 import weekday from "dayjs/plugin/weekday";
 
 dayjs.extend(weekday);
 dayjs.extend(isoWeek);
+dayjs.extend(duration);
 
-// 입력받은 특정 날짜의 해당 월의 달력 기준 시작과 끝 날짜 반환 함수
+/** 입력받은 특정 날짜의 해당 월의 달력 기준 시작과 끝 날짜 반환 함수 */
 export function getMonthDateRange(date: Date | string) {
   // 입력받은 특정 날짜
   const currentDate = dayjs(date);
@@ -25,7 +27,7 @@ export function getMonthDateRange(date: Date | string) {
   return { startDate: calendarMothStartDate, endDate: calendarMothEndDate };
 }
 
-// 입력받은 특정 날짜의 해당 주의 시작과 끝 날짜 반환 함수
+/** 입력받은 특정 날짜의 해당 주의 시작과 끝 날짜 반환 함수 */
 export function getWeekDateRange(date: Date | string) {
   // 입력받은 특정 날짜
   const currentDate = dayjs(date);
@@ -49,4 +51,22 @@ export function changeDateIfMidnight(startDate: Date | string) {
   }
 
   return startDate;
+}
+
+/**  기본 날짜 형식으로 변환하여 반환 */
+export function getDefaultFormatDate(date: ConfigType) {
+  return dayjs(date).format("YYYY-MM-DDTHH:mm[Z]");
+}
+
+/** 입력된 두 날짜가 동일한지 여부 반환 */
+export function areDatesEqual(date1: ConfigType, date2: ConfigType) {
+  // dayjs 객체로 변환
+  const d1 = dayjs(date1);
+  const d2 = dayjs(date2);
+
+  return d1.isSame(d2);
+}
+
+export function getNowDateTime() {
+  return getDefaultFormatDate(dayjs());
 }
