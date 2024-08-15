@@ -1,15 +1,20 @@
 import type FullCalendar from "@fullcalendar/react";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 
 import { CalendarContextType, CalendarProvider, useCalendarContext } from "@/contexts/calendar";
 
 // 활성화될 수 있는 전체 메뉴들의 type
 export type MenuType = "summarySchedules";
-
 interface PersonalCalendarContextType extends CalendarContextType {
   menuTab: MenuType | null;
+  changeConfirmOpen: boolean;
+  scheduleChange: ScheduleChangeObject | null;
+  updatedTime: string | null;
   getIsCurrentMenu: (mode: MenuType) => boolean;
-  setMenuTab: (clickMenu: MenuType) => void;
+  updateMenuTab: (clickMenu: MenuType) => void;
+  setChangeConfirmOpen: Dispatch<SetStateAction<boolean>>;
+  setScheduleChange: Dispatch<SetStateAction<ScheduleChangeObject | null>>;
+  setUpdatedTime: Dispatch<SetStateAction<string | null>>;
 }
 
 interface Props {
@@ -22,19 +27,36 @@ export const PersonalCalendarContext = createContext<PersonalCalendarContextType
 function InsidePersonalProvider({ children }: { children: ReactNode }) {
   // calendar 제어용 CalendarContext 호출 (CalendarContextProvider 하위에 있어야 정상적으로 context 를 호출 가능)
   const calendarContext = useCalendarContext();
-  const [menuTab, setState] = useState<null | MenuType>(null);
+
+  // 개인 일정 활성화된 사이드 메뉴 state
+  const [menuTab, setMenuTab] = useState<null | MenuType>(null);
+  // 캘린더 view 내에서 일정 수정(resize, drop) 시 확인 모달 활성화 여부
+  const [changeConfirmOpen, setChangeConfirmOpen] = useState(false);
+  // 캘린더 view 내에서 일정 수정 콜백함수의 이벤트관련 argument(모달에서 사용하기 위함)
+  const [scheduleChange, setScheduleChange] = useState<ScheduleChangeObject | null>(null);
+  // 일정 변경된 시간 (useQuery state 로 사용해 refetch 하기 위함)
+  const [updatedTime, setUpdatedTime] = useState<string | null>(null);
 
   const getIsCurrentMenu = (mode: MenuType) => mode === menuTab;
 
-  const setMenuTab = (clickMenu: MenuType) => {
-    menuTab === clickMenu ? setState(null) : setState(clickMenu);
+  const updateMenuTab = (clickMenu: MenuType) => {
+    menuTab === clickMenu ? setMenuTab(null) : setMenuTab(clickMenu);
   };
 
-  return (
-    <PersonalCalendarContext.Provider value={{ menuTab, getIsCurrentMenu, setMenuTab, ...calendarContext }}>
-      {children}
-    </PersonalCalendarContext.Provider>
-  );
+  const contextValue: PersonalCalendarContextType = {
+    menuTab,
+    changeConfirmOpen,
+    scheduleChange,
+    updatedTime,
+    getIsCurrentMenu,
+    updateMenuTab,
+    setChangeConfirmOpen,
+    setScheduleChange,
+    setUpdatedTime,
+    ...calendarContext,
+  };
+
+  return <PersonalCalendarContext.Provider value={contextValue}>{children}</PersonalCalendarContext.Provider>;
 }
 
 export function PersonalCalendarProvider({ calendarRef, children }: Props) {
