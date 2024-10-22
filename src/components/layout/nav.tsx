@@ -14,7 +14,7 @@ export default function Nav() {
   const user = useUserStore();
 
   return (
-    <div className="bg-muted z-50 hidden h-full w-16 border-r py-3 pt-2 lg:block ">
+    <div className="bg-muted hidden h-full w-16 border-r py-3 pt-2 lg:block ">
       <nav className="flex h-full flex-col justify-between">
         <TooltipProvider>
           {/* 개인 일정 및 그룹별 아이콘 */}

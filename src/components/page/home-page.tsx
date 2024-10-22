@@ -13,7 +13,7 @@ export default function HomePage() {
   const calendarRef = useRef<FullCalendar>(null);
   return (
     <PersonalCalendarProvider calendarRef={calendarRef}>
-      <div className="flex size-full flex-col">
+      <div className="z-0 flex size-full flex-col">
         {/* 콘텐츠 title */}
         <ContentHeader>
           <ContentTitle>개인 일정</ContentTitle>

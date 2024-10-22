@@ -2,12 +2,10 @@ import { ClipboardList } from "lucide-react";
 import React, { useEffect } from "react";
 
 import { SideMenuButtonItem, SideMenuButtons } from "@/components/side-menu";
-import { useCalendarContext } from "@/contexts/calendar";
 import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
 
 export default function PersonalSideButtons() {
-  const { menuTab, getIsCurrentMenu, updateMenuTab } = usePersonalCalendarContext();
-  const { updateSize } = useCalendarContext();
+  const { menuTab, getIsCurrentMenu, updateMenuTab, updateSize } = usePersonalCalendarContext();
 
   useEffect(() => {
     updateSize();

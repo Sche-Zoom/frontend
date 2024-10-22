@@ -3,7 +3,7 @@ import React from "react";
 
 export default function BasicLoader() {
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
+    <div className="flex h-full flex-col items-center justify-center">
       <Loader className="size-8 animate-spin" />
     </div>
   );

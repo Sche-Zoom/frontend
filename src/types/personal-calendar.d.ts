@@ -24,3 +24,22 @@ interface PersonalSchedule {
     end_date: string; // ISO8601
   }[];
 }
+
+interface ModifyScheduleVariables {
+  req: ModifyPersonalScheduleReq;
+  pathParam: string;
+}
+
+interface ModifyRepeatScheduleVariables {
+  req: ModifyPersonalRepeatScheduleReq;
+  pathParam: string;
+}
+
+interface DeleteScheduleVariables {
+  req: DeletePersonalScheduleReq;
+  pathParam: string;
+}
+
+interface CreateScheduleVariables {
+  req: CreatePersonalScheduleReq;
+}

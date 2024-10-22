@@ -13,21 +13,16 @@ import { CalendarControls, CalendarDateState } from "@/types/useCalendarControls
 export default function useCalendarControls(calendarRef: RefObject<FullCalendar>): CalendarControls {
   // 현재 캘린더 view 형식
   const [viewType, setViewType] = useState<CalendarViewType>("dayGridMonth");
-
   // 필터에서 체크된 태그 id 목록, 초기값 null 은 초기 모든 태그들이 선택된 상태를 의미하며
   // 이후 체크 상태가 변경되는 경우 체크된 id 배열로 상태를 유지
   const [checkedTagIds, setCheckedTagIds] = useState<number[] | null>(null);
-
   // 캘린더 헤더에 노출될 날짜형식의 title ex) 2024년 06월, 2024년 06월 30일 ~ 07월 06일
   const [calendarTitle, setCalendarTitle] = useState(dayjs().format("YYYY년 MM월"));
 
   // 캘린더에서 사용될 객체형식의 날짜 데이터
   const [dateObj, setDateObj] = useState<CalendarDateState>(() => {
     const today = dayjs().format("YYYY-MM-DD");
-    return {
-      currentDate: today,
-      ...getMonthDateRange(today),
-    };
+    return { currentDate: today, ...getMonthDateRange(today) };
   });
 
   const { currentDate, startDate, endDate } = dateObj;

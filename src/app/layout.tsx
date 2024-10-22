@@ -55,7 +55,7 @@ export default function RootLayout({
 
             <div className="relative flex flex-1">
               <Nav />
-              <main className="flex-1">{children}</main>
+              <main className="relative flex-1 ">{children}</main>
             </div>
           </div>
         </Providers>

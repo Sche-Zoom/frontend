@@ -5,7 +5,6 @@ import BasicLoader from "@/components/basic-loader";
 import ErrorBoundary from "@/components/error-boundary";
 import CalendarContent from "@/components/home/calendar-content";
 import PersonalCalendarHeader from "@/components/home/calendar-header";
-import ScheduleConfirmModal from "@/components/home/schedule-confirm-modal";
 interface Props {
   calendarRef: RefObject<FullCalendar>;
 }
@@ -25,9 +24,6 @@ export default function PersonalCalendar({ calendarRef }: Props) {
           </Suspense>
         </ErrorBoundary>
       </div>
-
-      {/* 캘린더 view 내에서 일정 변경 시 노출되는 최종 확인 모달 */}
-      <ScheduleConfirmModal />
     </div>
   );
 }
