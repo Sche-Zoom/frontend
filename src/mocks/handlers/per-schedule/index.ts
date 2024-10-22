@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 import {
+  MOCK_PERSONAL_SCHEDULE,
   MOCK_PERSONAL_SCHEDULES,
   MOCK_PERSONAL_SUMMARY_SCHEDULES,
   MOCK_PERSONAL_TAGS,
@@ -9,8 +10,8 @@ import {
 const API_URL = "api/per-schedule";
 
 export const PersonalScheduleHandlers = [
-  //개인 일정(개인 일정 + 본인 참가 그룹 일정) 조회
-  http.get<any, GetPersonalSchedulesReq, GetPersonalSchedulesRes>(`${API_URL}/view`, () => {
+  //개인 일정(개인 일정 + 본인 참가 그룹 일정) 목록 조회
+  http.get<any, GetPersonalSchedulesReq, GetPersonalSchedulesRes>(`${API_URL}/list`, () => {
     return HttpResponse.json(MOCK_PERSONAL_SCHEDULES);
   }),
 
@@ -24,10 +25,9 @@ export const PersonalScheduleHandlers = [
     return HttpResponse.json(MOCK_PERSONAL_SUMMARY_SCHEDULES);
   }),
 
-  // 개인 일정 수정
-  http.patch<ModifyPersonalScheduleParam, ModifyPersonalScheduleReq, any>(`${API_URL}/:sid`, ({ params }) => {
-    // const { sid } = params;
-    return HttpResponse.text("ok");
+  //개인 일정(개인 일정 + 본인 참가 그룹 일정) 디테일 조회
+  http.get<GetPersonalScheduleParam, any, GetPersonalScheduleRes>(`${API_URL}/:sid`, ({ params }) => {
+    return HttpResponse.json({ id: Number(params.sid), ...MOCK_PERSONAL_SCHEDULE });
   }),
 
   // 개인 반복 일정 수정
@@ -38,4 +38,16 @@ export const PersonalScheduleHandlers = [
       return HttpResponse.text("ok");
     },
   ),
+
+  // 개인 일정 수정
+  http.patch<ModifyPersonalScheduleParam, ModifyPersonalScheduleReq, any>(`${API_URL}/:sid`, ({ params }) => {
+    // const { sid } = params;
+    return HttpResponse.text("ok");
+  }),
+
+  // 개인 일정 삭제
+  http.delete<DeletePersonalScheduleParam, DeletePersonalScheduleReq, any>(`${API_URL}/:sid`, ({ params }) => {
+    // const { sid } = params;
+    return HttpResponse.text("ok");
+  }),
 ];
