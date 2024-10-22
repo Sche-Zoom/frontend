@@ -53,9 +53,9 @@ export function changeDateIfMidnight(startDate: Date | string) {
   return startDate;
 }
 
-/**  기본 날짜 형식으로 변환하여 반환 */
+/**  기본 날짜 형식으로 변환하여 반환 (YYYY-MM-DDTHH:mm:ss) */
 export function getDefaultFormatDate(date: ConfigType) {
-  return dayjs(date).format("YYYY-MM-DDTHH:mm[Z]");
+  return dayjs(date).format("YYYY-MM-DDTHH:mm:ss");
 }
 
 /** 입력된 두 날짜가 동일한지 여부 반환 */
@@ -69,4 +69,72 @@ export function areDatesEqual(date1: ConfigType, date2: ConfigType) {
 
 export function getNowDateTime() {
   return getDefaultFormatDate(dayjs());
+}
+
+/** 특정날짜에 시간을 합쳐 하나의 날짜시간을 dayjs 형식으로 반환 */
+// export function combineDateAndTime(date: ConfigType, time: ConfigType) {
+//   const timeDayjs = dayjs(time, "hh:mm:ss");
+//   const dateTime = dayjs(date).hour(timeDayjs.hour()).minute(timeDayjs.minute()).second(timeDayjs.second());
+
+//   return dateTime;
+// }
+
+// export function updateDateStringWithNewDate(prevDateString: string, changeDate) {
+//   // 기존 시간 문자열을 dayjs 객체로 변환
+//   const prevDate = dayjs(prevDateString);
+
+//   // 새로운 Date 객체를 dayjs 객체로 변환하여 년월일 가져옴
+//   const changedDate = dayjs(changeDate);
+
+//   // 기존 시간의 시, 분, 초 유지하고 새로운 날짜의 년, 월, 일로 설정
+//   const finalDate = changedDate
+//     .hour(prevDate.hour()) // 기존 시간의 시
+//     .minute(prevDate.minute()) // 기존 시간의 분
+//     .second(prevDate.second()); // 기존 시간의 초
+
+//   // 최종적으로 수정된 날짜와 시간을 문자열로 반환
+//   return finalDate.format("YYYY-MM-DD HH:mm:ss");
+// }
+
+/** 기존 날짜시간 에서 새로운 날짜의 년, 월, 일로 변경  */
+export function modifyOnlyDate(prevDate: ConfigType, changeDate: ConfigType) {
+  // 기존 시간 dayjs 객체로 변환
+  const prevDayjs = dayjs(prevDate);
+
+  // 새로운 Date 객체를 dayjs 객체로 변환하여 년월일 가져옴
+  const changeDayjs = dayjs(changeDate);
+
+  // 기존 시간의 시, 분, 초 유지하고 새로운 날짜의 년, 월, 일로 설정
+  const finalDate = prevDayjs
+    .year(changeDayjs.year()) // 새로운 날짜의 "년" 으로 변경
+    .month(changeDayjs.month()) // 새로운 날짜의 "월" 로 변경
+    .date(changeDayjs.date()); // 새로운 날짜의 "일" 로 변경
+
+  return finalDate;
+}
+
+/** 
+기존 날짜시간 에서 새로운 시간 시, 분, 초로 변경
+
+  */
+
+/**
+ * 기존 날짜시간 에서 새로운 시간 시, 분, 초로 변경
+ * @param prevDate 여러 형식의 기존 날짜 데이터
+ * @param changeTime "HH:mm" 형식의 시간 데이터
+ * @returns dayjs 객체
+ */
+export function modifyOnlyTime(prevDate: ConfigType, changeTime: string) {
+  // 기존 시간 dayjs 객체로 변환
+  const prevDayjs = dayjs(prevDate);
+
+  // HH:mm 형식의 시간 데이터 분리
+  const [hour, minute] = changeTime.split(":");
+
+  // 기존 시간의 시, 분, 초 유지하고 새로운 날짜의 년, 월, 일로 설정
+  const finalDate = prevDayjs
+    .hour(Number(hour)) // 새로운 시간의 "시" 로 변경
+    .minute(Number(minute)); // 새로운 시간의 "분" 으로 변경
+
+  return finalDate;
 }
