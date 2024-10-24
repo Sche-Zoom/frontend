@@ -1,3 +1,4 @@
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -14,14 +15,17 @@ const buttonVariants = cva(
         outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
+        "image-icon-none": "text-muted-foreground hover:text-foreground p-2",
+        "image-icon-active": "text-foreground p-2",
         link: "text-primary underline-offset-4 hover:underline",
-        icon: "bg-background p-2 rounded-[100%]",
+        icon: "bg-background rounded-[100%]",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
-        icon: "h-12 w-12",
+        icon: "size-12 p-2",
+        "icon-sm": "size-9 p-1",
       },
     },
     defaultVariants: {
@@ -45,4 +49,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+interface LoadingButtonProps extends ButtonProps {
+  loading: boolean;
+}
+
+const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
+  ({ variant, size, className, children, loading, ...props }, ref) => {
+    return (
+      <Button
+        disabled={loading}
+        className={cn(buttonVariants({ variant, size, className }), "space-x-2")}
+        ref={ref}
+        {...props}
+      >
+        {loading ? <ReloadIcon className="size-4 animate-spin" /> : children}
+      </Button>
+    );
+  },
+);
+LoadingButton.displayName = "LoadingButton";
+
+export { Button, buttonVariants, LoadingButton };
