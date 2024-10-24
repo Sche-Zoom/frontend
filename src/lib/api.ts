@@ -46,7 +46,7 @@ const apiRequest = async <T_Key extends keyof ApiEndpoint>(
       method,
       url: pathParam ? `${url}/${pathParam}` : url,
       data: method !== "GET" ? req : undefined, // request body
-      params: method === "GET" ? req : undefined, // query parameter
+      params: method === "GET" || method === "DELETE" ? req : undefined, // query parameter
     });
 
     if (!res.data) throw new CustomError("데이터를 불러오지 못했습니다.");

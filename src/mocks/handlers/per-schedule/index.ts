@@ -46,6 +46,12 @@ export const PersonalScheduleHandlers = [
   }),
 
   // 개인 일정 삭제
+  http.post<any, CreatePersonalScheduleReq, any>(API_URL, ({ params }) => {
+    // const { sid } = params;
+    return HttpResponse.text("ok");
+  }),
+
+  // 개인 일정 삭제
   http.delete<DeletePersonalScheduleParam, DeletePersonalScheduleReq, any>(`${API_URL}/:sid`, ({ params }) => {
     // const { sid } = params;
     return HttpResponse.text("ok");
