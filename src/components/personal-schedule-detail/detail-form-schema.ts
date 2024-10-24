@@ -11,7 +11,11 @@ import { COLORS, INVALID_TYPE_ERROR } from "@/constants";
  */
 export const PERSONAL_SCHEDULE_FORM_SCHEMA = z
   .object({
-    title: z.string(INVALID_TYPE_ERROR).max(50, { message: "50자로 제한됩니다." }).optional(),
+    title: z
+      .string(INVALID_TYPE_ERROR)
+      .max(50, { message: "제목은 최대 50자까지 작성가능합니다." })
+      .min(2, { message: "제목은 최소 2자 이상 작성해야합니다." })
+      .optional(),
     color: z.enum([...COLORS], INVALID_TYPE_ERROR).optional(),
     type: z.enum(["personal", "group"]).readonly(),
     start_date: z.string(INVALID_TYPE_ERROR).refine((start_date) => dayjs(start_date).isValid(), {
@@ -22,7 +26,11 @@ export const PERSONAL_SCHEDULE_FORM_SCHEMA = z
       ...INVALID_TYPE_ERROR,
       path: ["end_date"],
     }),
-    description: z.string(INVALID_TYPE_ERROR).max(200, { message: "200자로 제한됩니다." }).optional(),
+    description: z
+      .string(INVALID_TYPE_ERROR)
+      .max(200, { message: "설명은 최대 200자까지 작성가능합니다." })
+      .min(2, { message: "설명은 최소 2자 이상 작성해야합니다." })
+      .optional(),
     tags: z.array(
       z.object(
         {
@@ -37,14 +45,14 @@ export const PERSONAL_SCHEDULE_FORM_SCHEMA = z
     repeat_end_option: z.enum(["none", "count", "end_date"], INVALID_TYPE_ERROR).optional(),
     repeat_interval: z.coerce
       .number(INVALID_TYPE_ERROR)
-      .min(1, { message: "최소값은 1입니다." })
-      .max(30, { message: "최대값은 30입니다." })
+      .min(1, { message: "반복 횟수 최소값은 1입니다." })
+      .max(30, { message: "반복 횟수 최대값은 30입니다." })
       .optional(),
     repeat_frequency: z.enum(["daily", "weekly", "monthly", "yearly"], INVALID_TYPE_ERROR).optional(),
     repeat_end_count: z.coerce
       .number(INVALID_TYPE_ERROR)
-      .min(1, { message: "최소값은 1입니다." })
-      .max(30, { message: "최대값은 30입니다." })
+      .min(1, { message: "반복 종료 횟수 최소값은 1입니다." })
+      .max(30, { message: "반복 종료 횟수 최대값은 30입니다." })
       .optional(),
     repeat_end_date: z
       .string(INVALID_TYPE_ERROR)
@@ -53,9 +61,6 @@ export const PERSONAL_SCHEDULE_FORM_SCHEMA = z
         path: ["repeat_end_date"],
       })
       .optional(),
-
-    // alarms: z.array(z.number()),
-    // is_email_noti: z.enum(["yes", "no"]),
   })
   .refine(({ start_date, end_date }) => dayjs(start_date).isBefore(end_date), {
     message: "정상적인 기간이 아닙니다.",
