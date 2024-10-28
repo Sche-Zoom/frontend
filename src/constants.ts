@@ -11,6 +11,13 @@ export const IMPORTANCE_TYPE = {
   very_high: "매우 중요",
 } as const;
 
+export const REPEAT_FREQUENCY_TYPE = {
+  weekly: "주",
+  daily: "일",
+  monthly: "월",
+  yearly: "년",
+} as const;
+
 export const COLORS = [
   "pink",
   "blue",

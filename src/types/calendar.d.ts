@@ -4,7 +4,7 @@ type ColorType = "pink" | "blue" | "green" | "yellow" | "purple" | "orange" | "m
 
 type ScheduleType = "group" | "personal";
 
-type RepeatIntervalType = "daily" | "weekly" | "monthly" | "yearly";
+type RepeatFrequencyType = "daily" | "weekly" | "monthly" | "yearly";
 
 type ScheduleImportanceType = "very_low" | "low" | "medium" | "high" | "very_high";
 
@@ -30,7 +30,7 @@ interface ScheduleDetail {
   end_date: string; // ISO8601
   is_repeat?: boolean;
   repeat_end_option?: "count" | "end_date" | "none";
-  repeat_frequency?: RepeatIntervalType;
+  repeat_frequency?: RepeatFrequencyType;
   repeat_interval?: number;
   repeat_endDate?: string | null; // ISO8601
   repeat_end_count?: number | null;
@@ -53,7 +53,7 @@ interface ScheduleChangeObject {
   endDate?: string; // ISO8601
   isRepeat?: boolean;
   repeatEndOption?: "count" | "endDate" | "none";
-  repeatFrequency?: RepeatIntervalType;
+  repeatFrequency?: RepeatFrequencyType;
   repeatInterval?: number;
   repeatEndDate?: string; // ISO8601
   repeatCount?: number;

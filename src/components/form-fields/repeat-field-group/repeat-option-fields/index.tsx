@@ -1,26 +1,68 @@
 import React from "react";
-import { UseFormReturn } from "react-hook-form";
+import { ControllerRenderProps, useFormContext } from "react-hook-form";
 
-import RepeatFrequencyField from "@/components/form-fields/repeat-field-group/repeat-option-fields/repeat-frequency-field";
-import RepeatIntervalField from "@/components/form-fields/repeat-field-group/repeat-option-fields/repeat-interval-field";
-import { CommonFormFieldProps, RepeatFormValues } from "@/types/form";
+import { FormValues } from "@/components/form-fields/form-schema";
+import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-type RequiredFormValues = Pick<RepeatFormValues, "repeat_frequency" | "repeat_interval">;
+const RepeatOptionFields = () => {
+  const form = useFormContext<FormValues>();
 
-/** ※ 주의사항: form value 형식에 "repeat_interval", "repeat_frequency" 필수 ※ */
-const RepeatOptionFields = ({ form, editMode = true }: Omit<CommonFormFieldProps, "name">) => {
-  // 구현에 필수적인 form value 형태로 form type 고정 (실제 form field 구조와 별개)
-  const repeatForm = form as UseFormReturn<RequiredFormValues>;
+  const changeFieldHandler = (value: React.ChangeEvent | string, field: ControllerRenderProps<FormValues>) => {
+    field.onChange(value);
+    form.trigger(field.name); // 유효성 검사
+  };
 
   return (
     <div className="flex items-center gap-x-2">
       <span className="mr-2 w-16 text-sm font-medium">반복 기준</span>
 
       {/* 반복 주기 횟수 input number */}
-      <RepeatIntervalField form={repeatForm} editMode={editMode} />
+      <FormField
+        name="repeat_interval"
+        control={form.control}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                type="number"
+                min={1}
+                max={30}
+                className="w-16"
+                {...field}
+                onChange={(e) => changeFieldHandler(e, field)}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       {/* 반복 주기 select */}
-      <RepeatFrequencyField form={repeatForm} editMode={editMode} />
+      <FormField
+        name="repeat_frequency"
+        control={form.control}
+        render={({ field }) => (
+          <Select
+            defaultValue={field.value ?? "daily"}
+            onValueChange={(value) => changeFieldHandler(value, field)}
+            disabled={field.disabled}
+          >
+            <FormControl className="w-20">
+              <SelectTrigger>
+                <SelectValue placeholder={field.value} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem value="weekly">주</SelectItem>
+              <SelectItem value="daily">일</SelectItem>
+              <SelectItem value="monthly">월</SelectItem>
+              <SelectItem value="yearly">년</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+      />
     </div>
   );
 };

@@ -49,7 +49,7 @@ type ModifyPersonalScheduleReq = {
   end_date?: string; // ISO8601
   is_repeat?: boolean;
   repeat_end_option?: RepeatEndOptionType;
-  repeat_frequency?: RepeatIntervalType;
+  repeat_frequency?: RepeatFrequencyType;
   repeat_interval?: number;
   repeat_end_date?: string; // ISO8601
   repeat_end_count?: number;
@@ -77,7 +77,7 @@ interface CreatePersonalScheduleReq {
   end_date: string; // ISO8601
   is_repeat: boolean;
   repeat_end_option?: RepeatEndOptionType;
-  repeat_frequency?: RepeatIntervalType | null;
+  repeat_frequency?: RepeatFrequencyType | null;
   repeat_interval?: number | null;
   repeat_end_date?: string | null; // ISO8601
   repeat_end_count?: number | null;

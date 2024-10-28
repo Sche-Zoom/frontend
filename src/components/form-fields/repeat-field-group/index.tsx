@@ -1,27 +1,30 @@
 import React, { ReactNode } from "react";
-import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 
+import { FormValues } from "@/components/form-fields/form-schema";
 import RepeatEndOptionFields from "@/components/form-fields/repeat-field-group/repeat-end-option-fields";
 import RepeatOptionFields from "@/components/form-fields/repeat-field-group/repeat-option-fields";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { REPEAT_FREQUENCY_TYPE } from "@/constants";
 import { cn } from "@/lib/utils";
-import { CommonFormFieldProps, RepeatFormValues } from "@/types/form";
 
 const RadioItem = ({ children }: { children: ReactNode }) => (
-  <FormItem className="flex items-center space-x-3 space-y-0">{children}</FormItem>
+  <FormItem className="flex items-center gap-x-3 space-y-0">{children}</FormItem>
 );
 
-/** ※ 주의사항: form value 형식에 "is_repeat", "repeat_end_option", "repeat_interval", "repeat_frequency", "repeat_end_count", "repeat_end_date" 필수 */
-const RepeatFields = ({ form, editMode }: CommonFormFieldProps) => {
-  // 구현에 필수적인 form value 형태로 form type 고정 (실제 form field 구조와 별개)
-  const repeatForm = form as UseFormReturn<RepeatFormValues>;
-  const { is_repeat } = repeatForm.watch();
+const RepeatFields = () => {
+  const form = useFormContext<FormValues>();
+  const { is_repeat, repeat_interval, repeat_frequency, repeat_end_option, repeat_end_date, repeat_end_count } =
+    form.watch();
+  const isRepeatController = useController<FormValues, "is_repeat">({ name: "is_repeat" });
 
-  // value change handler
-  const changeFieldHandler = (value: React.ChangeEvent | string, field: ControllerRenderProps<RepeatFormValues>) => {
-    field.onChange(value);
-    repeatForm.trigger(field.name); // 유효성 검사
+  isRepeatController.field.disabled;
+
+  const repeatEndOption = {
+    end_date: `~ ${repeat_end_date}`,
+    count: `${repeat_end_count} 번 반복`,
+    none: "없음",
   };
 
   return (
@@ -29,17 +32,19 @@ const RepeatFields = ({ form, editMode }: CommonFormFieldProps) => {
       {/* 반복 사용 여부 radio group */}
       <FormField
         name="is_repeat"
-        control={repeatForm.control}
-        disabled={!editMode}
+        control={form.control}
         render={({ field }) => (
           <FormItem>
             <FormControl>
               {/* radio group control 영역 */}
               <RadioGroup
                 defaultValue={field.value}
-                className="flex items-center space-x-4"
-                onValueChange={(value) => changeFieldHandler(value, field)}
+                className="flex items-center gap-x-4"
                 disabled={field.disabled}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  form.trigger(field.name);
+                }}
               >
                 <span className="mr-2 text-sm font-medium">반복</span>
 
@@ -73,11 +78,32 @@ const RepeatFields = ({ form, editMode }: CommonFormFieldProps) => {
         )}
       >
         {/* 반복 옵션 fields: 반복횟수, 반복주기 */}
-        <RepeatOptionFields form={repeatForm} editMode={editMode} />
+        <RepeatOptionFields />
 
         {/* 종료 기준 RadioGroup */}
-        <RepeatEndOptionFields form={repeatForm} editMode={editMode} />
+        <RepeatEndOptionFields />
       </div>
+
+      {/* 읽기모드 */}
+      {isRepeatController.field.disabled && (
+        <div className="flex items-center">
+          <span className="mr-4 text-sm font-medium">반복</span>
+
+          {is_repeat ? (
+            <div className="flex items-center gap-x-4">
+              <span className="text-muted-foreground text-sm font-medium">반복 주기</span>
+              <p className="text-sm">
+                {repeat_interval} {REPEAT_FREQUENCY_TYPE[repeat_frequency as RepeatFrequencyType]}
+              </p>
+
+              <span className="text-muted-foreground ml-4 text-sm font-medium">종료 기준</span>
+              <p className="text-sm">{repeatEndOption[repeat_end_option as "end_date" | "none" | "count"]}</p>
+            </div>
+          ) : (
+            "없음"
+          )}
+        </div>
+      )}
     </div>
   );
 };
