@@ -1,7 +1,7 @@
 import type FullCalendar from "@fullcalendar/react";
 import { createContext, ReactNode, useContext } from "react";
 
-import useCalendarControls from "@/hooks/useCalendarControls ";
+import useCalendarControls from "@/hooks/useCalendarControls";
 import { CalendarControls } from "@/types/useCalendarControls";
 
 export interface CalendarContextType extends CalendarControls {}

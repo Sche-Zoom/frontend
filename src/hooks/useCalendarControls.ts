@@ -231,8 +231,6 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
     calendarRef.current.getApi().updateSize(); // 캘린더 size 변경
   };
 
-  const getIsCurrentView = (mode: CalendarViewType) => mode === viewType;
-
   return {
     viewType,
     checkedTagIds,
@@ -248,7 +246,6 @@ export default function useCalendarControls(calendarRef: RefObject<FullCalendar>
     setAllSubtagsChecked,
     getTagChecked,
     getTagAllChecked,
-    getIsCurrentView,
     updateSize,
   };
 }

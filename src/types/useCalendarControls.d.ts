@@ -22,6 +22,5 @@ export interface CalendarControls {
   setAllSubtagsChecked: (checked: CheckedState, ids: number[]) => void;
   getTagChecked: (id: number) => boolean;
   getTagAllChecked: (ids: number[]) => boolean;
-  getIsCurrentView: (mode: CalendarViewType) => boolean;
   updateSize: () => void;
 }
