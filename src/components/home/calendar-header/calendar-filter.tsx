@@ -1,13 +1,35 @@
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { Suspense } from "react";
 import React from "react";
 
 import { getPersonalTags } from "@/api/personal-schedule";
+import BasicLoader from "@/components/basic-loader";
+import ErrorBoundary from "@/components/error-boundary";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
 
-export default function FilterContents() {
+export default function CalendarFilter() {
+  return (
+    <Select>
+      <SelectTrigger className="w-18 h-9 px-3 text-sm" aria-label="일정 필터 선택">
+        <SelectValue placeholder="필터링" />
+      </SelectTrigger>
+      <SelectContent className="px-2 text-sm">
+        <ErrorBoundary>
+          <Suspense fallback={<BasicLoader />}>
+            <FilterContents />
+          </Suspense>
+        </ErrorBoundary>
+      </SelectContent>
+    </Select>
+  );
+}
+
+const FilterContents = () => {
+  "use client";
   const {
     checkedTagIds,
     startDate,
@@ -26,7 +48,6 @@ export default function FilterContents() {
   });
 
   const { per_tags, groups } = personalTagsData;
-
   const personalTagIds = per_tags.map(({ id }) => id);
   const groupTagIds = groups.flatMap(({ tags }) => tags.map((tag) => tag.id));
 
@@ -101,7 +122,9 @@ export default function FilterContents() {
                 )
               }
             />
-            <AccordionTrigger className="ml-2 py-0">{group.name}</AccordionTrigger>
+            <AccordionTrigger className="ml-2 py-0" aria-label={`그룹 ${group.name} 의 태그 목록`}>
+              {group.name}
+            </AccordionTrigger>
           </div>
 
           {/* Accordion 활성화 시 노출되는 각 그룹의 태그 목록*/}
@@ -122,4 +145,4 @@ export default function FilterContents() {
       ))}
     </Accordion>
   );
-}
+};
