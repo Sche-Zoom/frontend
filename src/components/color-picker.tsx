@@ -10,10 +10,12 @@ interface ColorPickerProps {
   disabled?: boolean;
   formMode: boolean;
   onChange: (value: string) => void;
+  "aria-label"?: string;
 }
 
-const ColorPicker = ({ value, formMode, onChange, disabled }: ColorPickerProps) => {
-  const trigger = <ColorPickerTrigger value={value} />;
+const ColorPicker = (props: ColorPickerProps) => {
+  const { value, formMode, onChange, disabled } = props;
+  const trigger = <ColorPickerTrigger value={value} aria-label={props["aria-label"]} />;
 
   return (
     <Select defaultValue={value} onValueChange={onChange} disabled={disabled}>
@@ -39,9 +41,9 @@ const ColorOption = ({ color }: { color: ColorType }) => (
   </div>
 );
 
-const ColorPickerTrigger = ({ value }: { value: ColorType }) => (
-  <SelectTrigger className="w-32">
-    <SelectValue placeholder={<ColorOption color={value} />} />
+const ColorPickerTrigger = (props: { value: ColorType; "aria-label"?: string }) => (
+  <SelectTrigger className="w-32" aria-label={props["aria-label"]}>
+    <SelectValue placeholder={<ColorOption color={props.value} />} />
   </SelectTrigger>
 );
 

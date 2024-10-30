@@ -1,7 +1,7 @@
 import React from "react";
 import { ControllerRenderProps, useFormContext } from "react-hook-form";
 
-import { FormValues } from "@/components/form-fields/form-schema";
+import { FormValues } from "@/components/form-fields/basic-form-schema";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -30,6 +30,7 @@ const RepeatOptionFields = () => {
                 min={1}
                 max={30}
                 className="w-16"
+                aria-label="반복 주기 횟수"
                 {...field}
                 onChange={(e) => changeFieldHandler(e, field)}
               />
@@ -50,7 +51,7 @@ const RepeatOptionFields = () => {
             disabled={field.disabled}
           >
             <FormControl className="w-20">
-              <SelectTrigger>
+              <SelectTrigger aria-label="반복 주기 선택">
                 <SelectValue placeholder={field.value} />
               </SelectTrigger>
             </FormControl>

@@ -1,28 +1,24 @@
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 
 import { getPersonalTags } from "@/api/personal-schedule";
+import { FormValues } from "@/components/form-fields/basic-form-schema";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CommonFormFieldProps } from "@/types/form";
 
-interface RequiredFormValues {
-  tags: Tag[];
-}
-
-/** ※ 주의사항 form value 형식에 "tags" 필수 ※ */
-const TagsField = ({ form, editMode }: CommonFormFieldProps) => {
+const TagsField = () => {
   const { data } = useQuery({ queryKey: ["personal_tag", "list"], queryFn: getPersonalTags });
 
   // 구현에 필수적인 form value 형태로 form type 고정 (실제 form field 구조와 별개)
-  const tagsForm = form as UseFormReturn<RequiredFormValues>;
-  const { tags } = tagsForm.watch();
+  const { control, watch, setValue } = useFormContext<FormValues>();
+  const { field } = useController<FormValues, "tags">({ name: "tags" });
+  const { tags } = watch();
 
   // 현재 체크된 tag id 목록 state 초기값은 form 의 초기 tag id 목록
   const [checkedTagIds, setCheckedTagsIds] = useState<number[]>(tags.map(({ id }) => id));
@@ -41,7 +37,7 @@ const TagsField = ({ form, editMode }: CommonFormFieldProps) => {
     setCheckedTagsIds(Array.from(currentTagsSet));
 
     // 체크된 tag id 기반으로 form value 변경
-    tagsForm.setValue(
+    setValue(
       "tags",
       per_tags.filter((tag) => currentTagsSet.has(tag.id)),
     );
@@ -52,54 +48,69 @@ const TagsField = ({ form, editMode }: CommonFormFieldProps) => {
 
   return (
     <div>
-      {/* tag 수정 popover */}
-      <div className="mb-3 flex items-center gap-x-4">
-        <span>분류</span>
+      {field.disabled ? (
+        // 읽기 모드 tag 목록
+        <div className="flex items-center">
+          <span className="mr-4 text-sm font-medium">태그 목록</span>
+          <div className="flex">
+            {per_tags.map((tag) => (
+              <span key={tag.id} className="mr-2 flex items-center space-x-2 text-sm">
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : (
+        // tag 수정 popover
+        <div>
+          <div className="mb-3 flex items-center gap-x-4">
+            <span>분류</span>
 
-        <Popover>
-          <PopoverTrigger asChild disabled={!editMode}>
-            <Button variant="default" size="sm">
-              태그 변경
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80" side="right">
-            <h4 className="mb-4 font-medium">분류 수정</h4>
-            <div className="space-y-2">
-              {per_tags.map((tag, index) => (
-                <div key={tag.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`${tag.id}-${tag.name}`}
-                    defaultChecked={getCheckBoxChecked(tag.id)}
-                    onCheckedChange={(checked) => handleCheckedChange(checked, tag.id)}
-                  />
-                  <Label htmlFor={`${tag.id}-${tag.name}`}>{tag.name}</Label>
+            <Popover>
+              <PopoverTrigger asChild disabled={field.disabled}>
+                <Button variant="default" size="sm">
+                  태그 변경
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80" side="right">
+                <h4 className="mb-4 font-medium">분류 수정</h4>
+                <div className="space-y-2">
+                  {per_tags.map((tag) => (
+                    <div key={tag.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`${tag.id}-${tag.name}`}
+                        defaultChecked={getCheckBoxChecked(tag.id)}
+                        onCheckedChange={(checked) => handleCheckedChange(checked, tag.id)}
+                      />
+                      <Label htmlFor={`${tag.id}-${tag.name}`}>{tag.name}</Label>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      <div className="flex gap-x-2">
-        {/* 실제 tag 데이터 목록 */}
-        {tags.map((tag, index) => (
-          <FormField
-            key={tag.id}
-            control={tagsForm.control}
-            name={`tags.${index}.name`}
-            render={({ field }) => (
-              <FormItem className="space-y-0">
-                <FormControl>
-                  <Input type="hidden" {...field} />
-                </FormControl>
-                <FormLabel className="border-muted-foreground rounded-full border px-2 py-1 text-sm">
-                  {personalTagIdsMap.get(tag.id)}
-                </FormLabel>
-              </FormItem>
-            )}
-          />
-        ))}
-      </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div className="flex gap-x-2">
+            {/* 실제 tag 데이터 목록 */}
+            {tags.map((tag, index) => (
+              <FormField
+                key={tag.id}
+                control={control}
+                name={`tags.${index}.name`}
+                render={({ field }) => (
+                  <FormItem className="space-y-0">
+                    <FormControl>
+                      <Input type="hidden" {...field} />
+                    </FormControl>
+                    <FormLabel className="border-muted-foreground rounded-full border px-2 py-1 text-sm">
+                      {personalTagIdsMap.get(tag.id)}
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

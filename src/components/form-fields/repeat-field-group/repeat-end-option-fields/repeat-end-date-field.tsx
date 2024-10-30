@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 
 import { DatePicker, DatePickerContent, DatePickerTrigger } from "@/components/date-picker";
-import { FormValues } from "@/components/form-fields/form-schema";
+import { FormValues } from "@/components/form-fields/basic-form-schema";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 const RepeatEndDateField = () => {
@@ -19,7 +19,7 @@ const RepeatEndDateField = () => {
         return (
           <FormItem>
             <DatePicker>
-              <DatePickerTrigger formMode={true} {...field}>
+              <DatePickerTrigger formMode={true} aria-label="반복 종료 날짜 선택" {...field}>
                 {value ? dayjs(value).format("YYYY-MM-DD") : "---- -- --"}
               </DatePickerTrigger>
               <DatePickerContent

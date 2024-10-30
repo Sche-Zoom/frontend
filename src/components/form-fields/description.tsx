@@ -1,41 +1,40 @@
-import { UseFormReturn } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
+import { FormValues } from "@/components/form-fields/basic-form-schema";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { CommonFormFieldProps } from "@/types/form";
 
-interface RequiredFormValues {
-  description: string;
-}
-
-/** ※ 주의사항 form value 형식에 "description" 필수 ※ */
-const DescriptionField = ({ form, editMode }: CommonFormFieldProps) => {
-  // 구현에 필수적인 form value 형태로 form type 고정 (실제 form field 구조와 별개)
-  const descriptionForm = form as UseFormReturn<RequiredFormValues>;
+const DescriptionField = () => {
+  const form = useFormContext<FormValues>();
 
   return (
     <FormField
       name="description"
-      control={descriptionForm.control}
-      disabled={!editMode}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>설명</FormLabel>
-          <FormControl>
-            <Textarea
-              placeholder={field.value}
-              className="resize-none"
-              maxLength={200}
-              {...field}
-              onBlur={() => {
-                field.onBlur();
-                descriptionForm.trigger(field.name); // 유효성 검사
-              }}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      control={form.control}
+      render={({ field }) =>
+        field.disabled ? (
+          // 읽기 모드
+          <Textarea value={field.value} rows={4} disabled className="resize-none" />
+        ) : (
+          // 수정 모드 form field
+          <FormItem>
+            <FormLabel>설명</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder={field.value}
+                className="resize-none"
+                maxLength={200}
+                {...field}
+                onBlur={() => {
+                  field.onBlur();
+                  form.trigger(field.name); // 유효성 검사
+                }}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )
+      }
     />
   );
 };

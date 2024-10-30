@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
 import DateTimePicker from "@/components/date-time-picker";
-import { FormValues } from "@/components/form-fields/form-schema";
+import { FormValues } from "@/components/form-fields/basic-form-schema";
 import { getDefaultFormatDate, modifyOnlyDate, modifyOnlyTime } from "@/lib/date";
 
 const DateRangeField = () => {
@@ -41,10 +41,13 @@ const DateRangeField = () => {
 
         {/* 시작 날짜 datetime picker  */}
         {startDateController.field.disabled ? (
+          // 읽기 모드
           <span className="text-sm">{dayjs(start_date).format("YYYY-MM-DD HH:mm:ss")}</span>
         ) : (
+          // 수정 모드 datetime picker
           <DateTimePicker
             date={start_date}
+            dateAriaLabel="시작 날짜"
             onSelectDate={(date, selectedDate) => handleChangeDate("start_date", selectedDate)}
             onChangeTime={(e) => handleChangeTime("start_date", e)}
             className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
@@ -55,10 +58,13 @@ const DateRangeField = () => {
 
         {/* 종료 날짜 datetime picker  */}
         {endDateController.field.disabled ? (
+          // 읽기 모드
           <span className="text-sm">{dayjs(end_date).format("YYYY-MM-DD HH:mm:ss")}</span>
         ) : (
+          // 수정 모드 datetime picker
           <DateTimePicker
             date={end_date}
+            dateAriaLabel="종료 날짜"
             onSelectDate={(date, selectedDate) => handleChangeDate("end_date", selectedDate)}
             onChangeTime={(e) => handleChangeTime("end_date", e)}
             className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
