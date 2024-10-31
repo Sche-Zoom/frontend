@@ -3,7 +3,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import CreateScheduleContent from "@/components/create-personal-schedule/create-schedule-content";
+import CreateScheduleContent from "@/components/schedule/add/create-schedule-content";
 import { Button } from "@/components/ui/button";
 
 export default function AddPersonalSchedule() {
