@@ -64,7 +64,7 @@ const TagsField = () => {
         // tag 수정 popover
         <div>
           <div className="mb-3 flex items-center gap-x-4">
-            <span>분류</span>
+            <span className="text-sm font-medium">분류</span>
 
             <Popover>
               <PopoverTrigger asChild disabled={field.disabled}>
