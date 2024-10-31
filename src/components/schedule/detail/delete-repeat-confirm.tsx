@@ -30,15 +30,13 @@ const DeleteRepeatConfirm = ({ open, scheduleId, setOpen }: Props) => {
     mutate({ req: { delete_type: data.type }, pathParam: scheduleId.toString() });
 
   return (
-    <>
-      <RepeatScheduleConfirmModal
-        title="반복 일정을 삭제하시겠습니까?"
-        description="최종확인 후 일정이 삭제됩니다."
-        open={open}
-        onOpenChange={setOpen}
-        onSubmit={onSubmit}
-      />
-    </>
+    <RepeatScheduleConfirmModal
+      title="반복 일정을 삭제하시겠습니까?"
+      description="최종확인 후 일정이 삭제됩니다."
+      open={open}
+      onOpenChange={setOpen}
+      onSubmit={onSubmit}
+    />
   );
 };
 

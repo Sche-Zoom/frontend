@@ -6,14 +6,14 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import { modifyPersonalSchedule } from "@/api/personal-schedule";
 import ScheduleConfirmModal from "@/components/confirm-modal";
-import { DefaultValues, PersonalScheduleFormValues } from "@/components/personal-schedule-detail/detail-form-schema";
-import { getIsChangeField, getIsChangeTags } from "@/components/personal-schedule-detail/utils";
+import { FormValues } from "@/components/form-fields/basic-form-schema";
+import { getIsChangeField, getIsChangeTags } from "@/lib/form-utils";
 
 interface Props {
   open: boolean;
   scheduleId: number;
-  formValues: PersonalScheduleFormValues;
-  defaultValues: DefaultValues;
+  formValues: FormValues;
+  defaultValues: FormValues;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -33,8 +33,7 @@ const ChangeConfirm = ({ open, scheduleId, formValues, defaultValues, setOpen }:
 
   // 일정 수정 최종 확인 이벤트 핸들러
   const onSubmit = () => {
-    const checkChangeField = (key: keyof PersonalScheduleFormValues) =>
-      getIsChangeField(key, formValues, defaultValues);
+    const checkChangeField = (key: keyof FormValues) => getIsChangeField(key, formValues, defaultValues);
 
     const request: ModifyPersonalScheduleReq = {
       start_date: checkChangeField("start_date") ? formValues.start_date : undefined,

@@ -5,15 +5,15 @@ import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
 
 import { modifyPersonalRepeatSchedule } from "@/api/personal-schedule";
-import { DefaultValues, PersonalScheduleFormValues } from "@/components/personal-schedule-detail/detail-form-schema";
-import { getIsChangeField, getIsChangeTags } from "@/components/personal-schedule-detail/utils";
+import { FormValues } from "@/components/form-fields/basic-form-schema";
 import RepeatScheduleConfirmModal, { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
+import { getIsChangeField, getIsChangeTags } from "@/lib/form-utils";
 
 interface Props {
   open: boolean;
   scheduleId: number;
-  formValues: PersonalScheduleFormValues;
-  defaultValues: DefaultValues;
+  formValues: FormValues;
+  defaultValues: FormValues;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -33,8 +33,7 @@ const ChangeRepeatConfirm = ({ open, scheduleId, formValues, defaultValues, setO
 
   // 반복 일정 수정 최종 확인 이벤트 핸들러
   const onSubmit = (data: RepeatConfirmFormValues) => {
-    const checkChangeField = (key: keyof PersonalScheduleFormValues) =>
-      getIsChangeField(key, formValues, defaultValues);
+    const checkChangeField = (key: keyof FormValues) => getIsChangeField(key, formValues, defaultValues);
 
     const request: ModifyPersonalRepeatScheduleReq = {
       modify_type: data.type,

@@ -9,7 +9,7 @@ import {
   EventMountArg,
 } from "@fullcalendar/core/index.js";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin, { EventResizeDoneArg } from "@fullcalendar/interaction";
+import interactionPlugin, { DateClickArg, EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { DefaultError, useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -29,8 +29,6 @@ export default function useCalendarContent(calendarRef: RefObject<FullCalendar>)
   const [scheduleChange, setScheduleChange] = useState<ScheduleChangeObject | null>(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [repeatConfirmModalOpen, setRepeatConfirmModalOpen] = useState(false);
-  const [contextMenuOpen, setContextMenuOpen] = useState(false);
-  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
   // 캘린더에 사용할 일정 목록 요청 로직
   const { data: schedulesData } = useSuspenseQuery({
@@ -85,13 +83,6 @@ export default function useCalendarContent(calendarRef: RefObject<FullCalendar>)
     }));
   });
 
-  const handleEventRightClick = (event: MouseEvent) => {
-    event.preventDefault(); // 우클릭 기본 메뉴 방지
-
-    setContextMenuPosition({ x: event.pageX, y: event.pageY });
-    setContextMenuOpen(true);
-  };
-
   const onEventChange = (arg: EventChangeArg) => {
     const { extendedProps } = arg.event as PersonalScheduleEvent;
     extendedProps.type === "personal" ? setConfirmModalOpen(true) : setRepeatConfirmModalOpen(true);
@@ -144,8 +135,11 @@ export default function useCalendarContent(calendarRef: RefObject<FullCalendar>)
   };
 
   const onDayCellDidMount = (info: DayCellMountArg) => {
-    // 우클릭 이벤트 등록
-    info.el.addEventListener("contextmenu", handleEventRightClick);
+    info.el.style.setProperty("cursor", "pointer");
+  };
+
+  const onDateClick = (arg: DateClickArg) => {
+    router.push("/schedule/add");
   };
 
   // 일정 수정 최종 확인 이벤트 핸들러
@@ -207,19 +201,16 @@ export default function useCalendarContent(calendarRef: RefObject<FullCalendar>)
     eventDrop: onEventDrop,
     eventDidMount: onEventDidMount,
     dayCellDidMount: onDayCellDidMount,
+    dateClick: onDateClick,
   };
 
   return {
     scheduleChange,
-    contextMenuPosition,
     confirmModalOpen,
     repeatConfirmModalOpen,
-    contextMenuOpen,
     calendarOption,
-    setScheduleChange,
     setConfirmModalOpen,
     setRepeatConfirmModalOpen,
-    setContextMenuOpen,
     onConfirmSubmit,
     onRepeatConfirmSubmit,
   };
