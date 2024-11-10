@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 
 import BasicLoader from "@/components/basic-loader";
@@ -13,15 +13,15 @@ interface Props {
 }
 
 export default function ScheduleDetail({ scheduleId }: Props) {
+  const router = useRouter();
+
   return (
     <div className="absolute left-0 top-0 z-10 flex size-full flex-col bg-white">
       {/* content title */}
       <div className="border-b-muted flex h-12 items-center space-x-1 border border-b-2">
-        <Link href="/">
-          <Button type="button" variant="image-icon-active" size="sm">
-            <ArrowLeft size={18} />
-          </Button>
-        </Link>
+        <Button type="button" variant="image-icon-active" size="sm" onClick={router.back}>
+          <ArrowLeft size={18} />
+        </Button>
 
         <h2 className="font-medium">일정 상세 정보</h2>
       </div>
