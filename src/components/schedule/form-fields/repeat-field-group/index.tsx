@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
-import { FormValues } from "@/components/form-fields/basic-form-schema";
-import RepeatEndOptionFields from "@/components/form-fields/repeat-field-group/repeat-end-option-fields";
-import RepeatOptionFields from "@/components/form-fields/repeat-field-group/repeat-option-fields";
+import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
+import RepeatEndOptionFields from "@/components/schedule/form-fields/repeat-field-group/repeat-end-option-fields";
+import RepeatOptionFields from "@/components/schedule/form-fields/repeat-field-group/repeat-option-fields";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { REPEAT_FREQUENCY_TYPE } from "@/constants";

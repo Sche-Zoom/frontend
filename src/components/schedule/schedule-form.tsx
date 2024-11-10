@@ -9,15 +9,15 @@ import { ReactNode, useState } from "react";
 import { FieldErrors, SubmitErrorHandler, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 
 import { createPersonalSchedule, getPersonalSchedule } from "@/api/personal-schedule";
-import * as FormFields from "@/components/form-fields";
-import { FormValues, SCHEDULE_FORM_SCHEMA } from "@/components/form-fields/basic-form-schema";
 import { ChangeConfirm, ChangeRepeatConfirm } from "@/components/schedule/detail/change-confirm";
 import { DeleteConfirm, DeleteRepeatConfirm } from "@/components/schedule/detail/delete-confirm";
+import * as FormFields from "@/components/schedule/form-fields";
+import { FormValues, SCHEDULE_FORM_SCHEMA } from "@/components/schedule/form-fields/basic-form-schema";
+import { getIsFormChange } from "@/components/schedule/form-utils";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { SCHEDULE_TYPE } from "@/constants";
 import { getDefaultFormatDate } from "@/lib/date";
-import { getIsFormChange } from "@/lib/form-utils";
 
 const INIT_FORM_VALUES: FormValues = {
   title: "",

@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 
 import { DatePicker, DatePickerContent, DatePickerTrigger } from "@/components/date-picker";
-import { FormValues } from "@/components/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 const RepeatEndDateField = () => {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
 import { getPersonalTags } from "@/api/personal-schedule";
-import { FormValues } from "@/components/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";

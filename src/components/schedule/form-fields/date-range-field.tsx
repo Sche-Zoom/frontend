@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
 import DateTimePicker from "@/components/date-time-picker";
-import { FormValues } from "@/components/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
 import { getDefaultFormatDate, modifyOnlyDate, modifyOnlyTime } from "@/lib/date";
 
 const DateRangeField = () => {
