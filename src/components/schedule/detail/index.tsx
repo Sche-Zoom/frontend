@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 
 import BasicLoader from "@/components/basic-loader";
+import ErrorBoundary from "@/components/error-boundary";
 import { ScheduleDetailForm } from "@/components/schedule/schedule-form";
 import { Button } from "@/components/ui/button";
 
@@ -28,10 +29,12 @@ export default function ScheduleDetail({ scheduleId }: Props) {
 
       {/* 일정 상세 정보 Form content */}
       <div className="size-full overflow-y-auto px-6 py-4">
-        <Suspense fallback={<BasicLoader />}>
-          {/* 상세정보 form */}
-          <ScheduleDetailForm scheduleId={scheduleId} />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<BasicLoader />}>
+            {/* 상세정보 form */}
+            <ScheduleDetailForm scheduleId={scheduleId} />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </div>
   );

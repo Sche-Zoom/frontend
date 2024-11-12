@@ -1,14 +1,38 @@
+import { Separator } from "@radix-ui/react-separator";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 
 import { getPersonalSummarySchedules } from "@/api/personal-schedule";
-import { SideMenuContent, SideMenuSeparator, SideMenuTitle } from "@/components/side-menu";
+import BasicLoader from "@/components/basic-loader";
+import ErrorBoundary from "@/components/error-boundary";
 import { SCHEDULE_TYPE } from "@/constants";
-import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
+import { useCalendarContext } from "@/contexts/calendar";
 import { getScheduleColorVariable } from "@/lib/calendar";
 
-function SummarySchedules() {
-  const { checkedTagIds, currentDate } = usePersonalCalendarContext();
+export default function CalendarSideMenu() {
+  const { menuTab } = useCalendarContext();
+
+  if (menuTab === null) return;
+
+  return (
+    <ErrorBoundary>
+      <Suspense
+        fallback={
+          <aside className={"border-box hidden h-full w-72 border p-4 lg:inline-block"}>
+            <BasicLoader />
+          </aside>
+        }
+      >
+        {/* 월단위 일정 요약 사이드메뉴  */}
+        {menuTab === "summarySchedules" && <SummarySchedules />}
+      </Suspense>
+    </ErrorBoundary>
+  );
+}
+
+const SummarySchedules = () => {
+  const { checkedTagIds, currentDate } = useCalendarContext();
 
   const router = useRouter();
 
@@ -19,8 +43,8 @@ function SummarySchedules() {
   });
 
   return (
-    <SideMenuContent>
-      <SideMenuTitle>일정 목록</SideMenuTitle>
+    <aside className={"border-box hidden h-full w-72 border p-4 lg:inline-block"}>
+      <h4 className="mb-2">일정 목록</h4>
       {/*  해당월의 전체 일정 목록 */}
       {data.side_schedules.map((dailySchedules) => (
         <>
@@ -42,11 +66,9 @@ function SummarySchedules() {
               </div>
             ))}
           </div>
-          <SideMenuSeparator />
+          <Separator className="mb-2" />;
         </>
       ))}
-    </SideMenuContent>
+    </aside>
   );
-}
-
-export default SummarySchedules;
+};

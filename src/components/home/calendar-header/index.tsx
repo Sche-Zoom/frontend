@@ -2,34 +2,34 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import CalendarFilter from "@/components/home/calendar-header/calendar-filter";
 import { Button } from "@/components/ui/button";
-import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
+import { useCalendarContext } from "@/contexts/calendar";
 
 const ViewButtonsData = [
   {
     viewText: "월",
-    viewType: "dayGridMonth",
+    viewType: "month",
   },
   {
     viewText: "주",
-    viewType: "timeGridWeek",
+    viewType: "week",
   },
   {
     viewText: "일",
-    viewType: "timeGridDay",
+    viewType: "day",
   },
 ] as const;
 
 export default function PersonalCalendarHeader() {
-  const { calendarTitle, viewType, goPrev, goNext, changeView } = usePersonalCalendarContext();
+  const { calendarTitle, viewType, moveCalendar, changeView } = useCalendarContext();
 
   return (
     <div className="mb-3 flex justify-between">
       <div className="flex items-center gap-x-1">
         {/* 캘린더 view 이동 버튼 */}
-        <Button variant="outline" size="icon-sm" aria-label="이전으로" onClick={goPrev}>
+        <Button variant="outline" size="icon-sm" aria-label="이전으로" onClick={() => moveCalendar("prev")}>
           <ChevronLeft className="size-4" />
         </Button>
-        <Button variant="outline" size="icon-sm" aria-label="다음으로" onClick={goNext}>
+        <Button variant="outline" size="icon-sm" aria-label="다음으로" onClick={() => moveCalendar("next")}>
           <ChevronRight className="size-4" />
         </Button>
 

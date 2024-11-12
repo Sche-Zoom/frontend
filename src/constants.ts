@@ -18,6 +18,12 @@ export const REPEAT_FREQUENCY_TYPE = {
   yearly: "년",
 } as const;
 
+export const SCHEDULE_VIEW_TYPE = {
+  day: "timeGridDay",
+  week: "timeGridWeek",
+  month: "dayGridMonth",
+} as const;
+
 export const COLORS = [
   "pink",
   "blue",

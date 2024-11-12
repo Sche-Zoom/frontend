@@ -9,7 +9,7 @@ import ErrorBoundary from "@/components/error-boundary";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
+import { useCalendarContext } from "@/contexts/calendar";
 
 export default function CalendarFilter() {
   return (
@@ -39,7 +39,7 @@ const FilterContents = () => {
     getTagAllChecked,
     setTagChecked,
     setAllSubtagsChecked,
-  } = usePersonalCalendarContext();
+  } = useCalendarContext();
 
   // 필터링용 태그 목록 요청 로직
   const { data: personalTagsData } = useSuspenseQuery({

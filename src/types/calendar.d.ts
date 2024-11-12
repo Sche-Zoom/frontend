@@ -1,4 +1,4 @@
-type CalendarViewType = "dayGridMonth" | "timeGridWeek" | "timeGridDay";
+type CalendarViewType = "month" | "week" | "day";
 
 type ColorType = "pink" | "blue" | "green" | "yellow" | "purple" | "orange" | "mint" | "lavender" | "beige" | "coral";
 
@@ -13,6 +13,16 @@ type RepeatEndOptionType = "count" | "end_date" | null;
 type ModifyOptionType = "only" | "after_all" | "all";
 
 type DeleteOptionType = ModifyOptionType & {};
+
+type SideMenuType = "summarySchedules" | null;
+
+type ScheduleViewType = "dayGridMonth" | "timeGridWeek" | "timeGridDay";
+
+interface CalendarDateState {
+  startDate: string;
+  endDate: string;
+  currentDate: string;
+}
 
 interface Tag {
   id: number;

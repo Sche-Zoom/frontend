@@ -6,8 +6,10 @@ import {
   EventChangeArg,
   EventClickArg,
   EventDropArg,
+  EventInput,
   EventMountArg,
 } from "@fullcalendar/core/index.js";
+import { EventImpl } from "@fullcalendar/core/internal";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg, EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
@@ -18,12 +20,26 @@ import { RefObject, useState } from "react";
 
 import { getPersonalSchedules, modifyPersonalRepeatSchedule, modifyPersonalSchedule } from "@/api/personal-schedule";
 import { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
-import { usePersonalCalendarContext } from "@/contexts/personal-calendar";
+import { SCHEDULE_VIEW_TYPE } from "@/constants";
+import { useCalendarContext } from "@/contexts/calendar";
 import { areDatesEqual, changeDateIfMidnight, getDefaultFormatDate } from "@/lib/date";
-import { PersonalScheduleEvent, PersonalScheduleExtendedProps, PersonalScheduleInput } from "@/types/personal-schedule";
 
-export default function useCalendarContent(calendarRef: RefObject<FullCalendar>) {
-  const { currentDate, checkedTagIds, startDate, endDate, viewType } = usePersonalCalendarContext();
+export interface PersonalScheduleExtendedProps {
+  isRepeat: boolean;
+  type: ScheduleType;
+  scheduleId: number;
+}
+// 개인 일정 입력 추가에 사용될 객체
+export interface PersonalScheduleInput extends EventInput {
+  extendedProps: PersonalScheduleExtendedProps;
+}
+
+export interface PersonalScheduleEvent extends EventImpl {
+  extendedProps: PersonalScheduleExtendedProps;
+}
+
+export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
+  const { currentDate, checkedTagIds, startDate, endDate, viewType } = useCalendarContext();
   const router = useRouter();
 
   const [scheduleChange, setScheduleChange] = useState<ScheduleChangeObject | null>(null);
@@ -58,9 +74,7 @@ export default function useCalendarContent(calendarRef: RefObject<FullCalendar>)
       alert("정상적으로 처리됐습니다.");
       setRepeatConfirmModalOpen(false);
     },
-    onError: () => {
-      alert("정상적으로 처리되지 않았습니다.");
-    },
+    onError: () => alert("정상적으로 처리되지 않았습니다."),
   });
 
   // 캘린더에 등록할 개인 일정 배열
@@ -138,9 +152,7 @@ export default function useCalendarContent(calendarRef: RefObject<FullCalendar>)
     info.el.style.setProperty("cursor", "pointer");
   };
 
-  const onDateClick = (arg: DateClickArg) => {
-    router.push("/schedule/add");
-  };
+  const onDateClick = (arg: DateClickArg) => router.push("/schedule/add");
 
   // 일정 수정 최종 확인 이벤트 핸들러
   const onConfirmSubmit = () => {
@@ -184,7 +196,7 @@ export default function useCalendarContent(calendarRef: RefObject<FullCalendar>)
     events: calendarSchedules,
     // setting & style
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-    initialView: viewType,
+    initialView: SCHEDULE_VIEW_TYPE[viewType],
     headerToolbar: false,
     views: {
       timeGridDay: {
