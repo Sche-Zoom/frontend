@@ -6,7 +6,6 @@ import { RefObject, Suspense, useEffect, useRef } from "react";
 
 import BasicLoader from "@/components/basic-loader";
 import ScheduleConfirmModal from "@/components/confirm-modal";
-import { ContentHeader, ContentTitle } from "@/components/content-header";
 import ErrorBoundary from "@/components/error-boundary";
 import PersonalCalendarHeader from "@/components/home/calendar-header";
 import CalendarSideMenu from "@/components/home/calendar-side-menu";
@@ -22,10 +21,10 @@ export default function Home() {
     <CalendarProvider calendarRef={calendarRef}>
       <div className="z-0 flex size-full flex-col">
         {/* 콘텐츠 title */}
-        <ContentHeader>
-          <ContentTitle>개인 일정</ContentTitle>
+        <div className="bg-muted flex h-9 items-center justify-between border-b px-2">
+          <h2 className="align-middle text-sm">개인 일정</h2>
           <PersonalSideButtons />
-        </ContentHeader>
+        </div>
 
         <div className="flex flex-1">
           <div className="relative flex-1">

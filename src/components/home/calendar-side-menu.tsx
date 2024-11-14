@@ -1,4 +1,3 @@
-import { Separator } from "@radix-ui/react-separator";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
@@ -6,6 +5,7 @@ import { Suspense } from "react";
 import { getPersonalSummarySchedules } from "@/api/personal-schedule";
 import BasicLoader from "@/components/basic-loader";
 import ErrorBoundary from "@/components/error-boundary";
+import { Separator } from "@/components/ui/separator";
 import { SCHEDULE_TYPE } from "@/constants";
 import { useCalendarContext } from "@/contexts/calendar";
 import { getScheduleColorVariable } from "@/lib/calendar";
@@ -44,13 +44,13 @@ const SummarySchedules = () => {
 
   return (
     <aside className={"border-box hidden h-full w-72 border p-4 lg:inline-block"}>
-      <h4 className="mb-2">일정 목록</h4>
+      <h3 className="mb-2 text-sm">일정 목록</h3>
       {/*  해당월의 전체 일정 목록 */}
       {data.side_schedules.map((dailySchedules) => (
         <>
           {/* 일정 시작 날짜기준 일별 일정 목록 */}
           <div key={dailySchedules.start_date} className="p-2">
-            <p className="mb-2">{dailySchedules.start_date}</p>
+            <p className="mb-2 text-sm">{dailySchedules.start_date}</p>
             {/* 특정 날짜 일정 목록 */}
             {dailySchedules.schedules.map((schedule) => (
               <div
@@ -59,14 +59,15 @@ const SummarySchedules = () => {
                 style={getScheduleColorVariable(schedule.color)}
                 onClick={() => router.push(`/schedule/${schedule.id}`)}
               >
-                {schedule.title}
-                <p className="text-muted-foreground flex text-sm">
-                  {`${SCHEDULE_TYPE[schedule.type]} | ${schedule.tag_names.join(" · ")}`}
+                <h4 className="mb-1 text-sm">{schedule.title}</h4>
+                <p className="text-muted-foreground flex text-xs">
+                  {SCHEDULE_TYPE[schedule.type]}
+                  {schedule.tag_names.length > 0 && ` | ${schedule.tag_names.join(" · ")}`}
                 </p>
               </div>
             ))}
           </div>
-          <Separator className="mb-2" />;
+          <Separator className="mb-2" />
         </>
       ))}
     </aside>
