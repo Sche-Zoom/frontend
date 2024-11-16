@@ -14,7 +14,7 @@ export default function Nav() {
   const user = useUserStore();
 
   return (
-    <div className="bg-muted z-50 hidden h-[calc(100vh-36px)] w-16 border-r pt-2 lg:sticky lg:left-0 lg:top-9 lg:block lg:py-3 ">
+    <div className="bg-muted hidden h-full w-16 border-r py-3 pt-2 lg:block ">
       <nav className="flex h-full flex-col justify-between">
         <TooltipProvider>
           {/* 개인 일정 및 그룹별 아이콘 */}
@@ -38,16 +38,16 @@ export default function Nav() {
           <div className="flex flex-col items-center gap-y-1">
             {/* 사용자 정보 팝오버 */}
             <UserPopover user={user} side="right">
-              <Sign size={12} src={user.thumbnail} />
+              <Sign size="sm" src={user.thumbnail} />
             </UserPopover>
 
             {/* 알림 내용이 없는 경우 노출 (알림 기능 구현 이후 보완 예정) */}
-            <Button variant={"ghost"} size={"icon"} className="text-muted-foreground">
+            <Button variant="image-icon-none" size={"icon"}>
               <Bell size={24} />
             </Button>
 
             {/* 설정 아이콘 (이후 기능 추가 예정) */}
-            <Button variant={"ghost"} size={"icon"} className="text-muted-foreground">
+            <Button variant="image-icon-none" size={"icon"}>
               <Settings size={24} />
             </Button>
           </div>

@@ -22,7 +22,7 @@ export default function UserPopover({ children, user, side }: Props) {
       <PopoverContent side={side} className="w-80">
         <div className="mb-3 flex items-center space-x-6">
           {/* 사용자 썸네일 이미지 */}
-          <Sign size={16} src={user.thumbnail} />
+          <Sign size="md" src={user.thumbnail} />
 
           {/* 사용자 정보 */}
           <div>

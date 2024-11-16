@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import React from "react";
 
+import ClientMsw from "@/components/clientMsw";
 import Header from "@/components/layout/header";
 import Nav from "@/components/layout/nav";
 import Providers from "@/components/providers";
@@ -45,14 +46,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className={cn(pretendard.className, "antialiased")}>
+    <html lang="ko" className="size-full">
+      <body className={cn(pretendard.className, "size-full antialiased")}>
+        <ClientMsw />
         <Providers>
-          <Header />
+          <div className="absolute flex size-full flex-col overflow-hidden">
+            <Header />
 
-          <div className="relative flex">
-            <Nav />
-            <main className="flex-1">{children}</main>
+            <div className="relative flex flex-1">
+              <Nav />
+              <main className="relative flex-1 ">{children}</main>
+            </div>
           </div>
         </Providers>
       </body>
