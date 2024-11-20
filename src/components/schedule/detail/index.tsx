@@ -6,7 +6,7 @@ import { Suspense } from "react";
 
 import BasicLoader from "@/components/basic-loader";
 import ErrorBoundary from "@/components/error-boundary";
-import { ScheduleDetailForm } from "@/components/schedule/schedule-form";
+import { ScheduleDetailForm } from "@/components/schedule/common/schedule-form";
 import { Button } from "@/components/ui/button";
 
 interface Props {

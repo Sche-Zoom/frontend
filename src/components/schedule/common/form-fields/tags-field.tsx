@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
 import { getPersonalTags } from "@/api/personal-schedule";
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
@@ -12,10 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-const TagsField = () => {
+export default function TagsField() {
   const { data } = useQuery({ queryKey: ["personal_tag", "list"], queryFn: getPersonalTags });
-
-  // 구현에 필수적인 form value 형태로 form type 고정 (실제 form field 구조와 별개)
   const { control, watch, setValue } = useFormContext<FormValues>();
   const { field } = useController<FormValues, "tags">({ name: "tags" });
   const { tags } = watch();
@@ -32,7 +30,6 @@ const TagsField = () => {
   const handleCheckedChange = (checked: CheckedState, tagId: number) => {
     const currentTagsSet = new Set(checkedTagIds);
 
-    // 체크 여부에 따라 tag id 추가 및 제거
     checked ? currentTagsSet.add(tagId) : currentTagsSet.delete(tagId);
     setCheckedTagsIds(Array.from(currentTagsSet));
 
@@ -61,11 +58,12 @@ const TagsField = () => {
           </div>
         </div>
       ) : (
-        // tag 수정 popover
+        // 수정 모드 form field
         <div>
           <div className="mb-3 flex items-center gap-x-4">
             <span className="text-sm font-medium">분류</span>
 
+            {/* tag 수정 popover */}
             <Popover>
               <PopoverTrigger asChild disabled={field.disabled}>
                 <Button variant="default" size="sm">
@@ -113,6 +111,4 @@ const TagsField = () => {
       )}
     </div>
   );
-};
-
-export default TagsField;
+}

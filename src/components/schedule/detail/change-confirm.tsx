@@ -8,8 +8,8 @@ import { useFormContext } from "react-hook-form";
 import { modifyPersonalRepeatSchedule, modifyPersonalSchedule } from "@/api/personal-schedule";
 import ScheduleConfirmModal from "@/components/confirm-modal";
 import RepeatScheduleConfirmModal, { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
-import { getIsChangeField, getIsChangeTags } from "@/components/schedule/form-utils";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
+import { getIsChangeField, getIsChangeTags } from "@/components/schedule/common/form-utils";
 
 interface ConfirmProps {
   open: boolean;

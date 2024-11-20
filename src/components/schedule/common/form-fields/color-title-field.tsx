@@ -1,12 +1,14 @@
+import { SelectValue } from "@radix-ui/react-select";
 import { useFormContext } from "react-hook-form";
 
-import ColorPicker from "@/components/color-picker";
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { COLORS } from "@/constants";
 import { getScheduleColorVariable } from "@/lib/calendar";
 
-function ColorTitleField() {
+export default function ColorTitleField() {
   const { control, trigger } = useFormContext<FormValues>();
 
   return (
@@ -28,17 +30,20 @@ function ColorTitleField() {
             // 수정 모드 form field
             <FormItem>
               <FormLabel>색상</FormLabel>
-              <ColorPicker
-                formMode
-                value={value ?? "pink"}
-                disabled={disabled}
-                aria-label="일정 색상 선택"
-                onChange={(value) => {
-                  onChange(value);
-                  trigger(field.name); // 유효성 검사
-                }}
-              />
-
+              <Select defaultValue={value} onValueChange={onChange} disabled={disabled}>
+                <FormControl>
+                  <SelectTrigger className="w-32" aria-label="일정 색상 선택">
+                    <SelectValue placeholder={<ColorOption color={value} />} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent collisionPadding={{ left: 0 }}>
+                  {COLORS.map((color) => (
+                    <SelectItem key={color} value={color}>
+                      <ColorOption color={color} />
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           );
@@ -51,10 +56,12 @@ function ColorTitleField() {
         control={control}
         render={({ field }) =>
           field.disabled ? (
+            // 읽기 모드
             <div className="flex items-center">
               <p>{field.value}</p>
             </div>
           ) : (
+            // 수정 모드 form field
             <FormItem className="flex-1">
               <FormLabel>제목</FormLabel>
               <FormControl>
@@ -77,4 +84,9 @@ function ColorTitleField() {
   );
 }
 
-export default ColorTitleField;
+const ColorOption = ({ color }: { color: ColorType }) => (
+  <div className="flex items-center gap-2">
+    <div className="size-4 rounded-full bg-[hsl(var(--schedule))]" style={getScheduleColorVariable(color)} />
+    {color}
+  </div>
+);

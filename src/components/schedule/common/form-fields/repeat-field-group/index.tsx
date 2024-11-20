@@ -1,19 +1,15 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { useController, useFormContext } from "react-hook-form";
 
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
-import RepeatEndOptionFields from "@/components/schedule/form-fields/repeat-field-group/repeat-end-option-fields";
-import RepeatOptionFields from "@/components/schedule/form-fields/repeat-field-group/repeat-option-fields";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
+import RepeatEndFields from "@/components/schedule/common/form-fields/repeat-field-group/repeat-end-fields";
+import RepeatPeriodFields from "@/components/schedule/common/form-fields/repeat-field-group/repeat-period-fields";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { REPEAT_FREQUENCY_TYPE } from "@/constants";
 import { cn } from "@/lib/utils";
 
-const RadioItem = ({ children }: { children: ReactNode }) => (
-  <FormItem className="flex items-center gap-x-3 space-y-0">{children}</FormItem>
-);
-
-const RepeatFields = () => {
+export default function RepeatFieldGroup() {
   const form = useFormContext<FormValues>();
   const { is_repeat, repeat_interval, repeat_frequency, repeat_end_option, repeat_end_date, repeat_end_count } =
     form.watch();
@@ -47,7 +43,7 @@ const RepeatFields = () => {
           )}
         </div>
       ) : (
-        // 수정 모드
+        // 수정 모드 form fields
         <div className="space-y-3">
           {/* 반복 사용 여부 radio group */}
           <FormField
@@ -69,20 +65,20 @@ const RepeatFields = () => {
                     <span className="mr-2 text-sm font-medium">반복</span>
 
                     {/* "사용" radio button */}
-                    <RadioItem>
+                    <div className="flex items-center gap-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="yes" />
                       </FormControl>
                       <FormLabel className="font-normal">사용</FormLabel>
-                    </RadioItem>
+                    </div>
 
                     {/* "사용 안함" radio button */}
-                    <RadioItem>
+                    <div className="flex items-center gap-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="no" />
                       </FormControl>
                       <FormLabel className="font-normal">사용 안함</FormLabel>
-                    </RadioItem>
+                    </div>
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -98,15 +94,13 @@ const RepeatFields = () => {
             )}
           >
             {/* 반복 옵션 fields: 반복횟수, 반복주기 */}
-            <RepeatOptionFields />
+            <RepeatPeriodFields />
 
             {/* 종료 기준 RadioGroup */}
-            <RepeatEndOptionFields />
+            <RepeatEndFields />
           </div>
         </div>
       )}
     </>
   );
-};
-
-export default RepeatFields;
+}

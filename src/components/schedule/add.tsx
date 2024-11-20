@@ -3,7 +3,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { ScheduleAddForm } from "@/components/schedule/schedule-form";
+import { ScheduleAddForm } from "@/components/schedule/common/schedule-form";
 import { Button } from "@/components/ui/button";
 
 export default function ScheduleAdd() {

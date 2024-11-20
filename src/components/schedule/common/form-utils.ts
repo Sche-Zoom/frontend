@@ -1,4 +1,4 @@
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 
 /** field 의 value 변경 여부 반환 함수 */
 export const getIsChangeField = (key: keyof FormValues, formValues: FormValues, defaultValues: FormValues) => {

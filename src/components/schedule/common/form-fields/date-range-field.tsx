@@ -3,10 +3,10 @@ import { ChangeEvent } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
 import DateTimePicker from "@/components/date-time-picker";
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { getDefaultFormatDate, modifyOnlyDate, modifyOnlyTime } from "@/lib/date";
 
-const DateRangeField = () => {
+export default function DateRangeField() {
   const form = useFormContext<FormValues>();
   const { start_date, end_date } = form.watch();
   const startDateController = useController<FormValues, "start_date">({ name: "start_date" });
@@ -76,6 +76,4 @@ const DateRangeField = () => {
       {getDateErrorMessage() && <span className="text-destructive pl-2 text-sm">{getDateErrorMessage()}</span>}
     </div>
   );
-};
-
-export default DateRangeField;
+}
