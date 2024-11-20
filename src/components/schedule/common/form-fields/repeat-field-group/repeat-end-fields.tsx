@@ -1,17 +1,18 @@
+import dayjs from "dayjs";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
-import RepeatEndCountField from "@/components/schedule/form-fields/repeat-field-group/repeat-end-option-fields/repeat-end-count-field";
-import RepeatEndDateField from "@/components/schedule/form-fields/repeat-field-group/repeat-end-option-fields/repeat-end-date-field";
+import { DatePicker, DatePickerContent, DatePickerTrigger } from "@/components/date-picker";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const RadioItem = ({ children }: { children: ReactNode }) => (
   <FormItem className="flex items-center space-x-3 space-y-0">{children}</FormItem>
 );
 
-const RepeatEndOptionFields = () => {
+export default function RepeatEndFields() {
   const form = useFormContext<FormValues>();
 
   return (
@@ -69,6 +70,68 @@ const RepeatEndOptionFields = () => {
       )}
     />
   );
+}
+
+const RepeatEndCountField = () => {
+  const form = useFormContext<FormValues>();
+  return (
+    <FormField
+      control={form.control}
+      name="repeat_end_count"
+      disabled={!(form.getValues().repeat_end_option === "count")}
+      render={({ field }) => (
+        <FormItem>
+          <FormControl>
+            <Input
+              type="number"
+              min={1}
+              max={30}
+              className="w-16"
+              aria-label="반복 종료 횟수"
+              {...field}
+              onChange={(e) => {
+                field.onChange(field.value);
+                form.trigger(field.name);
+              }}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
 };
 
-export default RepeatEndOptionFields;
+const RepeatEndDateField = () => {
+  const form = useFormContext<FormValues>();
+
+  return (
+    <FormField
+      control={form.control}
+      name="repeat_end_date"
+      disabled={!(form.getValues().repeat_end_option === "end_date")}
+      render={({ field }) => {
+        const { value, onChange } = field;
+        const dateValue = value ? new Date(value) : undefined;
+        return (
+          <FormItem>
+            <DatePicker>
+              <DatePickerTrigger formMode={true} aria-label="반복 종료 날짜 선택" {...field}>
+                {value ? dayjs(value).format("YYYY-MM-DD") : "---- -- --"}
+              </DatePickerTrigger>
+              <DatePickerContent
+                value={dateValue}
+                disabled={field.disabled}
+                onSelect={(value) => {
+                  field.onChange(dayjs(value).format("YYYY-MM-DD"));
+                  form.trigger(field.name);
+                }}
+              />
+            </DatePicker>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
+  );
+};

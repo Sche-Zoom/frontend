@@ -1,5 +1,5 @@
-import Home from "@/components/home";
+import ScheduleCalendar from "@/components/schedule/calendar";
 
 export default function Page() {
-  return <Home />;
+  return <ScheduleCalendar />;
 }

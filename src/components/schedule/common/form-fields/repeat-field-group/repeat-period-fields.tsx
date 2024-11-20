@@ -1,12 +1,11 @@
-import React from "react";
 import { ControllerRenderProps, useFormContext } from "react-hook-form";
 
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const RepeatOptionFields = () => {
+export default function RepeatPeriodFields() {
   const form = useFormContext<FormValues>();
 
   const changeFieldHandler = (value: React.ChangeEvent | string, field: ControllerRenderProps<FormValues>) => {
@@ -66,6 +65,4 @@ const RepeatOptionFields = () => {
       />
     </div>
   );
-};
-
-export default RepeatOptionFields;
+}

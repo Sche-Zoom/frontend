@@ -7,14 +7,14 @@ import { RefObject, Suspense, useEffect, useRef } from "react";
 import BasicLoader from "@/components/basic-loader";
 import ScheduleConfirmModal from "@/components/confirm-modal";
 import ErrorBoundary from "@/components/error-boundary";
-import PersonalCalendarHeader from "@/components/home/calendar-header";
-import CalendarSideMenu from "@/components/home/calendar-side-menu";
-import useCalendar from "@/components/home/useCalendar";
 import RepeatScheduleConfirmModal from "@/components/repeat-confirm-modal";
+import PersonalCalendarHeader from "@/components/schedule/calendar/calendar-header";
+import CalendarSideMenu from "@/components/schedule/calendar/calendar-side-menu";
+import useCalendar from "@/components/schedule/calendar/useCalendar";
 import { Button } from "@/components/ui/button";
 import { CalendarProvider, useCalendarContext } from "@/contexts/calendar";
 
-export default function Home() {
+export default function ScheduleCalendar() {
   const calendarRef = useRef<FullCalendar>(null);
 
   return (

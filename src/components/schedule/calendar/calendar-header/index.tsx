@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import CalendarFilter from "@/components/home/calendar-header/calendar-filter";
+import CalendarFilter from "@/components/schedule/calendar/calendar-header/calendar-filter";
 import { Button } from "@/components/ui/button";
 import { useCalendarContext } from "@/contexts/calendar";
 

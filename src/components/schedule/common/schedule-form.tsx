@@ -9,11 +9,11 @@ import { ReactNode, useState } from "react";
 import { FieldErrors, SubmitErrorHandler, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 
 import { createPersonalSchedule, getPersonalSchedule } from "@/api/personal-schedule";
+import * as FormFields from "@/components/schedule/common/form-fields";
+import { FormValues, SCHEDULE_FORM_SCHEMA } from "@/components/schedule/common/form-fields/basic-form-schema";
+import { getIsFormChange } from "@/components/schedule/common/form-utils";
 import { ChangeConfirm, ChangeRepeatConfirm } from "@/components/schedule/detail/change-confirm";
 import { DeleteConfirm, DeleteRepeatConfirm } from "@/components/schedule/detail/delete-confirm";
-import * as FormFields from "@/components/schedule/form-fields";
-import { FormValues, SCHEDULE_FORM_SCHEMA } from "@/components/schedule/form-fields/basic-form-schema";
-import { getIsFormChange } from "@/components/schedule/form-utils";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { SCHEDULE_TYPE } from "@/constants";
@@ -211,7 +211,8 @@ interface ScheduleFormProps {
 }
 
 const ScheduleForm = ({ type, children, onSubmit, onSubmitError }: ScheduleFormProps) => {
-  const { ColorTitleField, DateRangeField, DescriptionField, ImportanceField, RepeatFields, TagsField } = FormFields;
+  const { ColorTitleField, DateRangeField, DescriptionField, ImportanceField, RepeatFieldGroup, TagsField } =
+    FormFields;
   const form = useFormContext<FormValues>();
   return (
     <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className="box-border flex w-full flex-col gap-y-4">
@@ -226,7 +227,7 @@ const ScheduleForm = ({ type, children, onSubmit, onSubmitError }: ScheduleFormP
       <DescriptionField />
       <TagsField />
       <ImportanceField />
-      <RepeatFields />
+      <RepeatFieldGroup />
       {children}
     </form>
   );

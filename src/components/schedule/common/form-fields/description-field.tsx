@@ -1,10 +1,10 @@
 import { useFormContext } from "react-hook-form";
 
-import { FormValues } from "@/components/schedule/form-fields/basic-form-schema";
+import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 
-const DescriptionField = () => {
+export default function DescriptionField() {
   const form = useFormContext<FormValues>();
 
   return (
@@ -37,6 +37,4 @@ const DescriptionField = () => {
       }
     />
   );
-};
-
-export default DescriptionField;
+}
