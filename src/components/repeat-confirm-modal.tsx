@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { forwardRef, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertDialogFooter } from "@/components/ui/alert-dialog";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MODIFY_REPEAT_SCHEDULE_OPTIONS } from "@/constants";
@@ -81,7 +81,9 @@ export default function RepeatScheduleConfirmModal(props: Props) {
 
             <AlertDialogFooter>
               <AlertDialogCancel asChild>
-                <CancelButton onClick={onCancel} />
+                <Button type="button" variant="outline" size="lg" onClick={onCancel}>
+                  취소
+                </Button>
               </AlertDialogCancel>
 
               <Button type="submit" size="lg">
@@ -94,10 +96,3 @@ export default function RepeatScheduleConfirmModal(props: Props) {
     </AlertDialog>
   );
 }
-
-const CancelButton = forwardRef<HTMLButtonElement, ButtonProps>(({ onClick }, ref) => (
-  <Button type="button" variant="outline" size="lg" onClick={onClick} ref={ref}>
-    취소
-  </Button>
-));
-CancelButton.displayName = "CancelButton";

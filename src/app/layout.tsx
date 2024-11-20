@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import React from "react";
 
-import ClientMsw from "@/components/clientMsw";
+import ClientMsw from "@/components/client-msw";
 import Header from "@/components/layout/header";
 import Nav from "@/components/layout/nav";
 import Providers from "@/components/providers";
@@ -48,7 +48,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className="size-full">
       <body className={cn(pretendard.className, "size-full antialiased")}>
+        {/* mock server */}
         <ClientMsw />
+
         <Providers>
           <div className="absolute flex size-full flex-col overflow-hidden">
             <Header />

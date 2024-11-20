@@ -1,5 +1,5 @@
 import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
-import { forwardRef, ReactNode } from "react";
+import { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 interface Props {
@@ -39,7 +39,9 @@ export default function ScheduleConfirmModal(props: Props) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <AlertDialogFooter>
               <AlertDialogCancel asChild>
-                <CancelButton onClick={onCancel} />
+                <Button type="button" variant="outline" size="lg" onClick={onCancel}>
+                  취소
+                </Button>
               </AlertDialogCancel>
 
               <Button type="submit" size="lg">
@@ -52,10 +54,3 @@ export default function ScheduleConfirmModal(props: Props) {
     </AlertDialog>
   );
 }
-
-const CancelButton = forwardRef<HTMLButtonElement, ButtonProps>(({ onClick }, ref) => (
-  <Button type="button" variant="outline" size="lg" onClick={onClick} ref={ref}>
-    취소
-  </Button>
-));
-CancelButton.displayName = "CancelButton";
