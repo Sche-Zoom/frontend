@@ -10,48 +10,48 @@ interface ApiEndpointInfo {
 
 // API Req, Res 타입 정의
 export interface ApiEndpoint {
-  getPersonalSchedules: HttpReqRes<GetPersonalSchedulesReq, GetPersonalSchedulesRes>;
-  getPersonalTags: HttpReqRes<null, GetPersonalTagsRes>;
-  getPersonalSummarySchedules: HttpReqRes<GetPersonalSummarySchedulesReq, GetPersonalSummarySchedulesRes>;
-  getPersonalSchedule: HttpReqRes<null, GetPersonalScheduleRes>;
-  modifyPersonalSchedule: HttpReqRes<ModifyPersonalScheduleReq, null>;
-  modifyPersonalRepeatSchedule: HttpReqRes<ModifyPersonalRepeatScheduleReq, null>;
-  deletePersonalSchedule: HttpReqRes<DeletePersonalScheduleReq, null>;
-  createPersonalSchedule: HttpReqRes<CreatePersonalScheduleReq, null>;
+  getSchedules: HttpReqRes<GetSchedulesReq, GetSchedulesRes>;
+  getScheduleTags: HttpReqRes<null, GetScheduleTagsRes>;
+  getSummarySchedules: HttpReqRes<GetSummarySchedulesReq, GetSummarySchedulesRes>;
+  getSchedule: HttpReqRes<null, GetScheduleRes>;
+  modifySchedule: HttpReqRes<ModifyScheduleReq, null>;
+  modifyRepeatSchedule: HttpReqRes<ModifyRepeatScheduleReq, null>;
+  deleteSchedule: HttpReqRes<DeleteScheduleReq, null>;
+  createSchedule: HttpReqRes<CreateScheduleReq, null>;
 }
 
 // API Endpoint 정보
 export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
-  getPersonalSchedules: {
-    url: "/api/per-schedule/list",
+  getSchedules: {
+    url: "/api/schedule/list",
     method: "GET",
   },
-  getPersonalTags: {
-    url: "/api/per-schedule/total-tags",
+  getScheduleTags: {
+    url: "/api/schedule/total-tags",
     method: "GET",
   },
-  getPersonalSummarySchedules: {
-    url: "/api/per-schedule/summary-list",
+  getSummarySchedules: {
+    url: "/api/schedule/summary-list",
     method: "GET",
   },
-  modifyPersonalSchedule: {
-    url: "/api/per-schedule",
+  modifySchedule: {
+    url: "/api/schedule",
     method: "PATCH",
   },
-  modifyPersonalRepeatSchedule: {
-    url: "/api/per-schedule/repeat",
+  modifyRepeatSchedule: {
+    url: "/api/schedule/repeat",
     method: "PATCH",
   },
-  getPersonalSchedule: {
-    url: "/api/per-schedule",
+  getSchedule: {
+    url: "/api/schedule",
     method: "GET",
   },
-  deletePersonalSchedule: {
-    url: "/api/per-schedule",
+  deleteSchedule: {
+    url: "/api/schedule",
     method: "DELETE",
   },
-  createPersonalSchedule: {
-    url: "/api/per-schedule",
+  createSchedule: {
+    url: "/api/schedule",
     method: "POST",
   },
 };

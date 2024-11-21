@@ -29,9 +29,21 @@ interface Tag {
   name: string;
 }
 
+interface Schedule {
+  id: number;
+  title: string;
+  type: ScheduleType;
+  color: ColorType;
+  dates: {
+    start_date: string; // ISO8601
+    end_date: string; // ISO8601
+  }[];
+}
+
 interface ScheduleDetail {
   id: number;
   title: string;
+  type: ScheduleType;
   description: string;
   importance: ScheduleImportanceType;
   color: ColorType;
@@ -69,4 +81,35 @@ interface ScheduleChangeObject {
   repeatCount?: number;
   // reminder?: number[]; // minute
   // reminderEmailNoti?: boolean;
+}
+
+interface SummarySchedule {
+  start_date: string; // ISO8601 (YYYY-MM-DD)
+  schedules: {
+    id: number;
+    end_date: string; // ISO8601 (YYYY-MM-DD)
+    title: string;
+    type: ScheduleType;
+    color: ColorType;
+    tag_names: string[];
+  }[];
+}
+
+interface ModifyScheduleVariables {
+  req: ModifyScheduleReq;
+  pathParam: string;
+}
+
+interface ModifyRepeatScheduleVariables {
+  req: ModifyRepeatScheduleReq;
+  pathParam: string;
+}
+
+interface DeleteScheduleVariables {
+  req: DeleteScheduleReq;
+  pathParam: string;
+}
+
+interface CreateScheduleVariables {
+  req: CreateScheduleReq;
 }

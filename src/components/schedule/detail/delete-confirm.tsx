@@ -4,9 +4,9 @@ import { DefaultError, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
 
-import { deletePersonalSchedule } from "@/api/personal-schedule";
 import ScheduleConfirmModal from "@/components/confirm-modal";
 import RepeatScheduleConfirmModal, { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
+import apiRequest from "@/lib/api";
 
 interface DeleteConfirmProps {
   open: boolean;
@@ -19,7 +19,7 @@ const DeleteConfirm = ({ open, scheduleId, setOpen }: DeleteConfirmProps) => {
 
   // 일정 삭제 mutate
   const { mutate } = useMutation<null, DefaultError, DeleteScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => deletePersonalSchedule(req, pathParam),
+    mutationFn: ({ req, pathParam }) => apiRequest("deleteSchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
       setOpen(false);
@@ -47,7 +47,7 @@ const DeleteRepeatConfirm = ({ open, scheduleId, setOpen }: DeleteConfirmProps) 
 
   // 일정 삭제 mutate
   const { mutate } = useMutation<null, DefaultError, DeleteScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => deletePersonalSchedule(req, pathParam),
+    mutationFn: ({ req, pathParam }) => apiRequest("deleteSchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
       router.back();

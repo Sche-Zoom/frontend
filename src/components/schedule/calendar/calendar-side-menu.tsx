@@ -2,12 +2,12 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 
-import { getPersonalSummarySchedules } from "@/api/personal-schedule";
 import BasicLoader from "@/components/basic-loader";
 import ErrorBoundary from "@/components/error-boundary";
 import { Separator } from "@/components/ui/separator";
 import { SCHEDULE_TYPE } from "@/constants";
 import { useCalendarContext } from "@/contexts/calendar";
+import apiRequest from "@/lib/api";
 import { getScheduleColorVariable } from "@/lib/calendar";
 
 export default function CalendarSideMenu() {
@@ -39,7 +39,10 @@ const SummarySchedules = () => {
   const { data } = useSuspenseQuery({
     queryKey: ["personal_schedule_summary", "list", checkedTagIds, currentDate],
     queryFn: () =>
-      getPersonalSummarySchedules({ selected_date: currentDate, ...(checkedTagIds && { tag_ids: checkedTagIds }) }),
+      apiRequest("getSummarySchedules", {
+        selected_date: currentDate,
+        ...(checkedTagIds && { tag_ids: checkedTagIds }),
+      }),
   });
 
   return (
