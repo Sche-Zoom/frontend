@@ -50,7 +50,7 @@ const SummarySchedules = () => {
       <h3 className="mb-2 text-sm">일정 목록</h3>
       {/*  해당월의 전체 일정 목록 */}
       {data.side_schedules.map((dailySchedules) => (
-        <>
+        <div key={dailySchedules.start_date}>
           {/* 일정 시작 날짜기준 일별 일정 목록 */}
           <div key={dailySchedules.start_date} className="p-2">
             <p className="mb-2 text-sm">{dailySchedules.start_date}</p>
@@ -71,7 +71,7 @@ const SummarySchedules = () => {
             ))}
           </div>
           <Separator className="mb-2" />
-        </>
+        </div>
       ))}
     </aside>
   );
