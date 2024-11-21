@@ -8,7 +8,7 @@ import BasicLoader from "@/components/basic-loader";
 import ScheduleConfirmModal from "@/components/confirm-modal";
 import ErrorBoundary from "@/components/error-boundary";
 import RepeatScheduleConfirmModal from "@/components/repeat-confirm-modal";
-import PersonalCalendarHeader from "@/components/schedule/calendar/calendar-header";
+import CalendarHeader from "@/components/schedule/calendar/calendar-header";
 import CalendarSideMenu from "@/components/schedule/calendar/calendar-side-menu";
 import useCalendar from "@/components/schedule/calendar/useCalendar";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ export default function ScheduleCalendar() {
         {/* 콘텐츠 title */}
         <div className="bg-muted flex h-9 items-center justify-between border-b px-2">
           <h2 className="align-middle text-sm">개인 일정</h2>
-          <PersonalSideButtons />
+          <SideButtons />
         </div>
 
         <div className="flex flex-1">
@@ -31,7 +31,7 @@ export default function ScheduleCalendar() {
             {/* 캘린더 전체 */}
             <div className="absolute flex size-full flex-col p-4">
               {/* 캘린더 조작을 위한 header 부분 */}
-              <PersonalCalendarHeader />
+              <CalendarHeader />
 
               <ErrorBoundary>
                 <Suspense fallback={<BasicLoader />}>
@@ -93,7 +93,7 @@ const CalendarContent = ({ calendarRef }: { calendarRef: RefObject<FullCalendar>
   );
 };
 
-const PersonalSideButtons = () => {
+const SideButtons = () => {
   const { menuTab, updateMenuTab, updateSize } = useCalendarContext();
 
   useEffect(() => {

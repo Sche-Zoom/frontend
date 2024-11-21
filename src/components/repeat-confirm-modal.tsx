@@ -17,11 +17,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MODIFY_REPEAT_SCHEDULE_OPTIONS } from "@/constants";
 
-interface MutationVariables {
-  req: ModifyPersonalRepeatScheduleReq;
-  pathParam: string;
-}
-
 interface Props {
   open: boolean;
   title: ReactNode;

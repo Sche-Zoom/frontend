@@ -19,7 +19,7 @@ const ViewButtonsData = [
   },
 ] as const;
 
-export default function PersonalCalendarHeader() {
+export default function CalendarHeader() {
   const { calendarTitle, viewType, moveCalendar, changeView } = useCalendarContext();
 
   return (
