@@ -1,5 +1,5 @@
-import { PersonalScheduleHandlers } from "@/mocks/handlers/per-schedule";
+import { ScheduleHandlers } from "@/mocks/handlers/schedule";
 
-export const handlers = [...PersonalScheduleHandlers];
+export const handlers = [...ScheduleHandlers];
 
 export default handlers;

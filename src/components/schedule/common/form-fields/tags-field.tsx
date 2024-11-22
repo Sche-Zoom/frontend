@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
-import { getPersonalTags } from "@/api/personal-schedule";
 import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,9 +10,10 @@ import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/for
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import apiRequest from "@/lib/api";
 
 export default function TagsField() {
-  const { data } = useQuery({ queryKey: ["personal_tag", "list"], queryFn: getPersonalTags });
+  const { data } = useQuery({ queryKey: ["personal_tag", "list"], queryFn: () => apiRequest("getScheduleTags", null) });
   const { control, watch, setValue } = useFormContext<FormValues>();
   const { field } = useController<FormValues, "tags">({ name: "tags" });
   const { tags } = watch();

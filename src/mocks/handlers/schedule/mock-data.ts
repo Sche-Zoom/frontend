@@ -1,5 +1,5 @@
 // mock data: get "/per-schedule/list"
-export const MOCK_PERSONAL_SCHEDULES: GetPersonalSchedulesRes = {
+export const MOCK_SCHEDULES: GetSchedulesRes = {
   schedules: [
     {
       id: 1234,
@@ -45,7 +45,7 @@ export const MOCK_PERSONAL_SCHEDULES: GetPersonalSchedulesRes = {
 };
 
 // mock data: get "/per-schedule/{sid}"
-export const MOCK_PERSONAL_SCHEDULE: Omit<GetPersonalScheduleRes, "id"> = {
+export const MOCK_SCHEDULE: Omit<GetScheduleRes, "id"> = {
   title: "Meeting with Client",
   type: "personal",
   description: "Discuss project details and deadlines",
@@ -68,7 +68,7 @@ export const MOCK_PERSONAL_SCHEDULE: Omit<GetPersonalScheduleRes, "id"> = {
 };
 
 // mock data: get "/per-schedule/total-tags"
-export const MOCK_PERSONAL_TAGS: GetPersonalTagsRes = {
+export const MOCK_TAGS: GetScheduleTagsRes = {
   per_tags: [
     { id: 1, name: "헬스" },
     { id: 2, name: "여행" },
@@ -94,7 +94,7 @@ export const MOCK_PERSONAL_TAGS: GetPersonalTagsRes = {
 };
 
 // mock data: get "/per-schedule/summary-list"
-export const MOCK_PERSONAL_SUMMARY_SCHEDULES: GetPersonalSummarySchedulesRes = {
+export const MOCK_SUMMARY_SCHEDULES: GetSummarySchedulesRes = {
   side_schedules: [
     {
       start_date: "2024-07-01",

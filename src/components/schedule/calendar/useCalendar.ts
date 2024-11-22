@@ -18,24 +18,24 @@ import { DefaultError, useMutation, useSuspenseQuery } from "@tanstack/react-que
 import { useRouter } from "next/navigation";
 import { RefObject, useState } from "react";
 
-import { getPersonalSchedules, modifyPersonalRepeatSchedule, modifyPersonalSchedule } from "@/api/personal-schedule";
 import { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
 import { SCHEDULE_VIEW_TYPE } from "@/constants";
 import { useCalendarContext } from "@/contexts/calendar";
+import apiRequest from "@/lib/api";
 import { areDatesEqual, changeDateIfMidnight, getDefaultFormatDate } from "@/lib/date";
 
-export interface PersonalScheduleExtendedProps {
+export interface ScheduleExtendedProps {
   isRepeat: boolean;
   type: ScheduleType;
   scheduleId: number;
 }
-// 개인 일정 입력 추가에 사용될 객체
-export interface PersonalScheduleInput extends EventInput {
-  extendedProps: PersonalScheduleExtendedProps;
+
+export interface ScheduleInput extends EventInput {
+  extendedProps: ScheduleExtendedProps;
 }
 
-export interface PersonalScheduleEvent extends EventImpl {
-  extendedProps: PersonalScheduleExtendedProps;
+export interface ScheduleEvent extends EventImpl {
+  extendedProps: ScheduleExtendedProps;
 }
 
 export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
@@ -50,7 +50,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
   const { data: schedulesData } = useSuspenseQuery({
     queryKey: ["personal_schedule", "list", checkedTagIds, startDate, endDate],
     queryFn: () =>
-      getPersonalSchedules({
+      apiRequest("getSchedules", {
         start_date: startDate,
         end_date: endDate,
         ...(checkedTagIds && { tag_ids: checkedTagIds }),
@@ -59,7 +59,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
 
   // 일정 수정 mutate
   const { mutate: modifyScheduleMutate } = useMutation<null, DefaultError, ModifyScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => modifyPersonalSchedule(req, pathParam),
+    mutationFn: ({ req, pathParam }) => apiRequest("modifySchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
       setConfirmModalOpen(false);
@@ -69,7 +69,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
 
   // 반복 일정 수정 mutate
   const { mutate: modifyRepeatScheduleMutate } = useMutation<null, DefaultError, ModifyRepeatScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => modifyPersonalRepeatSchedule(req, pathParam),
+    mutationFn: ({ req, pathParam }) => apiRequest("modifyRepeatSchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
       setRepeatConfirmModalOpen(false);
@@ -78,8 +78,8 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
   });
 
   // 캘린더에 등록할 개인 일정 배열
-  const calendarSchedules: PersonalScheduleInput[] = schedulesData.schedules.flatMap((sch) => {
-    return sch.dates.map<PersonalScheduleInput>(({ start_date, end_date }, index) => ({
+  const calendarSchedules: ScheduleInput[] = schedulesData.schedules.flatMap((sch) => {
+    return sch.dates.map<ScheduleInput>(({ start_date, end_date }, index) => ({
       id: `${sch.id}-${index}`,
       title: sch.title,
       classNames: `font-medium`,
@@ -93,19 +93,19 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
         type: sch.type,
         scheduleId: sch.id,
         color: sch.color,
-      } as PersonalScheduleExtendedProps,
+      } as ScheduleExtendedProps,
     }));
   });
 
   const onEventChange = (arg: EventChangeArg) => {
-    const { extendedProps } = arg.event as PersonalScheduleEvent;
+    const { extendedProps } = arg.event as ScheduleEvent;
     extendedProps.type === "personal" ? setConfirmModalOpen(true) : setRepeatConfirmModalOpen(true);
   };
 
   const onEventResize = (arg: EventResizeDoneArg) => {
     const { oldEvent, event } = arg;
     const { start: beforeStart, end: beforeEnd } = oldEvent;
-    const { start, end, extendedProps } = event as PersonalScheduleEvent;
+    const { start, end, extendedProps } = event as ScheduleEvent;
     const { scheduleId, isRepeat } = extendedProps;
 
     setScheduleChange({
@@ -122,7 +122,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
   const onEventDrop = (arg: EventDropArg) => {
     const { oldEvent, event } = arg;
     const { start: beforeStart, end: beforeEnd } = oldEvent;
-    const { start, end, extendedProps } = event as PersonalScheduleEvent;
+    const { start, end, extendedProps } = event as ScheduleEvent;
     const { scheduleId, isRepeat } = extendedProps;
 
     setScheduleChange({
@@ -144,7 +144,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
   };
 
   const onEventClick = (arg: EventClickArg) => {
-    const { extendedProps } = arg.event as PersonalScheduleEvent;
+    const { extendedProps } = arg.event as ScheduleEvent;
     router.push(`/schedule/${extendedProps.scheduleId}`);
   };
 

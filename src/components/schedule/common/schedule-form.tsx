@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { FieldErrors, SubmitErrorHandler, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 
-import { createPersonalSchedule, getPersonalSchedule } from "@/api/personal-schedule";
 import * as FormFields from "@/components/schedule/common/form-fields";
 import { FormValues, SCHEDULE_FORM_SCHEMA } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { getIsFormChange } from "@/components/schedule/common/form-utils";
@@ -17,6 +16,7 @@ import { DeleteConfirm, DeleteRepeatConfirm } from "@/components/schedule/detail
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { SCHEDULE_TYPE } from "@/constants";
+import apiRequest from "@/lib/api";
 import { getDefaultFormatDate } from "@/lib/date";
 
 const INIT_FORM_VALUES: FormValues = {
@@ -41,7 +41,7 @@ const ScheduleAddForm = () => {
 
   // 일정 삭제 mutate
   const { mutate } = useMutation<null, DefaultError, CreateScheduleVariables>({
-    mutationFn: ({ req }) => createPersonalSchedule(req),
+    mutationFn: ({ req }) => apiRequest("createSchedule", req),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
       router.back();
@@ -111,7 +111,7 @@ const ScheduleDetailForm = ({ scheduleId }: { scheduleId: number }) => {
   // 개인 일정 상세 정보 조회 api
   const { data } = useSuspenseQuery({
     queryKey: ["personal_schedule", "detail", scheduleId],
-    queryFn: () => getPersonalSchedule(null, scheduleId.toString()),
+    queryFn: () => apiRequest("getSchedule", null, scheduleId.toString()),
   });
 
   // form values 초기값

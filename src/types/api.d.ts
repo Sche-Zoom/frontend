@@ -1,20 +1,20 @@
-interface GetPersonalSchedulesReq {
+interface GetSchedulesReq {
   start_date: string; // ISO8601
   end_date: string; // ISO8601
   tag_ids?: number[];
 }
 
-interface GetPersonalSchedulesRes {
-  schedules: PersonalSchedule[];
+interface GetSchedulesRes {
+  schedules: Schedule[];
 }
 
-interface GetPersonalScheduleParam {
+interface GetScheduleParam {
   sid: string;
 }
 
-interface GetPersonalScheduleRes extends PersonalScheduleDetail {}
+interface GetScheduleRes extends ScheduleDetail {}
 
-interface GetPersonalTagsRes {
+interface GetScheduleTagsRes {
   per_tags: Tag[];
   groups: {
     id: number;
@@ -23,23 +23,23 @@ interface GetPersonalTagsRes {
   }[];
 }
 
-interface GetPersonalSummarySchedulesReq {
+interface GetSummarySchedulesReq {
   selected_date: string; // ISO8601 (YYYY-MM-DD)
   tag_ids?: number[];
 }
 
-interface GetPersonalSummarySchedulesRes {
-  side_schedules: PersonalSummarySchedule[];
+interface GetSummarySchedulesRes {
+  side_schedules: SummarySchedule[];
 }
 
-interface PersonalSchedulePathParam {
+interface SchedulePathParam {
   sid: string;
 }
 
-type ModifyPersonalScheduleParam = PersonalSchedulePathParam & {};
-type DeletePersonalScheduleParam = PersonalSchedulePathParam & {};
+type ModifyScheduleParam = SchedulePathParam & {};
+type DeleteScheduleParam = SchedulePathParam & {};
 
-type ModifyPersonalScheduleReq = {
+type ModifyScheduleReq = {
   tags?: number[];
   title?: string;
   description?: string;
@@ -57,17 +57,17 @@ type ModifyPersonalScheduleReq = {
   // reminder_email_noti?: boolean;
 };
 
-type ModifyPersonalRepeatScheduleReq = ModifyPersonalScheduleReq & {
+type ModifyRepeatScheduleReq = ModifyScheduleReq & {
   modify_type: ModifyOptionType;
   before_start_date: string; // ISO8601
   before_end_date: string; // ISO8601
 };
 
-interface DeletePersonalScheduleReq {
+interface DeleteScheduleReq {
   delete_type: DeleteOptionType;
 }
 
-interface CreatePersonalScheduleReq {
+interface CreateScheduleReq {
   tags: number[];
   title: string;
   description: string;

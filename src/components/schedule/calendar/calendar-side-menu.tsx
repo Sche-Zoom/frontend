@@ -2,12 +2,12 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 
-import { getPersonalSummarySchedules } from "@/api/personal-schedule";
 import BasicLoader from "@/components/basic-loader";
 import ErrorBoundary from "@/components/error-boundary";
 import { Separator } from "@/components/ui/separator";
 import { SCHEDULE_TYPE } from "@/constants";
 import { useCalendarContext } from "@/contexts/calendar";
+import apiRequest from "@/lib/api";
 import { getScheduleColorVariable } from "@/lib/calendar";
 
 export default function CalendarSideMenu() {
@@ -39,7 +39,10 @@ const SummarySchedules = () => {
   const { data } = useSuspenseQuery({
     queryKey: ["personal_schedule_summary", "list", checkedTagIds, currentDate],
     queryFn: () =>
-      getPersonalSummarySchedules({ selected_date: currentDate, ...(checkedTagIds && { tag_ids: checkedTagIds }) }),
+      apiRequest("getSummarySchedules", {
+        selected_date: currentDate,
+        ...(checkedTagIds && { tag_ids: checkedTagIds }),
+      }),
   });
 
   return (
@@ -47,7 +50,7 @@ const SummarySchedules = () => {
       <h3 className="mb-2 text-sm">일정 목록</h3>
       {/*  해당월의 전체 일정 목록 */}
       {data.side_schedules.map((dailySchedules) => (
-        <>
+        <div key={dailySchedules.start_date}>
           {/* 일정 시작 날짜기준 일별 일정 목록 */}
           <div key={dailySchedules.start_date} className="p-2">
             <p className="mb-2 text-sm">{dailySchedules.start_date}</p>
@@ -68,7 +71,7 @@ const SummarySchedules = () => {
             ))}
           </div>
           <Separator className="mb-2" />
-        </>
+        </div>
       ))}
     </aside>
   );

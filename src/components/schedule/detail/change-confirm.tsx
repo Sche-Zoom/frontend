@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { modifyPersonalRepeatSchedule, modifyPersonalSchedule } from "@/api/personal-schedule";
 import ScheduleConfirmModal from "@/components/confirm-modal";
 import RepeatScheduleConfirmModal, { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
 import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { getIsChangeField, getIsChangeTags } from "@/components/schedule/common/form-utils";
+import apiRequest from "@/lib/api";
 
 interface ConfirmProps {
   open: boolean;
@@ -49,7 +49,7 @@ const ChangeConfirm = ({ open, scheduleId, defaultValues, setOpen }: ConfirmProp
   const formValues = watch();
 
   const { mutate } = useMutation<null, DefaultError, ModifyScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => modifyPersonalSchedule(req, pathParam),
+    mutationFn: ({ req, pathParam }) => apiRequest("modifySchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
       setOpen(false);
@@ -59,7 +59,7 @@ const ChangeConfirm = ({ open, scheduleId, defaultValues, setOpen }: ConfirmProp
   });
 
   const onSubmit = () => {
-    const request: ModifyPersonalScheduleReq = createCommonModifyFields(formValues, defaultValues);
+    const request: ModifyScheduleReq = createCommonModifyFields(formValues, defaultValues);
     mutate({ req: request, pathParam: scheduleId.toString() });
   };
 
@@ -81,7 +81,7 @@ const ChangeRepeatConfirm = ({ open, scheduleId, defaultValues, setOpen }: Confi
   const formValues = watch();
 
   const { mutate } = useMutation<null, DefaultError, ModifyRepeatScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => modifyPersonalRepeatSchedule(req, pathParam),
+    mutationFn: ({ req, pathParam }) => apiRequest("modifyRepeatSchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
       setOpen(false);
@@ -91,7 +91,7 @@ const ChangeRepeatConfirm = ({ open, scheduleId, defaultValues, setOpen }: Confi
   });
 
   const onSubmit = (data: RepeatConfirmFormValues) => {
-    const request: ModifyPersonalRepeatScheduleReq = {
+    const request: ModifyRepeatScheduleReq = {
       modify_type: data.type,
       before_start_date: defaultValues.start_date,
       before_end_date: defaultValues.end_date,
