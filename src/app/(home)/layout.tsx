@@ -1,3 +1,6 @@
+import Header from "@/components/layout/header";
+import Nav from "@/components/layout/nav";
+
 interface Props {
   children: React.ReactNode;
   detail: React.ReactNode; // 상세정보
@@ -7,9 +10,16 @@ interface Props {
 export default function Layout({ children, detail, add }: Props) {
   return (
     <>
-      {children}
       {detail}
       {add}
+      <div className="absolute flex size-full flex-col overflow-hidden">
+        <Header />
+
+        <div className="relative flex flex-1">
+          <Nav />
+          <main className="relative flex-1 ">{children}</main>
+        </div>
+      </div>
     </>
   );
 }

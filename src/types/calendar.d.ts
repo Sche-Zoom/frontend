@@ -113,3 +113,7 @@ interface DeleteScheduleVariables {
 interface CreateScheduleVariables {
   req: CreateScheduleReq;
 }
+
+interface LoginVariables {
+  req: LoginReq;
+}

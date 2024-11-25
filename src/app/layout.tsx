@@ -5,8 +5,6 @@ import localFont from "next/font/local";
 import React from "react";
 
 import ClientMsw from "@/components/client-msw";
-import Header from "@/components/layout/header";
-import Nav from "@/components/layout/nav";
 import Providers from "@/components/providers";
 import { cn } from "@/lib/utils";
 
@@ -51,16 +49,7 @@ export default function RootLayout({
         {/* mock server */}
         <ClientMsw />
 
-        <Providers>
-          <div className="absolute flex size-full flex-col overflow-hidden">
-            <Header />
-
-            <div className="relative flex flex-1">
-              <Nav />
-              <main className="relative flex-1 ">{children}</main>
-            </div>
-          </div>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
