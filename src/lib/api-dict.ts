@@ -67,5 +67,6 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   login: {
     url: "/api/auth/login",
     method: "POST",
+    withCredentials: true,
   },
 };
