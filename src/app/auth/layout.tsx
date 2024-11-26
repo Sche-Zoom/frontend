@@ -4,10 +4,9 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="relative size-full min-w-[800px]">
-      <div className="absolute left-1/2 top-1/2 flex w-[450px] -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-xl border border-solid px-10 py-8">
-        {children}
-      </div>
+    <div className="flex size-full flex-col items-center justify-center gap-4 px-4">
+      <h1 className="text-2xl font-bold">RICH CALENDAR</h1>
+      <div className="w-full max-w-md flex-col rounded-xl border border-solid p-6 sm:px-10">{children}</div>
     </div>
   );
 }

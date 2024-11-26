@@ -60,7 +60,7 @@ export default function Login() {
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-y-6">
-      <h1 className="text-xl">로그인</h1>
+      <h2 className="text-lg">로그인</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className="flex w-full flex-col gap-y-4">
           <FormField
@@ -99,6 +99,9 @@ export default function Login() {
         </Link>
         <Link href="/auth/find-pw" className="px-3 text-sm">
           비밀번호 찾기
+        </Link>
+        <Link href="/auth/sign-up" className="px-3 text-sm">
+          회원가입
         </Link>
       </div>
     </div>
