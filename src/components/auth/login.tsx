@@ -13,11 +13,7 @@ import { Input } from "@/components/ui/input";
 import apiRequest from "@/lib/api";
 
 const LOGIN_FORM_SCHEMA = z.object({
-  id: z
-    .string()
-    .min(3, "ID는 최소 3자 이상이어야 합니다.")
-    .max(30, "ID는 최대 30자 이하이어야 합니다.")
-    .regex(/^[a-zA-Z0-9._-]+$/, "ID는 영문자, 숫자, 점, 밑줄, 하이픈만 사용할 수 있습니다."),
+  email: z.string().email("유효한 이메일 주소를 입력해주세요."),
   password: z
     .string()
     .min(8, "비밀번호는 최소 8자 이상이어야 합니다.")
@@ -33,7 +29,7 @@ type FormValues = z.infer<typeof LOGIN_FORM_SCHEMA>;
 export default function Login() {
   const form = useForm<FormValues>({
     resolver: zodResolver(LOGIN_FORM_SCHEMA),
-    defaultValues: { id: "", password: "" },
+    defaultValues: { email: "", password: "" },
   });
   const router = useRouter();
 
@@ -60,16 +56,16 @@ export default function Login() {
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-y-6">
-      <h2 className="text-lg">로그인</h2>
+      <h2 className="text-lg font-medium">로그인</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className="flex w-full flex-col gap-y-4">
           <FormField
-            name="id"
+            name="email"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>아이디</FormLabel>
+                <FormLabel>이메일(아이디)</FormLabel>
                 <FormControl>
-                  <Input placeholder="아이디" {...field} />
+                  <Input placeholder="이메일(아이디)" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,7 +96,7 @@ export default function Login() {
         <Link href="/auth/find-pw" className="px-3 text-sm">
           비밀번호 찾기
         </Link>
-        <Link href="/auth/sign-up" className="px-3 text-sm">
+        <Link href="/auth/signup" className="px-3 text-sm">
           회원가입
         </Link>
       </div>

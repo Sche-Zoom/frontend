@@ -84,6 +84,6 @@ interface CreateScheduleReq {
 }
 
 interface LoginReq {
-  id: string;
+  email: string;
   password: string;
 }
