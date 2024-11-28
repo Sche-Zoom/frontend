@@ -82,3 +82,8 @@ interface CreateScheduleReq {
   repeat_end_date?: string | null; // ISO8601
   repeat_end_count?: number | null;
 }
+
+interface LoginReq {
+  email: string;
+  password: string;
+}

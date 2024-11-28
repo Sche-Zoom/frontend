@@ -6,6 +6,7 @@ interface HttpReqRes<T_Req = unknown, T_Res = unknown> {
 interface ApiEndpointInfo {
   url: string;
   method: "GET" | "POST" | "PATCH" | "DELETE";
+  withCredentials?: boolean;
 }
 
 // API Req, Res 타입 정의
@@ -18,6 +19,7 @@ export interface ApiEndpoint {
   modifyRepeatSchedule: HttpReqRes<ModifyRepeatScheduleReq, null>;
   deleteSchedule: HttpReqRes<DeleteScheduleReq, null>;
   createSchedule: HttpReqRes<CreateScheduleReq, null>;
+  login: HttpReqRes<LoginReq, null>;
 }
 
 // API Endpoint 정보
@@ -25,33 +27,46 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   getSchedules: {
     url: "/api/schedule/list",
     method: "GET",
+    withCredentials: true,
   },
   getScheduleTags: {
     url: "/api/schedule/total-tags",
     method: "GET",
+    withCredentials: true,
   },
   getSummarySchedules: {
     url: "/api/schedule/summary-list",
     method: "GET",
+    withCredentials: true,
   },
   modifySchedule: {
     url: "/api/schedule",
     method: "PATCH",
+    withCredentials: true,
   },
   modifyRepeatSchedule: {
     url: "/api/schedule/repeat",
     method: "PATCH",
+    withCredentials: true,
   },
   getSchedule: {
     url: "/api/schedule",
     method: "GET",
+    withCredentials: true,
   },
   deleteSchedule: {
     url: "/api/schedule",
     method: "DELETE",
+    withCredentials: true,
   },
   createSchedule: {
     url: "/api/schedule",
     method: "POST",
+    withCredentials: true,
+  },
+  login: {
+    url: "/api/auth/login",
+    method: "POST",
+    withCredentials: true,
   },
 };

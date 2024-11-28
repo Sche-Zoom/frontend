@@ -30,7 +30,7 @@ const handleApiError = (error: unknown): never => {
     }
   } else {
     // 요청을 설정하는 동안 문제가 발생한 경우
-    throw new CustomError("요청 설정에 문제가 발생했습니다.");
+    throw new CustomError("요청 설정에 문제가 발생했습니다. ");
   }
 };
 
@@ -39,13 +39,14 @@ const apiRequest = async <T_Key extends keyof ApiEndpoint>(
   req: ApiEndpoint[T_Key]["req"],
   pathParam?: string, // path param
 ): Promise<ApiEndpoint[T_Key]["res"]> => {
-  const { url, method } = apiEndpoint[key];
+  const { url, method, withCredentials } = apiEndpoint[key];
 
   try {
     const res = await api.request({
       method,
       url: pathParam ? `${url}/${pathParam}` : url,
       data: method !== "GET" ? req : undefined, // request body
+      withCredentials: withCredentials ?? false,
       params: method === "GET" || method === "DELETE" ? req : undefined, // query parameter
     });
 

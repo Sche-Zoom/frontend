@@ -37,7 +37,7 @@ export const ScheduleHandlers = [
     return HttpResponse.text("ok");
   }),
 
-  // 개인 일정 삭제
+  // 개인 일정 생성
   http.post<any, CreateScheduleReq, any>(API_URL, ({ params }) => {
     // const { sid } = params;
     return HttpResponse.text("ok");
