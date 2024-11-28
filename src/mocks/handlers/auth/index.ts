@@ -13,4 +13,14 @@ export const AuthHandlers = [
       headers: { "Set-Cookie": `authToken=${mockJwtToken}; Path=/; HttpOnly` },
     });
   }),
+
+  // 회원가입
+  http.post<any, SignupReq, any>(`${API_URL}/signup`, ({ params }) => {
+    return HttpResponse.text("ok");
+  }),
+
+  // 중복 email 확인
+  http.post<any, CheckEmailReq, CheckEmailRes>(`${API_URL}/check-email`, ({ params }) => {
+    return HttpResponse.json({ available: true });
+  }),
 ];

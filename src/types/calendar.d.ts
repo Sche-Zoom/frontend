@@ -117,3 +117,11 @@ interface CreateScheduleVariables {
 interface LoginVariables {
   req: LoginReq;
 }
+
+interface SignupVariables {
+  req: SignupReq;
+}
+
+interface CheckEmailVariables {
+  req: CheckEmailReq;
+}
