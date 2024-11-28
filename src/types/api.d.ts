@@ -87,3 +87,16 @@ interface LoginReq {
   email: string;
   password: string;
 }
+
+interface SignupReq {
+  email: string;
+  password: string;
+}
+
+interface CheckEmailReq {
+  email: string;
+}
+
+interface CheckEmailRes {
+  available: boolean;
+}

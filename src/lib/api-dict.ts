@@ -20,6 +20,8 @@ export interface ApiEndpoint {
   deleteSchedule: HttpReqRes<DeleteScheduleReq, null>;
   createSchedule: HttpReqRes<CreateScheduleReq, null>;
   login: HttpReqRes<LoginReq, null>;
+  signup: HttpReqRes<SignupReq, null>;
+  checkEmail: HttpReqRes<CheckEmailReq, CheckEmailRes>;
 }
 
 // API Endpoint 정보
@@ -68,5 +70,13 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
     url: "/api/auth/login",
     method: "POST",
     withCredentials: true,
+  },
+  signup: {
+    url: "/api/auth/signup",
+    method: "POST",
+  },
+  checkEmail: {
+    url: "/api/auth/check-email",
+    method: "POST",
   },
 };
