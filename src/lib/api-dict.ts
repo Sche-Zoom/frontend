@@ -21,6 +21,7 @@ export interface ApiEndpoint {
   createSchedule: HttpReqRes<CreateScheduleReq, null>;
   login: HttpReqRes<LoginReq, null>;
   signup: HttpReqRes<SignupReq, null>;
+  checkId: HttpReqRes<CheckIdReq, CheckIdRes>;
   checkEmail: HttpReqRes<CheckEmailReq, CheckEmailRes>;
 }
 
@@ -73,6 +74,10 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   },
   signup: {
     url: "/api/auth/signup",
+    method: "POST",
+  },
+  checkId: {
+    url: "/api/auth/check-id",
     method: "POST",
   },
   checkEmail: {

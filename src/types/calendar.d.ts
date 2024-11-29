@@ -122,6 +122,10 @@ interface SignupVariables {
   req: SignupReq;
 }
 
+interface CheckIdVariables {
+  req: CheckIdReq;
+}
+
 interface CheckEmailVariables {
   req: CheckEmailReq;
 }

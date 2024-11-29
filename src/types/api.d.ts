@@ -84,13 +84,22 @@ interface CreateScheduleReq {
 }
 
 interface LoginReq {
-  email: string;
+  id: string;
   password: string;
 }
 
 interface SignupReq {
+  id: string;
   email: string;
   password: string;
+}
+
+interface CheckIdReq {
+  id: string;
+}
+
+interface CheckIdRes {
+  available: boolean;
 }
 
 interface CheckEmailReq {

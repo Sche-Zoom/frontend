@@ -23,4 +23,9 @@ export const AuthHandlers = [
   http.post<any, CheckEmailReq, CheckEmailRes>(`${API_URL}/check-email`, ({ params }) => {
     return HttpResponse.json({ available: true });
   }),
+
+  // 중복 id 확인
+  http.post<any, CheckIdReq, CheckIdRes>(`${API_URL}/check-id`, ({ params }) => {
+    return HttpResponse.json({ available: true });
+  }),
 ];
