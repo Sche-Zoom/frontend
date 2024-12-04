@@ -67,7 +67,7 @@ export default function Login() {
             name="id"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem>
                 <FormLabel>아이디</FormLabel>
                 <FormControl>
                   <Input placeholder="아이디" {...field} />
@@ -80,7 +80,7 @@ export default function Login() {
             name="password"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem>
                 <FormLabel>비밀번호</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="비밀번호" {...field} />
