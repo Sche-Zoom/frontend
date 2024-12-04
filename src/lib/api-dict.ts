@@ -23,6 +23,7 @@ export interface ApiEndpoint {
   signup: HttpReqRes<SignupReq, null>;
   checkId: HttpReqRes<CheckIdReq, CheckIdRes>;
   checkEmail: HttpReqRes<CheckEmailReq, CheckEmailRes>;
+  findId: HttpReqRes<FindIdReq, FindIdRes>;
 }
 
 // API Endpoint 정보
@@ -82,6 +83,10 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   },
   checkEmail: {
     url: "/api/auth/check-email",
+    method: "POST",
+  },
+  findId: {
+    url: "/api/auth/find-id",
     method: "POST",
   },
 };

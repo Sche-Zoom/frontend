@@ -28,4 +28,9 @@ export const AuthHandlers = [
   http.post<any, CheckIdReq, CheckIdRes>(`${API_URL}/check-id`, ({ params }) => {
     return HttpResponse.json({ available: true });
   }),
+
+  // id 찾기
+  http.post<any, FindIdReq, FindIdRes>(`${API_URL}/find-id`, ({ params }) => {
+    return HttpResponse.json({ success: true, id: "userid12332", created_at: "2024-07-23" });
+  }),
 ];
