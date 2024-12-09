@@ -33,4 +33,13 @@ export const AuthHandlers = [
   http.post<any, FindIdReq, FindIdRes>(`${API_URL}/find-id`, ({ params }) => {
     return HttpResponse.json({ success: true, id: "userid12332", created_at: "2024-07-23" });
   }),
+
+  // 로그아웃
+  http.post(`${API_URL}/logout`, ({ params }) => {
+    return new HttpResponse("ok", {
+      headers: {
+        "Set-Cookie": "authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly",
+      },
+    });
+  }),
 ];
