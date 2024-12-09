@@ -14,13 +14,7 @@ export default function ImportanceField() {
       control={control}
       render={({ field }) => {
         const { value, onChange, disabled } = field;
-        return field.disabled ? (
-          // 읽기 모드
-          <div className="flex items-center">
-            <span className="mr-4 text-sm font-medium">중요도</span>
-            <p className="text-sm">{IMPORTANCE_TYPE[field.value]}</p>
-          </div>
-        ) : (
+        return (
           // 수정 모드 form field
           <FormItem className="flex items-center space-x-6 space-y-0">
             <FormLabel>중요도</FormLabel>

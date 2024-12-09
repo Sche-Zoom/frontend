@@ -40,36 +40,24 @@ export default function DateRangeField() {
         <span className="mr-4 text-sm font-medium">시간</span>
 
         {/* 시작 날짜 datetime picker  */}
-        {startDateController.field.disabled ? (
-          // 읽기 모드
-          <span className="text-sm">{dayjs(start_date).format("YYYY-MM-DD HH:mm:ss")}</span>
-        ) : (
-          // 수정 모드 datetime picker
-          <DateTimePicker
-            date={start_date}
-            dateAriaLabel="시작 날짜"
-            onSelectDate={(date, selectedDate) => handleChangeDate("start_date", selectedDate)}
-            onChangeTime={(e) => handleChangeTime("start_date", e)}
-            className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
-          />
-        )}
+        <DateTimePicker
+          date={start_date}
+          dateAriaLabel="시작 날짜"
+          onSelectDate={(date, selectedDate) => handleChangeDate("start_date", selectedDate)}
+          onChangeTime={(e) => handleChangeTime("start_date", e)}
+          className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
+        />
 
         <span>~</span>
 
         {/* 종료 날짜 datetime picker  */}
-        {endDateController.field.disabled ? (
-          // 읽기 모드
-          <span className="text-sm">{dayjs(end_date).format("YYYY-MM-DD HH:mm:ss")}</span>
-        ) : (
-          // 수정 모드 datetime picker
-          <DateTimePicker
-            date={end_date}
-            dateAriaLabel="종료 날짜"
-            onSelectDate={(date, selectedDate) => handleChangeDate("end_date", selectedDate)}
-            onChangeTime={(e) => handleChangeTime("end_date", e)}
-            className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
-          />
-        )}
+        <DateTimePicker
+          date={end_date}
+          dateAriaLabel="종료 날짜"
+          onSelectDate={(date, selectedDate) => handleChangeDate("end_date", selectedDate)}
+          onChangeTime={(e) => handleChangeTime("end_date", e)}
+          className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
+        />
       </div>
 
       {/* 에러메시지 */}

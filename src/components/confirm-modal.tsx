@@ -1,16 +1,16 @@
-import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
 import { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 interface Props {
@@ -38,8 +38,12 @@ export default function ScheduleConfirmModal(props: Props) {
           {/* 반복 일정 수정 처리 form  */}
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <AlertDialogFooter>
-              <AlertDialogCancel asChild>
-                <Button type="button" variant="outline" size="lg" onClick={onCancel}>
+              <AlertDialogCancel
+                className={buttonVariants({ variant: "outline", size: "lg" })}
+                onClick={onCancel}
+                asChild
+              >
+                <Button type="button" variant={null}>
                   취소
                 </Button>
               </AlertDialogCancel>

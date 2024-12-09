@@ -10,7 +10,6 @@ export const SCHEDULE_FORM_SCHEMA = z
       .max(50, { message: "제목은 최대 50자까지 작성가능합니다." })
       .min(2, { message: "제목은 최소 2자 이상 작성해야합니다." }),
     color: z.enum([...COLORS], INVALID_TYPE_ERROR),
-    type: z.enum(["personal", "group"]).readonly(),
     start_date: z.string(INVALID_TYPE_ERROR).refine((start_date) => dayjs(start_date).isValid(), {
       ...INVALID_TYPE_ERROR,
       path: ["start_date"],

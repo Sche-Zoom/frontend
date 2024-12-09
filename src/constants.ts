@@ -1,8 +1,3 @@
-export const SCHEDULE_TYPE = {
-  personal: "개인일정",
-  group: "그룹일정",
-} as const;
-
 export const IMPORTANCE_TYPE = {
   very_low: "매우 낮음",
   low: "낮음",

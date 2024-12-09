@@ -15,12 +15,7 @@ interface GetScheduleParam {
 interface GetScheduleRes extends ScheduleDetail {}
 
 interface GetScheduleTagsRes {
-  per_tags: Tag[];
-  groups: {
-    id: number;
-    name: string;
-    tags: Tag[];
-  }[];
+  schedule_tags: Tag[];
 }
 
 interface GetSummarySchedulesReq {
@@ -53,8 +48,6 @@ type ModifyScheduleReq = {
   repeat_interval?: number;
   repeat_end_date?: string; // ISO8601
   repeat_end_count?: number;
-  // reminder?: number[]; // minute
-  // reminder_email_noti?: boolean;
 };
 
 type ModifyRepeatScheduleReq = ModifyScheduleReq & {
