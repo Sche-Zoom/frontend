@@ -1,30 +1,31 @@
 import { UserRound } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 interface Props {
-  src: string | null;
-  size: "sm" | "md";
+  src?: string;
+  size: keyof typeof sizes;
   className?: string;
 }
 const sizes = {
+  xs: "size-9" /* 36px */,
   sm: "size-12" /* 48px */,
   md: "size-16" /* 64px */,
 };
 
-/**
- * 사용자 아바타 컴포넌트 사용자의 이미지가 따로 존재하지 않을 경우 기본 프로필 이미지가 적용
- * @param size 요소의 넓이와 높이(sm: 48px, md: 64px)
- * @param src 이미지 경로
- * @param className
- * @returns
- */
+const innerSizes = {
+  xs: 18,
+  sm: 24,
+  md: 32,
+};
+
 export default function Sign({ src, size, className }: Props) {
   return (
-    <Avatar className={`${className} ${sizes[size]}`}>
-      <AvatarImage src={src ?? ""} />
+    <Avatar className={cn(className, sizes[size])}>
+      <AvatarImage src={src && src} />
       <AvatarFallback className="bg-background border">
-        <UserRound className="text-muted-foreground size-1/2" />
+        <UserRound size={innerSizes[size]} className="text-muted-foreground" />
       </AvatarFallback>
     </Avatar>
   );

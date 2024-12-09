@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -8,11 +8,11 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { AlertDialogFooter } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MODIFY_REPEAT_SCHEDULE_OPTIONS } from "@/constants";
@@ -45,6 +45,7 @@ export default function RepeatScheduleConfirmModal(props: Props) {
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
+
         <Form {...form}>
           {/* 반복 일정 수정 처리 form  */}
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -75,8 +76,12 @@ export default function RepeatScheduleConfirmModal(props: Props) {
             />
 
             <AlertDialogFooter>
-              <AlertDialogCancel asChild>
-                <Button type="button" variant="outline" size="lg" onClick={onCancel}>
+              <AlertDialogCancel
+                className={buttonVariants({ variant: "outline", size: "lg" })}
+                onClick={onCancel}
+                asChild
+              >
+                <Button type="button" variant={null}>
                   취소
                 </Button>
               </AlertDialogCancel>

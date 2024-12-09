@@ -1,48 +1,62 @@
 "use client";
 
 import FullCalendar from "@fullcalendar/react";
-import { ClipboardList } from "lucide-react";
-import { RefObject, Suspense, useEffect, useRef } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { RefObject, Suspense, useRef, useState } from "react";
 
 import BasicLoader from "@/components/basic-loader";
 import ScheduleConfirmModal from "@/components/confirm-modal";
 import ErrorBoundary from "@/components/error-boundary";
 import RepeatScheduleConfirmModal from "@/components/repeat-confirm-modal";
 import CalendarHeader from "@/components/schedule/calendar/calendar-header";
-import CalendarSideMenu from "@/components/schedule/calendar/calendar-side-menu";
 import useCalendar from "@/components/schedule/calendar/useCalendar";
-import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { CalendarProvider, useCalendarContext } from "@/contexts/calendar";
+import apiRequest from "@/lib/api";
+import { getScheduleColorVariable } from "@/lib/calendar";
 
 export default function ScheduleCalendar() {
   const calendarRef = useRef<FullCalendar>(null);
+  const [isSideOpen, setIsSideOpen] = useState(false);
 
   return (
     <CalendarProvider calendarRef={calendarRef}>
-      <div className="z-0 flex size-full flex-col">
-        {/* 콘텐츠 title */}
-        <div className="bg-muted flex h-9 items-center justify-between border-b px-2">
-          <h2 className="align-middle text-sm">개인 일정</h2>
-          <SideButtons />
-        </div>
+      <div className="relative z-0 flex size-full flex-1">
+        {/* 캘린더 전체 */}
+        <div className="absolute flex size-full flex-col ">
+          {/* 캘린더 조작을 위한 header 부분 */}
+          <CalendarHeader isSideOpen={isSideOpen} onClickSideButton={() => setIsSideOpen((prev) => !prev)} />
 
-        <div className="flex flex-1">
-          <div className="relative flex-1">
-            {/* 캘린더 전체 */}
-            <div className="absolute flex size-full flex-col p-4">
-              {/* 캘린더 조작을 위한 header 부분 */}
-              <CalendarHeader />
+          <div className="flex flex-1">
+            {/* calendar */}
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <div className="flex-1">
+                    <BasicLoader />
+                  </div>
+                }
+              >
+                <CalendarContent calendarRef={calendarRef} />
+              </Suspense>
+            </ErrorBoundary>
 
+            {isSideOpen && (
+              // 사이드 메뉴
               <ErrorBoundary>
-                <Suspense fallback={<BasicLoader />}>
-                  <CalendarContent calendarRef={calendarRef} />
+                <Suspense
+                  fallback={
+                    <aside className={"border-box hidden h-full w-72 border p-4 lg:inline-block"}>
+                      <BasicLoader />
+                    </aside>
+                  }
+                >
+                  <CalendarSideMenu />
                 </Suspense>
               </ErrorBoundary>
-            </div>
+            )}
           </div>
-
-          {/* 사이드 메뉴 */}
-          <CalendarSideMenu />
         </div>
       </div>
     </CalendarProvider>
@@ -50,6 +64,19 @@ export default function ScheduleCalendar() {
 }
 
 const CalendarContent = ({ calendarRef }: { calendarRef: RefObject<FullCalendar> }) => {
+  const { checkedTagIds, startDate, endDate } = useCalendarContext();
+
+  // 캘린더에 사용할 일정 목록 요청 로직
+  const { data: schedulesData } = useSuspenseQuery({
+    queryKey: ["schedule", "list", checkedTagIds, startDate, endDate],
+    queryFn: () =>
+      apiRequest("getSchedules", {
+        start_date: startDate,
+        end_date: endDate,
+        ...(checkedTagIds && { tag_ids: checkedTagIds }),
+      }),
+  });
+
   const {
     calendarOption,
     confirmModalOpen,
@@ -59,12 +86,12 @@ const CalendarContent = ({ calendarRef }: { calendarRef: RefObject<FullCalendar>
     setRepeatConfirmModalOpen,
     onConfirmSubmit,
     onRepeatConfirmSubmit,
-  } = useCalendar(calendarRef);
+  } = useCalendar(calendarRef, schedulesData);
 
   return (
     <>
       {/* 실제 일정이 노출될 캘린더 content 부분 */}
-      <div className="flex-1 text-sm">
+      <div className="h-full flex-1 p-4 text-sm">
         <FullCalendar {...calendarOption} />
       </div>
 
@@ -93,23 +120,47 @@ const CalendarContent = ({ calendarRef }: { calendarRef: RefObject<FullCalendar>
   );
 };
 
-const SideButtons = () => {
-  const { menuTab, updateMenuTab, updateSize } = useCalendarContext();
+const CalendarSideMenu = () => {
+  const router = useRouter();
+  const { checkedTagIds, currentDate } = useCalendarContext();
 
-  useEffect(() => {
-    updateSize();
-  }, [menuTab, updateSize]);
+  const { data } = useSuspenseQuery({
+    queryKey: ["schedule_summary", "list", checkedTagIds, currentDate],
+    queryFn: () =>
+      apiRequest("getSummarySchedules", {
+        selected_date: currentDate,
+        ...(checkedTagIds && { tag_ids: checkedTagIds }),
+      }),
+  });
 
   return (
-    <div className="flex gap-2">
-      <Button
-        size="icon-sm"
-        className="hidden lg:inline-block"
-        variant={"summarySchedules" === menuTab ? "image-icon-active" : "image-icon-none"}
-        onClick={() => updateMenuTab("summarySchedules")}
-      >
-        <ClipboardList size={24} />
-      </Button>
-    </div>
+    // 월단위 일정 요약 사이드메뉴
+    <aside className="border-box hidden h-full w-72 border-l p-4 lg:inline-block">
+      <h3 className="mb-2 font-semibold">일정 목록</h3>
+      {/*  해당월의 전체 일정 목록 */}
+      {data.side_schedules.map((dailySchedules) => (
+        <div key={dailySchedules.start_date}>
+          {/* 일정 시작 날짜기준 일별 일정 목록 */}
+          <div key={dailySchedules.start_date} className="p-2">
+            <p className="mb-2 text-sm">{dailySchedules.start_date}</p>
+            {/* 특정 날짜 일정 목록 */}
+            {dailySchedules.schedules.map((schedule) => (
+              <div
+                key={schedule.id}
+                className={`mb-2 space-y-1 border-l-4 border-[hsl(var(--schedule))] bg-[hsl(var(--schedule-background))] p-2`}
+                style={getScheduleColorVariable(schedule.color)}
+                onClick={() => router.push(`/schedule/${schedule.id}`)}
+              >
+                <h4 className="text-sm">{schedule.title}</h4>
+                <p className="text-muted-foreground flex text-xs">
+                  {schedule.tag_names.length > 0 && `${schedule.tag_names.join(" · ")}`}
+                </p>
+              </div>
+            ))}
+          </div>
+          <Separator className="mb-2" />
+        </div>
+      ))}
+    </aside>
   );
 };

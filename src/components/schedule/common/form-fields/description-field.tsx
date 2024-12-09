@@ -11,30 +11,25 @@ export default function DescriptionField() {
     <FormField
       name="description"
       control={form.control}
-      render={({ field }) =>
-        field.disabled ? (
-          // 읽기 모드
-          <Textarea value={field.value} rows={4} disabled className="resize-none" />
-        ) : (
-          // 수정 모드 form field
-          <FormItem>
-            <FormLabel>설명</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder={field.value}
-                className="resize-none"
-                maxLength={200}
-                {...field}
-                onBlur={() => {
-                  field.onBlur();
-                  form.trigger(field.name); // 유효성 검사
-                }}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )
-      }
+      render={({ field }) => (
+        // 수정 모드 form field
+        <FormItem>
+          <FormLabel>설명</FormLabel>
+          <FormControl>
+            <Textarea
+              placeholder={field.value}
+              className="resize-none"
+              maxLength={200}
+              {...field}
+              onBlur={() => {
+                field.onBlur();
+                form.trigger(field.name); // 유효성 검사
+              }}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
     />
   );
 }

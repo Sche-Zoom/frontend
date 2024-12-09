@@ -1,10 +1,9 @@
-// mock data: get "/per-schedule/list"
+// mock data: get "/schedule/list"
 export const MOCK_SCHEDULES: GetSchedulesRes = {
   schedules: [
     {
       id: 1234,
       title: "Weekly Team Meeting",
-      type: "group",
       color: "pink",
       dates: [
         {
@@ -16,7 +15,6 @@ export const MOCK_SCHEDULES: GetSchedulesRes = {
     {
       id: 234,
       title: "Gym Session",
-      type: "personal",
       color: "yellow",
       dates: [
         {
@@ -28,7 +26,6 @@ export const MOCK_SCHEDULES: GetSchedulesRes = {
     {
       id: 24,
       title: "Team Lunch",
-      type: "personal",
       color: "green",
       dates: [
         {
@@ -44,10 +41,9 @@ export const MOCK_SCHEDULES: GetSchedulesRes = {
   ],
 };
 
-// mock data: get "/per-schedule/{sid}"
+// mock data: get "/schedule/{sid}"
 export const MOCK_SCHEDULE: Omit<GetScheduleRes, "id"> = {
   title: "Meeting with Client",
-  type: "personal",
   description: "Discuss project details and deadlines",
   importance: "high",
   color: "pink",
@@ -63,37 +59,19 @@ export const MOCK_SCHEDULE: Omit<GetScheduleRes, "id"> = {
   repeat_interval: 1,
   repeat_end_count: 1,
   repeat_endDate: null,
-  reminder: [180, 2400],
-  reminder_email_noti: true,
 };
 
-// mock data: get "/per-schedule/total-tags"
+// mock data: get "/schedule/total-tags"
 export const MOCK_TAGS: GetScheduleTagsRes = {
-  per_tags: [
+  schedule_tags: [
     { id: 1, name: "헬스" },
     { id: 2, name: "여행" },
     { id: 11, name: "Client" },
     { id: 22, name: "Meeting" },
   ],
-  groups: [
-    {
-      id: 124,
-      name: "group101",
-      tags: [
-        {
-          id: 12,
-          name: "A 개발팀",
-        },
-        {
-          id: 13,
-          name: "B 개발팀",
-        },
-      ],
-    },
-  ],
 };
 
-// mock data: get "/per-schedule/summary-list"
+// mock data: get "/schedule/summary-list"
 export const MOCK_SUMMARY_SCHEDULES: GetSummarySchedulesRes = {
   side_schedules: [
     {
@@ -103,7 +81,6 @@ export const MOCK_SUMMARY_SCHEDULES: GetSummarySchedulesRes = {
           id: 1,
           end_date: "2024-07-12",
           title: "Team Meeting",
-          type: "group",
           color: "pink",
           tag_names: ["study", "develop"],
         },
@@ -116,7 +93,6 @@ export const MOCK_SUMMARY_SCHEDULES: GetSummarySchedulesRes = {
           id: 2,
           end_date: "2024-07-15",
           title: "Lunch with Team",
-          type: "personal",
           color: "yellow",
           tag_names: [],
         },
@@ -124,7 +100,6 @@ export const MOCK_SUMMARY_SCHEDULES: GetSummarySchedulesRes = {
           id: 3,
           end_date: "2024-07-16",
           title: "Project Review",
-          type: "group",
           color: "green",
           tag_names: ["project", "develop"],
         },

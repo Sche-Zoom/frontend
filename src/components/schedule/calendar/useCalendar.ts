@@ -14,7 +14,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg, EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { DefaultError, useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { DefaultError, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { RefObject, useState } from "react";
 
@@ -26,7 +26,6 @@ import { areDatesEqual, changeDateIfMidnight, getDefaultFormatDate } from "@/lib
 
 export interface ScheduleExtendedProps {
   isRepeat: boolean;
-  type: ScheduleType;
   scheduleId: number;
 }
 
@@ -38,24 +37,13 @@ export interface ScheduleEvent extends EventImpl {
   extendedProps: ScheduleExtendedProps;
 }
 
-export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
-  const { currentDate, checkedTagIds, startDate, endDate, viewType } = useCalendarContext();
+export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedulesData: GetSchedulesRes) {
+  const { currentDate, viewType } = useCalendarContext();
   const router = useRouter();
 
   const [scheduleChange, setScheduleChange] = useState<ScheduleChangeObject | null>(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [repeatConfirmModalOpen, setRepeatConfirmModalOpen] = useState(false);
-
-  // 캘린더에 사용할 일정 목록 요청 로직
-  const { data: schedulesData } = useSuspenseQuery({
-    queryKey: ["personal_schedule", "list", checkedTagIds, startDate, endDate],
-    queryFn: () =>
-      apiRequest("getSchedules", {
-        start_date: startDate,
-        end_date: endDate,
-        ...(checkedTagIds && { tag_ids: checkedTagIds }),
-      }),
-  });
 
   // 일정 수정 mutate
   const { mutate: modifyScheduleMutate } = useMutation<null, DefaultError, ModifyScheduleVariables>({
@@ -87,10 +75,9 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
       end: changeDateIfMidnight(end_date),
       backgroundColor: `hsl(var(--schedule))`,
       borderColor: `hsl(var(--schedule))`,
-      editable: sch.type === "personal",
+      editable: true,
       extendedProps: {
         isRepeat: sch.dates.length > 1,
-        type: sch.type,
         scheduleId: sch.id,
         color: sch.color,
       } as ScheduleExtendedProps,
@@ -99,7 +86,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>) {
 
   const onEventChange = (arg: EventChangeArg) => {
     const { extendedProps } = arg.event as ScheduleEvent;
-    extendedProps.type === "personal" ? setConfirmModalOpen(true) : setRepeatConfirmModalOpen(true);
+    extendedProps.isRepeat ? setRepeatConfirmModalOpen(true) : setConfirmModalOpen(true);
   };
 
   const onEventResize = (arg: EventResizeDoneArg) => {

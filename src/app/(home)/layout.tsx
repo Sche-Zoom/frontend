@@ -1,5 +1,4 @@
 import Header from "@/components/layout/header";
-import Nav from "@/components/layout/nav";
 
 interface Props {
   children: React.ReactNode;
@@ -16,7 +15,6 @@ export default function Layout({ children, detail, add }: Props) {
         <Header />
 
         <div className="relative flex flex-1">
-          <Nav />
           <main className="relative flex-1 ">{children}</main>
         </div>
       </div>

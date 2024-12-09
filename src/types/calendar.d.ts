@@ -2,8 +2,6 @@ type CalendarViewType = "month" | "week" | "day";
 
 type ColorType = "pink" | "blue" | "green" | "yellow" | "purple" | "orange" | "mint" | "lavender" | "beige" | "coral";
 
-type ScheduleType = "group" | "personal";
-
 type RepeatFrequencyType = "daily" | "weekly" | "monthly" | "yearly";
 
 type ScheduleImportanceType = "very_low" | "low" | "medium" | "high" | "very_high";
@@ -32,7 +30,6 @@ interface Tag {
 interface Schedule {
   id: number;
   title: string;
-  type: ScheduleType;
   color: ColorType;
   dates: {
     start_date: string; // ISO8601
@@ -43,7 +40,6 @@ interface Schedule {
 interface ScheduleDetail {
   id: number;
   title: string;
-  type: ScheduleType;
   description: string;
   importance: ScheduleImportanceType;
   color: ColorType;
@@ -56,8 +52,6 @@ interface ScheduleDetail {
   repeat_interval?: number;
   repeat_endDate?: string | null; // ISO8601
   repeat_end_count?: number | null;
-  reminder: number[]; // minute
-  reminder_email_noti: boolean;
 }
 
 interface ScheduleChangeObject {
@@ -79,8 +73,6 @@ interface ScheduleChangeObject {
   repeatInterval?: number;
   repeatEndDate?: string; // ISO8601
   repeatCount?: number;
-  // reminder?: number[]; // minute
-  // reminderEmailNoti?: boolean;
 }
 
 interface SummarySchedule {
@@ -89,7 +81,6 @@ interface SummarySchedule {
     id: number;
     end_date: string; // ISO8601 (YYYY-MM-DD)
     title: string;
-    type: ScheduleType;
     color: ColorType;
     tag_names: string[];
   }[];

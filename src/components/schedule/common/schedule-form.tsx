@@ -15,14 +15,12 @@ import { ChangeConfirm, ChangeRepeatConfirm } from "@/components/schedule/detail
 import { DeleteConfirm, DeleteRepeatConfirm } from "@/components/schedule/detail/delete-confirm";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { SCHEDULE_TYPE } from "@/constants";
 import apiRequest from "@/lib/api";
 import { getDefaultFormatDate } from "@/lib/date";
 
 const INIT_FORM_VALUES: FormValues = {
   title: "",
   color: "pink",
-  type: "personal",
   description: "",
   tags: [],
   importance: "medium",
@@ -91,7 +89,7 @@ const ScheduleAddForm = () => {
   };
   return (
     <Form {...form}>
-      <ScheduleForm type="add" onSubmit={onSubmit} onSubmitError={onSubmitError}>
+      <ScheduleForm onSubmit={onSubmit} onSubmitError={onSubmitError}>
         <div className="flex justify-end">
           <Button type="submit" size="lg">
             완료
@@ -110,7 +108,7 @@ const ScheduleDetailForm = ({ scheduleId }: { scheduleId: number }) => {
 
   // 개인 일정 상세 정보 조회 api
   const { data } = useSuspenseQuery({
-    queryKey: ["personal_schedule", "detail", scheduleId],
+    queryKey: ["schedule", "detail", scheduleId],
     queryFn: () => apiRequest("getSchedule", null, scheduleId.toString()),
   });
 
@@ -118,7 +116,6 @@ const ScheduleDetailForm = ({ scheduleId }: { scheduleId: number }) => {
   const defaultValues: FormValues = {
     title: data.title,
     color: data.color,
-    type: data.type,
     description: data.description,
     tags: data.tags,
     importance: data.importance,
@@ -136,7 +133,6 @@ const ScheduleDetailForm = ({ scheduleId }: { scheduleId: number }) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(SCHEDULE_FORM_SCHEMA),
     defaultValues,
-    disabled: defaultValues.type === "group",
   });
   const formValues = form.watch();
 
@@ -169,19 +165,17 @@ const ScheduleDetailForm = ({ scheduleId }: { scheduleId: number }) => {
 
   return (
     <Form {...form}>
-      <ScheduleForm type="detail" onSubmit={onSubmit} onSubmitError={onSubmitError}>
+      <ScheduleForm onSubmit={onSubmit} onSubmitError={onSubmitError}>
         {/* 푸터 버튼 박스 */}
-        {defaultValues.type === "personal" && (
-          <div className="flex justify-between">
-            <Button type="button" variant="ghost" onClick={() => deleteConfirmOption.setOpen()}>
-              <Trash2 className="mr-2" size={16} />
-              일정 삭제
-            </Button>
-            <Button type="submit" size="lg" disabled={!getIsFormChange(formValues, defaultValues)}>
-              저장
-            </Button>
-          </div>
-        )}
+        <div className="flex justify-between">
+          <Button type="button" variant="ghost" onClick={() => deleteConfirmOption.setOpen()}>
+            <Trash2 className="mr-2" size={16} />
+            일정 삭제
+          </Button>
+          <Button type="submit" size="lg" disabled={!getIsFormChange(formValues, defaultValues)}>
+            저장
+          </Button>
+        </div>
       </ScheduleForm>
 
       {defaultValues.is_repeat ? (
@@ -204,25 +198,18 @@ const ScheduleDetailForm = ({ scheduleId }: { scheduleId: number }) => {
 };
 
 interface ScheduleFormProps {
-  type: "add" | "detail";
   children: ReactNode;
   onSubmit: SubmitHandler<FormValues>;
   onSubmitError: SubmitErrorHandler<FormValues>;
 }
 
-const ScheduleForm = ({ type, children, onSubmit, onSubmitError }: ScheduleFormProps) => {
+const ScheduleForm = ({ children, onSubmit, onSubmitError }: ScheduleFormProps) => {
   const { ColorTitleField, DateRangeField, DescriptionField, ImportanceField, RepeatFieldGroup, TagsField } =
     FormFields;
   const form = useFormContext<FormValues>();
   return (
     <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className="box-border flex w-full flex-col gap-y-4">
       <ColorTitleField />
-      {type === "detail" && (
-        <div className="flex items-center">
-          <span className="mr-4 text-sm font-medium">분류</span>
-          <p className="text-sm">{SCHEDULE_TYPE[form.getValues("type")]}</p>
-        </div>
-      )}
       <DateRangeField />
       <DescriptionField />
       <TagsField />

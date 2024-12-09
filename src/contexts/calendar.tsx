@@ -14,16 +14,11 @@ interface CalendarControls {
   startDate: string;
   endDate: string;
   calendarTitle: string;
-  menuTab: SideMenuType;
   setCheckedTagIds: Dispatch<SetStateAction<number[] | null>>;
   moveCalendar: (type: "next" | "prev") => void;
   changeView: (mode: CalendarViewType) => void;
   setTagChecked: (checked: CheckedState, id: number) => void;
-  setAllSubtagsChecked: (checked: CheckedState, ids: number[]) => void;
   getTagChecked: (id: number) => boolean;
-  getTagAllChecked: (ids: number[]) => boolean;
-  updateSize: () => void;
-  updateMenuTab: (clickMenu: SideMenuType) => void;
 }
 interface CalendarContextType extends CalendarControls {}
 
@@ -56,7 +51,6 @@ export function useCalendarControls(calendarRef: RefObject<FullCalendar>): Calen
   // 필터에서 체크된 태그 id 목록, 초기값 null 은 초기 모든 태그들이 선택된 상태를 의미하며 이후 체크 상태가 변경되는 경우 체크된 id 배열로 상태를 유지
   const [checkedTagIds, setCheckedTagIds] = useState<number[] | null>(null);
   const [calendarTitle, setCalendarTitle] = useState(dayjs().format("YYYY년 MM월")); // 캘린더 헤더에 노출될 날짜형식의 title ex) 2024년 06월, 2024년 06월 30일 ~ 07월 06일
-  const [menuTab, setMenuTab] = useState<SideMenuType>(null);
 
   // 캘린더에서 사용될 객체형식의 날짜 데이터
   const [dateObj, setDateObj] = useState<CalendarDateState>(() => {
@@ -89,17 +83,6 @@ export function useCalendarControls(calendarRef: RefObject<FullCalendar>): Calen
 
   const setTagChecked = (checked: CheckedState, id: number) =>
     updateCheckedTagIds((set) => (checked ? set.add(id) : set.delete(id)));
-
-  const setAllSubtagsChecked = (checked: CheckedState, ids: number[]) => {
-    updateCheckedTagIds((set) => (checked ? ids.forEach((id) => set.add(id)) : ids.forEach((id) => set.delete(id))));
-  };
-
-  const getTagAllChecked = (ids: number[]) => {
-    if (checkedTagIds === null) return true; // 초기상태의 경우 true 반환
-
-    const checkedTagIdsSet = new Set(checkedTagIds);
-    return ids.every((id) => checkedTagIdsSet.has(id));
-  };
 
   const getTagChecked = (id: number) => {
     if (checkedTagIds === null) return true; // 초기상태의 경우 true 반환
@@ -148,13 +131,6 @@ export function useCalendarControls(calendarRef: RefObject<FullCalendar>): Calen
     setDateObj(viewTypeHandlers[viewType]());
   };
 
-  const updateMenuTab = (clickMenu: SideMenuType) => (menuTab === clickMenu ? setMenuTab(null) : setMenuTab(clickMenu));
-
-  const updateSize = () => {
-    if (!calendarRef.current) return;
-    calendarRef.current.getApi().updateSize(); // 캘린더 size 변경
-  };
-
   return {
     viewType,
     checkedTagIds,
@@ -162,15 +138,10 @@ export function useCalendarControls(calendarRef: RefObject<FullCalendar>): Calen
     startDate,
     endDate,
     calendarTitle,
-    menuTab,
     setCheckedTagIds,
     moveCalendar,
     changeView,
     setTagChecked,
-    setAllSubtagsChecked,
     getTagChecked,
-    getTagAllChecked,
-    updateMenuTab,
-    updateSize,
   };
 }
