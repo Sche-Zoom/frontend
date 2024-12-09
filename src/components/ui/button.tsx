@@ -51,19 +51,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 interface LoadingButtonProps extends ButtonProps {
-  loading: boolean;
+  isLoading: boolean;
 }
 
 const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
-  ({ variant, size, className, children, loading, ...props }, ref) => {
+  ({ variant, size, className, children, isLoading, ...props }, ref) => {
     return (
       <Button
-        disabled={loading}
+        disabled={isLoading}
         className={cn(buttonVariants({ variant, size, className }), "space-x-2")}
         ref={ref}
         {...props}
       >
-        {loading ? <ReloadIcon className="size-4 animate-spin" /> : children}
+        {isLoading ? <ReloadIcon className="size-4 animate-spin" /> : children}
       </Button>
     );
   },

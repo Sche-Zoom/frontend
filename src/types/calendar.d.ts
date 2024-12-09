@@ -120,3 +120,7 @@ interface CheckIdVariables {
 interface CheckEmailVariables {
   req: CheckEmailReq;
 }
+
+interface FindIdVariables {
+  req: FindIdReq;
+}

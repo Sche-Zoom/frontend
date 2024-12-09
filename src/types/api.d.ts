@@ -102,3 +102,19 @@ interface CheckEmailReq {
 interface CheckEmailRes {
   available: boolean;
 }
+
+interface FindIdReq {
+  email: string;
+}
+
+interface FindIdSuccessRes {
+  success: true;
+  id: string;
+  created_at: string; // ISO8601 (YYYY-MM-DD)
+}
+
+interface FindIdFailureRes {
+  success: false;
+}
+
+type FindIdRes = FindIdSuccessRes | FindIdFailureRes;

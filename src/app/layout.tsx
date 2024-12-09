@@ -6,6 +6,7 @@ import React from "react";
 
 import ClientMsw from "@/components/client-msw";
 import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
 const pretendard = localFont({
@@ -48,6 +49,7 @@ export default function RootLayout({
       <body className={cn(pretendard.className, "size-full antialiased")}>
         {/* mock server */}
         <ClientMsw />
+        <Toaster />
 
         <Providers>{children}</Providers>
       </body>
