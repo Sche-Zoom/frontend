@@ -1,11 +1,15 @@
 "use client";
 
+import { DefaultError, useMutation } from "@tanstack/react-query";
 import { ChevronDown, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import Sign from "@/components/layout/sign";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import apiRequest from "@/lib/api";
 import { useUserStore } from "@/store/user";
 
 export default function Header() {
@@ -23,6 +27,14 @@ export default function Header() {
 
 const UserPopover = () => {
   const user = useUserStore();
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const { mutate } = useMutation<null, DefaultError>({
+    mutationFn: () => apiRequest("logout"),
+    onSuccess: () => router.push("/auth/login"),
+    onError: () => toast({ title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", variant: "destructive" }),
+  });
 
   return (
     <Popover>
@@ -52,7 +64,7 @@ const UserPopover = () => {
 
         <div className="flex items-center space-x-4 p-2 text-sm font-medium" />
 
-        <Button className="w-full justify-start space-x-4" variant="ghost">
+        <Button type="button" className="w-full justify-start space-x-4" variant="ghost" onClick={() => mutate()}>
           <LogOut size="18" />
           <span>로그아웃</span>
         </Button>

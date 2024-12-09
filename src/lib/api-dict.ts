@@ -20,6 +20,7 @@ export interface ApiEndpoint {
   deleteSchedule: HttpReqRes<DeleteScheduleReq, null>;
   createSchedule: HttpReqRes<CreateScheduleReq, null>;
   login: HttpReqRes<LoginReq, null>;
+  logout: HttpReqRes<null, null>;
   signup: HttpReqRes<SignupReq, null>;
   checkId: HttpReqRes<CheckIdReq, CheckIdRes>;
   checkEmail: HttpReqRes<CheckEmailReq, CheckEmailRes>;
@@ -88,5 +89,10 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   findId: {
     url: "/api/auth/find-id",
     method: "POST",
+  },
+  logout: {
+    url: "/api/auth/logout",
+    method: "POST",
+    withCredentials: true,
   },
 };

@@ -36,7 +36,7 @@ const handleApiError = (error: unknown): never => {
 
 const apiRequest = async <T_Key extends keyof ApiEndpoint>(
   key: T_Key,
-  req: ApiEndpoint[T_Key]["req"],
+  req?: ApiEndpoint[T_Key]["req"],
   pathParam?: string, // path param
 ): Promise<ApiEndpoint[T_Key]["res"]> => {
   const { url, method, withCredentials } = apiEndpoint[key];
