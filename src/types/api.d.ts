@@ -118,3 +118,16 @@ interface FindIdFailureRes {
 }
 
 type FindIdRes = FindIdSuccessRes | FindIdFailureRes;
+
+interface SendEmailCodeReq {
+  email: string;
+}
+
+interface VerifyEmailCodeReq {
+  email: string;
+  code: string;
+}
+
+interface VerifyEmailCodeRes {
+  success: boolean;
+}

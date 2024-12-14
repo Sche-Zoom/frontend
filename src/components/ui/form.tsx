@@ -5,6 +5,7 @@ import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from "react-hook-form";
 
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -128,4 +129,35 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
 );
 FormMessage.displayName = "FormMessage";
 
-export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };
+const CustomFormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement> & { retry: () => void }
+>(({ retry, className, ...props }, ref) => {
+  const { error, formMessageId } = useFormField();
+
+  if (!error) return;
+
+  return error.type === "server" ? (
+    <p ref={ref} id={formMessageId} className={cn("text-destructive text-sm font-medium", className)} {...props}>
+      {error.message}&nbsp;&nbsp;
+      <Button type="button" variant="link" size={null} onClick={retry}>
+        다시시도
+      </Button>
+    </p>
+  ) : (
+    <FormMessage />
+  );
+});
+CustomFormMessage.displayName = "CustomFormMessage";
+
+export {
+  CustomFormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useFormField,
+};

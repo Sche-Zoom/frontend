@@ -42,4 +42,14 @@ export const AuthHandlers = [
       },
     });
   }),
+
+  // 이메일 인증코드 발송
+  http.post(`${API_URL}/email/code`, ({ params }) => {
+    return HttpResponse.text("ok");
+  }),
+
+  // 이메일 코드 인증
+  http.post(`${API_URL}/email/verify-code`, ({ params }) => {
+    return HttpResponse.json({ success: true });
+  }),
 ];

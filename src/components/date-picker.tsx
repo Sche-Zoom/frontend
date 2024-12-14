@@ -1,5 +1,5 @@
-import { CalendarIcon } from "@radix-ui/react-icons";
 import { PopoverProps } from "@radix-ui/react-popover";
+import { CalendarIcon } from "lucide-react";
 import * as React from "react";
 import { DayPickerSingleProps } from "react-day-picker";
 
