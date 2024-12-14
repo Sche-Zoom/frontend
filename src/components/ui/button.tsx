@@ -1,6 +1,6 @@
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { RotateCwIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -18,7 +18,7 @@ const buttonVariants = cva(
         "image-icon-none": "text-muted-foreground hover:text-foreground",
         "image-icon-active": "text-foreground",
         "outline-image": "border border-input bg-background hover:bg-accent ",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "underline-offset-4 underline",
         icon: "bg-background rounded-[100%]",
       },
       size: {
@@ -63,7 +63,7 @@ const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
         ref={ref}
         {...props}
       >
-        {isLoading ? <ReloadIcon className="size-4 animate-spin" /> : children}
+        {isLoading ? <RotateCwIcon className="size-4 animate-spin" /> : children}
       </Button>
     );
   },

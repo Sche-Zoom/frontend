@@ -124,3 +124,11 @@ interface CheckEmailVariables {
 interface FindIdVariables {
   req: FindIdReq;
 }
+
+interface SendEmailCodeVariables {
+  req: SendEmailCodeReq;
+}
+
+interface VerifyEmailCodeVariables {
+  req: VerifyEmailCodeReq;
+}
