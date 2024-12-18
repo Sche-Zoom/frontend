@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultError, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import FormFields, { FormValues, SIGNUP_SCHEMA } from "@/components/auth/signup/form-fields";
@@ -26,6 +26,7 @@ import apiRequest from "@/lib/api";
 export default function Signup() {
   const router = useRouter();
   const { toast } = useToast();
+
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
 
   const form = useForm<FormValues>({
@@ -38,17 +39,15 @@ export default function Signup() {
     mutationFn: ({ req }) => apiRequest("signup", req),
     onSuccess: () => router.push("/"),
     onError: () =>
-      toast({ title: "회원가입이 정상적으로 처리되지 않았습니다. 잠시 후 다시 시도해주세요.", variant: "destructive" }),
+      toast({ title: "회원가입이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.", variant: "destructive" }),
   });
-
-  const onSubmit: SubmitHandler<FormValues> = (data) => mutate({ req: data });
 
   return (
     <>
       <div className="flex flex-col items-center justify-center gap-y-6">
         <h1 className="text-xl font-medium">회원가입</h1>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-y-4">
+          <form onSubmit={form.handleSubmit((data) => mutate({ req: data }))} className="flex w-full flex-col gap-y-4">
             <FormFields openVerifyEmail={() => setIsEmailModalOpen(true)} />
             <LoadingButton isLoading={isPending} className="w-full">
               회원가입
@@ -106,20 +105,26 @@ const VerifyEmailModal = ({ changeIsOpen, updateEmail }: VerifyEmailModalProps) 
   const { mutate: checkEmailMutate } = useMutation<CheckEmailRes, DefaultError, CheckEmailVariables>({
     mutationFn: ({ req }) => apiRequest("checkEmail", req),
     onSuccess: ({ available }) => {
-      if (!available) sendEmailForm.setError("email", { type: "duplicate", message: "중복된 이메일입니다." });
+      if (!available) sendEmailForm.setError("email", { type: "duplicate", message: "사용 불가능한 이메일입니다." });
     },
     onError: () => {
-      sendEmailForm.setError("email", { type: "server", message: "이메일 중복확인이 완료되지 않았습니다." });
-      toast({ title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", variant: "destructive" });
+      sendEmailForm.setError("email", { type: "server", message: "사용 가능한 이메일인지 확인이 필요합니다." });
+      toast({
+        title: "이메일 확인이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.",
+        variant: "destructive",
+      });
     },
   });
 
   const sendCodeMutation = useMutation<null, DefaultError, SendEmailCodeVariables>({
     mutationFn: ({ req }) => apiRequest("sendEmailCode", req),
     onSuccess: () => setMode("verify"),
-    onError: () => toast({ title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", variant: "destructive" }),
+    onError: () =>
+      toast({
+        title: "인증코드 발송이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.",
+        variant: "destructive",
+      }),
   });
-  const { mutate: sendCodeMutate, isPending: isSendCodePending } = sendCodeMutation;
 
   const verifyCodeMutation = useMutation<VerifyEmailCodeRes, DefaultError, VerifyEmailCodeVariables>({
     mutationFn: ({ req }) => apiRequest("verifyEmailCode", req),
@@ -131,8 +136,14 @@ const VerifyEmailModal = ({ changeIsOpen, updateEmail }: VerifyEmailModalProps) 
         toast({ title: "인증코드가 일치하지 않습니다", variant: "warning" });
       }
     },
-    onError: () => toast({ title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", variant: "destructive" }),
+    onError: () =>
+      toast({
+        title: "인증코드 확인이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.",
+        variant: "destructive",
+      }),
   });
+
+  const { mutate: sendCodeMutate, isPending: isSendCodePending } = sendCodeMutation;
   const { mutate: verifyCodeMutate, isPending: isVerifyCodePending } = verifyCodeMutation;
 
   const checkEmailValidation = async () => {
@@ -145,10 +156,7 @@ const VerifyEmailModal = ({ changeIsOpen, updateEmail }: VerifyEmailModalProps) 
       <DialogContent onInteractOutside={(e) => e.preventDefault()}>
         {mode === "input" && (
           <Form {...sendEmailForm}>
-            <form
-              onSubmit={sendEmailForm.handleSubmit(() => sendCodeMutate({ req: { email: email } }))}
-              className="space-y-6"
-            >
+            <form onSubmit={sendEmailForm.handleSubmit(() => sendCodeMutate({ req: { email } }))} className="space-y-6">
               <DialogHeader>
                 <DialogTitle>이메일을 입력해주세요</DialogTitle>
                 <DialogDescription>인증코드를 받을 이메일을 입력해해주세요.</DialogDescription>
