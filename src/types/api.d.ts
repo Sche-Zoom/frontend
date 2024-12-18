@@ -131,3 +131,25 @@ interface VerifyEmailCodeReq {
 interface VerifyEmailCodeRes {
   success: boolean;
 }
+
+interface SendPwCodeReq {
+  email: string;
+}
+
+interface SendPwCodeRes {
+  success: boolean;
+}
+
+interface VerifyPwCodeReq {
+  email: string;
+  code: string;
+}
+
+interface VerifyPwCodeRes {
+  success: boolean;
+}
+
+interface ResetPwReq {
+  email: string;
+  password: string;
+}
