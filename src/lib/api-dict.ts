@@ -27,6 +27,9 @@ export interface ApiEndpoint {
   findId: HttpReqRes<FindIdReq, FindIdRes>;
   sendEmailCode: HttpReqRes<SendEmailCodeReq, null>;
   verifyEmailCode: HttpReqRes<VerifyEmailCodeReq, VerifyEmailCodeRes>;
+  sendPwCode: HttpReqRes<SendPwCodeReq, SendPwCodeRes>;
+  verifyPwCode: HttpReqRes<VerifyPwCodeReq, VerifyPwCodeRes>;
+  resetPw: HttpReqRes<ResetPwReq, null>;
 }
 
 // API Endpoint 정보
@@ -103,6 +106,18 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   },
   verifyEmailCode: {
     url: "/api/auth/email/verify-code",
+    method: "POST",
+  },
+  sendPwCode: {
+    url: "/api/auth/password/code",
+    method: "POST",
+  },
+  verifyPwCode: {
+    url: "/api/auth/password/verify-code",
+    method: "POST",
+  },
+  resetPw: {
+    url: "/api/auth/password/",
     method: "POST",
   },
 };

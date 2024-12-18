@@ -132,3 +132,15 @@ interface SendEmailCodeVariables {
 interface VerifyEmailCodeVariables {
   req: VerifyEmailCodeReq;
 }
+
+interface SendPwCodeVariables {
+  req: SendPwCodeReq;
+}
+
+interface VerifyPwCodeVariables {
+  req: VerifyPwCodeReq;
+}
+
+interface ResetPwVariables {
+  req: ResetPwReq;
+}

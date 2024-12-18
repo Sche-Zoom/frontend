@@ -49,7 +49,22 @@ export const AuthHandlers = [
   }),
 
   // 이메일 코드 인증
-  http.post(`${API_URL}/email/verify-code`, ({ params }) => {
+  http.post<any, VerifyEmailCodeReq, VerifyEmailCodeRes>(`${API_URL}/email/verify-code`, ({ params }) => {
     return HttpResponse.json({ success: true });
+  }),
+
+  // 비밀번호 인증코드 발송
+  http.post<any, SendPwCodeReq, SendPwCodeRes>(`${API_URL}/password/code`, ({ params }) => {
+    return HttpResponse.json({ success: true });
+  }),
+
+  // 비밀번호 코드 인증
+  http.post<any, VerifyPwCodeReq, VerifyPwCodeRes>(`${API_URL}/password/verify-code`, ({ params }) => {
+    return HttpResponse.json({ success: true });
+  }),
+
+  // 비밀번호 재설정
+  http.post<any, ResetPwReq>(`${API_URL}/password`, ({ params }) => {
+    return HttpResponse.text("ok");
   }),
 ];
