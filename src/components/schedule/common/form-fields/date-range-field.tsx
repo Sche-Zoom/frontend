@@ -34,6 +34,8 @@ export default function DateRangeField() {
     else return undefined;
   };
 
+  const isValidPeriod = !dayjs(start_date).isBefore(end_date);
+
   return (
     <div>
       <div className="mb-2 flex w-full flex-wrap items-center gap-2">
@@ -43,9 +45,14 @@ export default function DateRangeField() {
         <DateTimePicker
           date={start_date}
           dateAriaLabel="시작 날짜"
-          onSelectDate={(date, selectedDate) => handleChangeDate("start_date", selectedDate)}
-          onChangeTime={(e) => handleChangeTime("start_date", e)}
-          className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
+          datePickerProps={{
+            onSelect: (date, selectedDate) => handleChangeDate("start_date", selectedDate),
+            // disabled: { after: new Date(end_date) },
+            className: isValidPeriod ? "text-destructive hover:text-destructive" : "",
+          }}
+          timePickerProps={{
+            onChange: (e) => handleChangeTime("start_date", e),
+          }}
         />
 
         <span>~</span>
@@ -54,9 +61,14 @@ export default function DateRangeField() {
         <DateTimePicker
           date={end_date}
           dateAriaLabel="종료 날짜"
-          onSelectDate={(date, selectedDate) => handleChangeDate("end_date", selectedDate)}
-          onChangeTime={(e) => handleChangeTime("end_date", e)}
-          className={!dayjs(start_date).isBefore(end_date) ? "text-destructive hover:text-destructive" : ""}
+          datePickerProps={{
+            onSelect: (date, selectedDate) => handleChangeDate("end_date", selectedDate),
+            disabled: { before: new Date(start_date) },
+            className: isValidPeriod ? "text-destructive hover:text-destructive" : "",
+          }}
+          timePickerProps={{
+            onChange: (e) => handleChangeTime("end_date", e),
+          }}
         />
       </div>
 

@@ -14,31 +14,29 @@ DatePicker.displayName = "DatePicker";
 
 export type DayPickerContentProps = Omit<DayPickerSingleProps, "mode"> & {
   value: Date | undefined;
-  disabled?: boolean;
 };
 
 const DatePickerContent = React.forwardRef<HTMLDivElement, DayPickerContentProps>((props, ref) => {
-  const { value = new Date(), onSelect, disabled = false, ...rest } = props;
+  const { value = new Date(), ...rest } = props;
   return (
     <PopoverContent className="w-auto p-0" align="start" ref={ref}>
-      <Calendar mode="single" selected={value} onSelect={onSelect} {...rest} />
+      <Calendar mode="single" selected={value} {...rest} />
     </PopoverContent>
   );
 });
 DatePickerContent.displayName = "DatePickerContent";
 
-const DatePickerTrigger = React.forwardRef<HTMLButtonElement, ButtonProps & { formMode?: boolean }>((props, ref) => {
-  const { children, className, formMode = false, ...rest } = props;
+const DatePickerTrigger = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+  const { children, className, ...rest } = props;
 
-  const trigger = (
-    <Button variant={"outline"} className={cn("justify-start text-left font-normal", className)} {...rest}>
-      {children}
-      <CalendarIcon className="ml-2 text-black" />
-    </Button>
-  );
   return (
     <PopoverTrigger ref={ref} asChild>
-      {formMode ? <FormControl>{trigger}</FormControl> : trigger}
+      <FormControl>
+        <Button variant={"outline"} className={cn("justify-start text-left font-normal", className)} {...rest}>
+          {children}
+          <CalendarIcon size={16} className="ml-2 text-black" />
+        </Button>
+      </FormControl>
     </PopoverTrigger>
   );
 });
