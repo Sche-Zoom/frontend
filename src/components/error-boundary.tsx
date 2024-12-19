@@ -24,7 +24,9 @@ function FallbackRender({ error, resetErrorBoundary }: { error: CustomError | nu
     <div role="alert" className="flex flex-col items-center justify-center">
       <p className="mb-2 text-2xl font-bold">{error?.message ?? "요청사항을 처리하는 중 오류가 발생했습니다."}</p>
       <p className="mb-4 font-medium">잠시 후 다시 시도해 주세요.</p>
-      <Button onClick={resetErrorBoundary}>다시 시도</Button>
+      <Button type="button" onClick={resetErrorBoundary}>
+        다시 시도
+      </Button>
     </div>
   );
 }

@@ -91,9 +91,7 @@ const ScheduleAddForm = () => {
     <Form {...form}>
       <ScheduleForm onSubmit={onSubmit} onSubmitError={onSubmitError}>
         <div className="flex justify-end">
-          <Button type="submit" size="lg">
-            완료
-          </Button>
+          <Button size="lg">완료</Button>
         </div>
       </ScheduleForm>
     </Form>
@@ -172,7 +170,7 @@ const ScheduleDetailForm = ({ scheduleId }: { scheduleId: number }) => {
             <Trash2 className="mr-2" size={16} />
             일정 삭제
           </Button>
-          <Button type="submit" size="lg" disabled={!getIsFormChange(formValues, defaultValues)}>
+          <Button size="lg" disabled={!getIsFormChange(formValues, defaultValues)}>
             저장
           </Button>
         </div>

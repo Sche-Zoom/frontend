@@ -71,6 +71,7 @@ export default function CalendarHeader({ isSideOpen, onClickSideButton }: Props)
         <div className="flex items-center gap-x-1">
           {ViewButtonsData.map((data) => (
             <Button
+              type="button"
               key={data.viewType}
               variant={viewType === data.viewType ? "default" : "secondary"}
               onClick={() => changeView(data.viewType)}
@@ -83,6 +84,7 @@ export default function CalendarHeader({ isSideOpen, onClickSideButton }: Props)
 
         <div className="flex gap-2">
           <Button
+            type="button"
             className={cn("hidden p-2 lg:inline-block", isSideOpen && "bg-accent")}
             variant="outline-image"
             onClick={onClickSideButton}

@@ -10,20 +10,21 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants, LoadingButton } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 interface Props {
   open: boolean;
   title: ReactNode;
   description: ReactNode;
+  isLoading?: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: () => void;
   onCancel?: () => void;
 }
 
 export default function ScheduleConfirmModal(props: Props) {
-  const { open, title, description, onOpenChange, onSubmit, onCancel } = props;
+  const { open, title, description, isLoading, onOpenChange, onSubmit, onCancel } = props;
 
   const form = useForm();
   return (
@@ -48,9 +49,13 @@ export default function ScheduleConfirmModal(props: Props) {
                 </Button>
               </AlertDialogCancel>
 
-              <Button type="submit" size="lg">
-                확인
-              </Button>
+              {isLoading ? (
+                <LoadingButton size="lg" isLoading={isLoading}>
+                  확인
+                </LoadingButton>
+              ) : (
+                <Button size="lg">확인</Button>
+              )}
             </AlertDialogFooter>
           </form>
         </Form>

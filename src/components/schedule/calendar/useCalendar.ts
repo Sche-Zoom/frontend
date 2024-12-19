@@ -46,7 +46,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedu
   const [repeatConfirmModalOpen, setRepeatConfirmModalOpen] = useState(false);
 
   // 일정 수정 mutate
-  const { mutate: modifyScheduleMutate } = useMutation<null, DefaultError, ModifyScheduleVariables>({
+  const modifyMutation = useMutation<null, DefaultError, ModifyScheduleVariables>({
     mutationFn: ({ req, pathParam }) => apiRequest("modifySchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
@@ -55,8 +55,10 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedu
     onError: () => alert("정상적으로 처리되지 않았습니다."),
   });
 
+  const { mutate: modifyScheduleMutate, isPending: isModifyLoading } = modifyMutation;
+
   // 반복 일정 수정 mutate
-  const { mutate: modifyRepeatScheduleMutate } = useMutation<null, DefaultError, ModifyRepeatScheduleVariables>({
+  const modifyRepeatMutation = useMutation<null, DefaultError, ModifyRepeatScheduleVariables>({
     mutationFn: ({ req, pathParam }) => apiRequest("modifyRepeatSchedule", req, pathParam),
     onSuccess: () => {
       alert("정상적으로 처리됐습니다.");
@@ -64,6 +66,8 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedu
     },
     onError: () => alert("정상적으로 처리되지 않았습니다."),
   });
+
+  const { mutate: modifyRepeatScheduleMutate, isPending: isRepeatModifyLoading } = modifyRepeatMutation;
 
   // 캘린더에 등록할 개인 일정 배열
   const calendarSchedules: ScheduleInput[] = schedulesData.schedules.flatMap((sch) => {
