@@ -3,14 +3,7 @@ import React, { ReactNode, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CustomFormMessage, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -30,8 +23,8 @@ export const SIGNUP_SCHEMA = z
     email: z.string().email("유효한 email 주소를 입력해주세요."),
     password: z
       .string()
-      .min(8, "비밀번호는 최소 8자 이상이어야 합니다.")
-      .max(100, "비밀번호는 최대 100자 이하이어야 합니다.")
+      .min(9, "비밀번호는 최소 9자 이상이어야 합니다.")
+      .max(64, "비밀번호는 최대 64자 이하이어야 합니다.")
       .regex(
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!\"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])[A-Za-z\d!\"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]{8,}$/,
         "비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 하나 이상 포함해야 합니다.",
@@ -66,11 +59,14 @@ const IdField = () => {
   const { mutate: checkDuplicateIdMutate } = useMutation<CheckIdRes, DefaultError, CheckIdVariables>({
     mutationFn: ({ req }) => apiRequest("checkId", req),
     onSuccess: ({ available }) => {
-      if (!available) setError("id", { type: "duplicate", message: "중복된 id 입니다." });
+      if (!available) setError("id", { type: "duplicate", message: "중복된 아이디입니다." });
     },
     onError: () => {
-      setError("id", { type: "server", message: "아이디 중복확인이 완료되지 않았습니다." });
-      toast({ title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", variant: "destructive" });
+      setError("id", { type: "server", message: "아이디 확인이 필요합니다." });
+      toast({
+        title: "아이디 확인이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -174,15 +170,11 @@ const PolicyModal = (props: PolicyModalProps) => {
   return (
     <AlertDialog open={open} defaultOpen={true} onOpenChange={onOpenChange}>
       <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-        </AlertDialogHeader>
+        <AlertDialogTitle>{title}</AlertDialogTitle>
         <Textarea className="h-60 resize-none" readOnly>
           {children}
         </Textarea>
-        <AlertDialogFooter>
-          <AlertDialogCancel>닫기</AlertDialogCancel>
-        </AlertDialogFooter>
+        <AlertDialogCancel>닫기</AlertDialogCancel>
       </AlertDialogContent>
     </AlertDialog>
   );

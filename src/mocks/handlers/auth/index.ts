@@ -44,7 +44,7 @@ export const AuthHandlers = [
   }),
 
   // 이메일 인증코드 발송
-  http.post(`${API_URL}/email/code`, ({ params }) => {
+  http.post<any, SendEmailCodeReq, any>(`${API_URL}/email/code`, ({ params }) => {
     return HttpResponse.text("ok");
   }),
 
