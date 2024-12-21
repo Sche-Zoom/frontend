@@ -50,7 +50,7 @@ export default function TagsField() {
         {/* tag 수정 popover */}
         <Popover>
           <PopoverTrigger asChild disabled={field.disabled}>
-            <Button variant="default" size="sm">
+            <Button type="button" variant="default" size="sm">
               태그 변경
             </Button>
           </PopoverTrigger>

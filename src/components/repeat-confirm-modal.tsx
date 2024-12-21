@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants, LoadingButton } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MODIFY_REPEAT_SCHEDULE_OPTIONS } from "@/constants";
@@ -21,6 +21,7 @@ interface Props {
   open: boolean;
   title: ReactNode;
   description: ReactNode;
+  isLoading?: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: z.infer<typeof REPEAT_CONFIRM_FORM_SCHEMA>) => void;
   onCancel?: () => void;
@@ -30,8 +31,8 @@ export const REPEAT_CONFIRM_FORM_SCHEMA = z.object({ type: z.enum(["only", "afte
 
 export type RepeatConfirmFormValues = z.infer<typeof REPEAT_CONFIRM_FORM_SCHEMA>;
 
-export default function RepeatScheduleConfirmModal(props: Props) {
-  const { open, title, description, onOpenChange, onSubmit, onCancel } = props;
+export function RepeatScheduleConfirmModal(props: Props) {
+  const { open, title, description, isLoading, onOpenChange, onSubmit, onCancel } = props;
 
   const form = useForm<RepeatConfirmFormValues>({
     resolver: zodResolver(REPEAT_CONFIRM_FORM_SCHEMA),
@@ -86,9 +87,13 @@ export default function RepeatScheduleConfirmModal(props: Props) {
                 </Button>
               </AlertDialogCancel>
 
-              <Button type="submit" size="lg">
-                확인
-              </Button>
+              {isLoading ? (
+                <LoadingButton size="lg" isLoading={isLoading}>
+                  확인
+                </LoadingButton>
+              ) : (
+                <Button size="lg">확인</Button>
+              )}
             </AlertDialogFooter>
           </form>
         </Form>

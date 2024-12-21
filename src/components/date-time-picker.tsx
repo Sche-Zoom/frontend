@@ -1,19 +1,18 @@
 import dayjs from "dayjs";
-import { type ChangeEventHandler } from "react";
-import { type SelectSingleEventHandler } from "react-day-picker";
+import { DayPickerSingleProps, InputProps } from "react-day-picker";
 
 import { DatePicker, DatePickerContent, DatePickerTrigger } from "@/components/date-picker";
 import TimePicker from "@/components/time-picker";
 
 interface Props {
   date: string | Date;
-  className?: string;
   dateAriaLabel?: string;
-  onSelectDate: SelectSingleEventHandler;
-  onChangeTime: ChangeEventHandler<HTMLInputElement>;
+  datePickerProps: Omit<DayPickerSingleProps, "mode" | "selected">;
+  timePickerProps: InputProps;
 }
 
-function DateTimePicker({ date, className, dateAriaLabel, onSelectDate, onChangeTime }: Props) {
+function DateTimePicker({ date, dateAriaLabel, datePickerProps, timePickerProps }: Props) {
+  const { className, ...rest } = datePickerProps;
   return (
     <div className="flex items-center gap-2">
       {/* date picker(년, 월, 일) */}
@@ -21,15 +20,14 @@ function DateTimePicker({ date, className, dateAriaLabel, onSelectDate, onChange
         <DatePickerTrigger aria-label={`${dateAriaLabel} 년, 월, 일 선택`} className={className}>
           {dayjs(date).format("YYYY-MM-DD")}
         </DatePickerTrigger>
-        <DatePickerContent value={new Date(date)} onSelect={onSelectDate} />
+        <DatePickerContent value={new Date(date)} showOutsideDays={false} {...rest} />
       </DatePicker>
 
       {/* time picker */}
       <TimePicker
         value={dayjs(date).format("HH:mm")}
         aria-label={`${dateAriaLabel} 시, 분 선택`}
-        onChange={onChangeTime}
-        className={className}
+        {...timePickerProps}
       />
     </div>
   );

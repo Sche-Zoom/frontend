@@ -53,7 +53,7 @@ export default function CalendarHeader({ isSideOpen, onClickSideButton }: Props)
           <SelectTrigger className="w-18 h-9 px-3 text-sm" aria-label="일정 필터 선택">
             <SelectValue placeholder="필터링" />
           </SelectTrigger>
-          <SelectContent className="px-2 text-sm">
+          <SelectContent className="p-2 text-sm">
             <ErrorBoundary>
               <Suspense fallback={<BasicLoader />}>
                 <FilterContents />
@@ -71,6 +71,7 @@ export default function CalendarHeader({ isSideOpen, onClickSideButton }: Props)
         <div className="flex items-center gap-x-1">
           {ViewButtonsData.map((data) => (
             <Button
+              type="button"
               key={data.viewType}
               variant={viewType === data.viewType ? "default" : "secondary"}
               onClick={() => changeView(data.viewType)}
@@ -83,6 +84,7 @@ export default function CalendarHeader({ isSideOpen, onClickSideButton }: Props)
 
         <div className="flex gap-2">
           <Button
+            type="button"
             className={cn("hidden p-2 lg:inline-block", isSideOpen && "bg-accent")}
             variant="outline-image"
             onClick={onClickSideButton}
@@ -124,14 +126,15 @@ const FilterContents = () => {
   }
 
   return (
-    <ul>
+    <ul className="space-y-2">
       {schedule_tags.map((tag) => (
-        <li className="my-1.5 ml-1 flex items-center space-x-2 pb-1.5 text-xs font-medium md:text-sm" key={tag.id}>
+        <li className="ml-1 flex items-center space-x-2 text-xs font-medium md:text-sm" key={tag.id}>
           <Checkbox
+            id={tag.id.toString()}
             checked={getTagChecked(tag.id)}
             onCheckedChange={(checked) => handleCheckedChange(checked, tag.id)}
           />
-          <span>{tag.name}</span>
+          <label htmlFor={tag.id.toString()}>{tag.name}</label>
         </li>
       ))}
     </ul>

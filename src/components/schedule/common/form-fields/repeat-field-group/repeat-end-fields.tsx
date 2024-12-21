@@ -116,7 +116,7 @@ const RepeatEndDateField = () => {
         return (
           <FormItem>
             <DatePicker>
-              <DatePickerTrigger formMode={true} aria-label="반복 종료 날짜 선택" {...field}>
+              <DatePickerTrigger aria-label="반복 종료 날짜 선택" {...field}>
                 {value ? dayjs(value).format("YYYY-MM-DD") : "---- -- --"}
               </DatePickerTrigger>
               <DatePickerContent

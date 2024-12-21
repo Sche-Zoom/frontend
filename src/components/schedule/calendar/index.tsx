@@ -2,17 +2,20 @@
 
 import FullCalendar from "@fullcalendar/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { RefObject, Suspense, useRef, useState } from "react";
+import { DefaultError, useMutation } from "@tanstack/react-query";
+import Link from "next/link";
+import { Suspense, useRef, useState } from "react";
 
 import BasicLoader from "@/components/basic-loader";
 import ScheduleConfirmModal from "@/components/confirm-modal";
 import ErrorBoundary from "@/components/error-boundary";
-import RepeatScheduleConfirmModal from "@/components/repeat-confirm-modal";
+import { RepeatScheduleConfirmModal } from "@/components/repeat-confirm-modal";
+import { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
 import CalendarHeader from "@/components/schedule/calendar/calendar-header";
 import useCalendar from "@/components/schedule/calendar/useCalendar";
 import { Separator } from "@/components/ui/separator";
 import { CalendarProvider, useCalendarContext } from "@/contexts/calendar";
+import { useToast } from "@/hooks/use-toast";
 import apiRequest from "@/lib/api";
 import { getScheduleColorVariable } from "@/lib/calendar";
 
@@ -31,30 +34,20 @@ export default function ScheduleCalendar() {
           <div className="flex flex-1">
             {/* calendar */}
             <ErrorBoundary>
-              <Suspense
-                fallback={
-                  <div className="flex-1">
-                    <BasicLoader />
-                  </div>
-                }
-              >
-                <CalendarContent calendarRef={calendarRef} />
+              <Suspense fallback={<BasicLoader />}>
+                <CalendarContent />
               </Suspense>
             </ErrorBoundary>
 
             {isSideOpen && (
               // 사이드 메뉴
-              <ErrorBoundary>
-                <Suspense
-                  fallback={
-                    <aside className={"border-box hidden h-full w-72 border p-4 lg:inline-block"}>
-                      <BasicLoader />
-                    </aside>
-                  }
-                >
-                  <CalendarSideMenu />
-                </Suspense>
-              </ErrorBoundary>
+              <aside className="border-box hidden h-full w-72 border-l p-4 lg:inline-block">
+                <ErrorBoundary>
+                  <Suspense fallback={<BasicLoader />}>
+                    <CalendarSideMenu />
+                  </Suspense>
+                </ErrorBoundary>
+              </aside>
             )}
           </div>
         </div>
@@ -63,8 +56,8 @@ export default function ScheduleCalendar() {
   );
 }
 
-const CalendarContent = ({ calendarRef }: { calendarRef: RefObject<FullCalendar> }) => {
-  const { checkedTagIds, startDate, endDate } = useCalendarContext();
+const CalendarContent = () => {
+  const { checkedTagIds, startDate, endDate, calendarRef } = useCalendarContext();
 
   // 캘린더에 사용할 일정 목록 요청 로직
   const { data: schedulesData } = useSuspenseQuery({
@@ -77,16 +70,7 @@ const CalendarContent = ({ calendarRef }: { calendarRef: RefObject<FullCalendar>
       }),
   });
 
-  const {
-    calendarOption,
-    confirmModalOpen,
-    repeatConfirmModalOpen,
-    scheduleChange,
-    setConfirmModalOpen,
-    setRepeatConfirmModalOpen,
-    onConfirmSubmit,
-    onRepeatConfirmSubmit,
-  } = useCalendar(calendarRef, schedulesData);
+  const { confirmOpen, calendarOption, scheduleChange, onConfirmOpenChange } = useCalendar(calendarRef, schedulesData);
 
   return (
     <>
@@ -97,31 +81,95 @@ const CalendarContent = ({ calendarRef }: { calendarRef: RefObject<FullCalendar>
 
       {/* 일정 수정 확인 모달 */}
       {scheduleChange && (
-        <ScheduleConfirmModal
-          title="일정을 수정하시겠습니까?"
-          description="최종확인 후 일정이 수정됩니다."
-          onSubmit={onConfirmSubmit}
-          open={confirmModalOpen}
-          onOpenChange={setConfirmModalOpen}
-        />
-      )}
-
-      {/* 반복 일정 수정 확인 모달 */}
-      {scheduleChange && (
-        <RepeatScheduleConfirmModal
-          title="일정을 수정하시겠습니까?"
-          description="최종확인 후 일정이 수정됩니다."
-          onSubmit={onRepeatConfirmSubmit}
-          open={repeatConfirmModalOpen}
-          onOpenChange={setRepeatConfirmModalOpen}
-        />
+        <ConfirmModal open={confirmOpen} onOpenChange={onConfirmOpenChange} scheduleChange={scheduleChange} />
       )}
     </>
   );
 };
 
+interface ConfirmModalProps {
+  open: boolean;
+  scheduleChange: ScheduleChangeObject;
+  onOpenChange: (open: boolean) => void;
+}
+
+const ConfirmModal = ({ open, scheduleChange, onOpenChange }: ConfirmModalProps) => {
+  const { toast } = useToast();
+
+  const mutationCallbacks = {
+    onSuccess: () => {
+      onOpenChange(false);
+      toast({ title: "일정 수정이 정상적으로 처리됐습니다.", variant: "success" });
+    },
+    onError: () =>
+      toast({
+        title: "일정 수정이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.",
+        variant: "destructive",
+      }),
+  };
+
+  // 일정 수정 mutate
+  const modifyMutation = useMutation<null, DefaultError, ModifyScheduleVariables>({
+    mutationFn: ({ req, pathParam }) => apiRequest("modifySchedule", req, pathParam),
+    ...mutationCallbacks,
+  });
+
+  // 반복 일정 수정 mutate
+  const modifyRepeatMutation = useMutation<null, DefaultError, ModifyRepeatScheduleVariables>({
+    mutationFn: ({ req, pathParam }) => apiRequest("modifyRepeatSchedule", req, pathParam),
+    ...mutationCallbacks,
+  });
+
+  const { mutate: modifyScheduleMutate, isPending: isModifyLoading } = modifyMutation;
+  const { mutate: modifyRepeatScheduleMutate, isPending: isModifyRepeatLoading } = modifyRepeatMutation;
+
+  // 일정 수정 최종 확인 이벤트 핸들러
+  const onConfirmSubmit = () => {
+    const { id, initialIsRepeat, initialStartDate, initialEndDate, ...rest } = scheduleChange;
+    modifyScheduleMutate({ req: rest, pathParam: id.toString() });
+  };
+
+  // 반복 일정 수정 최종 확인 이벤트 핸들러
+  const onRepeatConfirmSubmit = (data: RepeatConfirmFormValues) => {
+    if (!scheduleChange) return;
+
+    modifyRepeatScheduleMutate({
+      req: {
+        modify_type: data.type,
+        start_date: scheduleChange.startDate,
+        end_date: scheduleChange.endDate,
+        before_start_date: scheduleChange.initialStartDate,
+        before_end_date: scheduleChange.initialEndDate,
+        title: scheduleChange.title,
+        description: scheduleChange.description,
+        importance: scheduleChange.importance,
+        color: scheduleChange.color,
+        tags: scheduleChange.tags,
+        is_repeat: scheduleChange.isRepeat,
+        repeat_frequency: scheduleChange.repeatFrequency,
+        repeat_interval: scheduleChange.repeatInterval,
+        repeat_end_date: scheduleChange.repeatEndDate,
+        repeat_end_count: scheduleChange.repeatCount,
+      },
+      pathParam: scheduleChange.id.toString(),
+    });
+  };
+
+  const modalProps = {
+    open,
+    title: "일정을 수정하시겠습니까?",
+    description: "최종확인 후 일정이 수정됩니다.",
+    onOpenChange,
+  };
+
+  return scheduleChange.initialIsRepeat ? (
+    <RepeatScheduleConfirmModal isLoading={isModifyRepeatLoading} onSubmit={onRepeatConfirmSubmit} {...modalProps} />
+  ) : (
+    <ScheduleConfirmModal isLoading={isModifyLoading} onSubmit={onConfirmSubmit} {...modalProps} />
+  );
+};
+
 const CalendarSideMenu = () => {
-  const router = useRouter();
   const { checkedTagIds, currentDate } = useCalendarContext();
 
   const { data } = useSuspenseQuery({
@@ -135,7 +183,7 @@ const CalendarSideMenu = () => {
 
   return (
     // 월단위 일정 요약 사이드메뉴
-    <aside className="border-box hidden h-full w-72 border-l p-4 lg:inline-block">
+    <>
       <h3 className="mb-2 font-semibold">일정 목록</h3>
       {/*  해당월의 전체 일정 목록 */}
       {data.side_schedules.map((dailySchedules) => (
@@ -145,22 +193,22 @@ const CalendarSideMenu = () => {
             <p className="mb-2 text-sm">{dailySchedules.start_date}</p>
             {/* 특정 날짜 일정 목록 */}
             {dailySchedules.schedules.map((schedule) => (
-              <div
+              <Link
                 key={schedule.id}
-                className={`mb-2 space-y-1 border-l-4 border-[hsl(var(--schedule))] bg-[hsl(var(--schedule-background))] p-2`}
+                className="mb-2 block space-y-1 border-l-4 border-[hsl(var(--schedule))] bg-[hsl(var(--schedule-background))] p-2"
                 style={getScheduleColorVariable(schedule.color)}
-                onClick={() => router.push(`/schedule/${schedule.id}`)}
+                href={`/schedule/${schedule.id}`}
               >
                 <h4 className="text-sm">{schedule.title}</h4>
                 <p className="text-muted-foreground flex text-xs">
                   {schedule.tag_names.length > 0 && `${schedule.tag_names.join(" · ")}`}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
           <Separator className="mb-2" />
         </div>
       ))}
-    </aside>
+    </>
   );
 };
