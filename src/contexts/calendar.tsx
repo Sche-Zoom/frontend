@@ -14,6 +14,7 @@ interface CalendarControls {
   startDate: string;
   endDate: string;
   calendarTitle: string;
+  calendarRef: RefObject<FullCalendar>;
   setCheckedTagIds: Dispatch<SetStateAction<number[] | null>>;
   moveCalendar: (type: "next" | "prev") => void;
   changeView: (mode: CalendarViewType) => void;
@@ -23,7 +24,7 @@ interface CalendarControls {
 interface CalendarContextType extends CalendarControls {}
 
 interface Props {
-  calendarRef: React.RefObject<FullCalendar>;
+  calendarRef: RefObject<FullCalendar>;
   children: ReactNode;
 }
 
@@ -132,6 +133,7 @@ export function useCalendarControls(calendarRef: RefObject<FullCalendar>): Calen
   };
 
   return {
+    calendarRef,
     viewType,
     checkedTagIds,
     currentDate,

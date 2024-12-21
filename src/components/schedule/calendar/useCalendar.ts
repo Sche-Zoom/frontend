@@ -14,14 +14,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg, EventResizeDoneArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { DefaultError, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { RefObject, useState } from "react";
 
-import { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
 import { SCHEDULE_VIEW_TYPE } from "@/constants";
 import { useCalendarContext } from "@/contexts/calendar";
-import apiRequest from "@/lib/api";
 import { areDatesEqual, changeDateIfMidnight, getDefaultFormatDate } from "@/lib/date";
 
 export interface ScheduleExtendedProps {
@@ -38,36 +35,11 @@ export interface ScheduleEvent extends EventImpl {
 }
 
 export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedulesData: GetSchedulesRes) {
-  const { currentDate, viewType } = useCalendarContext();
   const router = useRouter();
+  const { currentDate, viewType } = useCalendarContext();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const [scheduleChange, setScheduleChange] = useState<ScheduleChangeObject | null>(null);
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [repeatConfirmModalOpen, setRepeatConfirmModalOpen] = useState(false);
-
-  // 일정 수정 mutate
-  const modifyMutation = useMutation<null, DefaultError, ModifyScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => apiRequest("modifySchedule", req, pathParam),
-    onSuccess: () => {
-      alert("정상적으로 처리됐습니다.");
-      setConfirmModalOpen(false);
-    },
-    onError: () => alert("정상적으로 처리되지 않았습니다."),
-  });
-
-  const { mutate: modifyScheduleMutate, isPending: isModifyLoading } = modifyMutation;
-
-  // 반복 일정 수정 mutate
-  const modifyRepeatMutation = useMutation<null, DefaultError, ModifyRepeatScheduleVariables>({
-    mutationFn: ({ req, pathParam }) => apiRequest("modifyRepeatSchedule", req, pathParam),
-    onSuccess: () => {
-      alert("정상적으로 처리됐습니다.");
-      setRepeatConfirmModalOpen(false);
-    },
-    onError: () => alert("정상적으로 처리되지 않았습니다."),
-  });
-
-  const { mutate: modifyRepeatScheduleMutate, isPending: isRepeatModifyLoading } = modifyRepeatMutation;
 
   // 캘린더에 등록할 개인 일정 배열
   const calendarSchedules: ScheduleInput[] = schedulesData.schedules.flatMap((sch) => {
@@ -88,10 +60,7 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedu
     }));
   });
 
-  const onEventChange = (arg: EventChangeArg) => {
-    const { extendedProps } = arg.event as ScheduleEvent;
-    extendedProps.isRepeat ? setRepeatConfirmModalOpen(true) : setConfirmModalOpen(true);
-  };
+  const onEventChange = (arg: EventChangeArg) => setConfirmOpen(true);
 
   const onEventResize = (arg: EventResizeDoneArg) => {
     const { oldEvent, event } = arg;
@@ -145,40 +114,6 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedu
 
   const onDateClick = (arg: DateClickArg) => router.push("/schedule/add");
 
-  // 일정 수정 최종 확인 이벤트 핸들러
-  const onConfirmSubmit = () => {
-    if (!scheduleChange) return;
-
-    const { id, initialIsRepeat, initialStartDate, initialEndDate, ...rest } = scheduleChange;
-    modifyScheduleMutate({ req: rest, pathParam: id.toString() });
-  };
-
-  // 반복 일정 수정 최종 확인 이벤트 핸들러
-  const onRepeatConfirmSubmit = (data: RepeatConfirmFormValues) => {
-    if (!scheduleChange) return;
-
-    modifyRepeatScheduleMutate({
-      req: {
-        modify_type: data.type,
-        start_date: scheduleChange.startDate,
-        end_date: scheduleChange.endDate,
-        before_start_date: scheduleChange.initialStartDate,
-        before_end_date: scheduleChange.initialEndDate,
-        title: scheduleChange.title,
-        description: scheduleChange.description,
-        importance: scheduleChange.importance,
-        color: scheduleChange.color,
-        tags: scheduleChange.tags,
-        is_repeat: scheduleChange.isRepeat,
-        repeat_frequency: scheduleChange.repeatFrequency,
-        repeat_interval: scheduleChange.repeatInterval,
-        repeat_end_date: scheduleChange.repeatEndDate,
-        repeat_end_count: scheduleChange.repeatCount,
-      },
-      pathParam: scheduleChange.id.toString(),
-    });
-  };
-
   // Fullcalendar props 객체
   const calendarOption: CalendarOptions & { ref: RefObject<FullCalendar> } = {
     // data
@@ -208,13 +143,9 @@ export default function useCalendar(calendarRef: RefObject<FullCalendar>, schedu
   };
 
   return {
+    confirmOpen,
     scheduleChange,
-    confirmModalOpen,
-    repeatConfirmModalOpen,
     calendarOption,
-    setConfirmModalOpen,
-    setRepeatConfirmModalOpen,
-    onConfirmSubmit,
-    onRepeatConfirmSubmit,
+    onConfirmOpenChange: (open: boolean) => setConfirmOpen(open),
   };
 }

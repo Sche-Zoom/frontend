@@ -31,7 +31,7 @@ export const REPEAT_CONFIRM_FORM_SCHEMA = z.object({ type: z.enum(["only", "afte
 
 export type RepeatConfirmFormValues = z.infer<typeof REPEAT_CONFIRM_FORM_SCHEMA>;
 
-export default function RepeatScheduleConfirmModal(props: Props) {
+export function RepeatScheduleConfirmModal(props: Props) {
   const { open, title, description, isLoading, onOpenChange, onSubmit, onCancel } = props;
 
   const form = useForm<RepeatConfirmFormValues>({
