@@ -34,15 +34,6 @@ export const AuthHandlers = [
     return HttpResponse.json({ success: true, id: "userid12332", created_at: "2024-07-23" });
   }),
 
-  // 로그아웃
-  http.post(`${API_URL}/logout`, ({ params }) => {
-    return new HttpResponse("ok", {
-      headers: {
-        "Set-Cookie": "authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly",
-      },
-    });
-  }),
-
   // 이메일 인증코드 발송
   http.post<any, SendEmailCodeReq, any>(`${API_URL}/email/code`, ({ params }) => {
     return HttpResponse.text("ok");

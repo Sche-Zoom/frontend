@@ -1,19 +1,15 @@
 "use client";
 
-import { DefaultError, useMutation } from "@tanstack/react-query";
 import { ChevronDown, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
 
-import Sign from "@/components/layout/sign";
+import { logout } from "@/actions";
+import Sign from "@/components/sign";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
-import apiRequest from "@/lib/api";
 import { useUserStore } from "@/store/user";
 
 export default function Header() {
-  const user = useUserStore();
   return (
     <header className="bg-muted flex h-12 items-center justify-between border-b px-4">
       {/* 로고 */}
@@ -27,24 +23,14 @@ export default function Header() {
 
 const UserPopover = () => {
   const user = useUserStore();
-  const router = useRouter();
-  const { toast } = useToast();
-
-  const { mutate } = useMutation<null, DefaultError>({
-    mutationFn: () => apiRequest("logout"),
-    onSuccess: () => router.push("/auth/login"),
-    onError: () => toast({ title: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", variant: "destructive" }),
-  });
 
   return (
     <Popover>
       {/* 사용자 아바타 */}
-      <PopoverTrigger>
-        <div className="flex items-center gap-x-2">
-          <Sign size="xs" />
-          <span>{user.id}</span>
-          <ChevronDown size={18} />
-        </div>
+      <PopoverTrigger className="flex items-center gap-x-2">
+        <Sign size="xs" />
+        <span>{user.id}</span>
+        <ChevronDown size={18} />
       </PopoverTrigger>
 
       {/* 아바타 클릭시 노출되는 사용자 정보 popover */}
@@ -60,11 +46,16 @@ const UserPopover = () => {
           </div>
         </div>
 
-        <Separator className="mt-4" />
-
-        <div className="flex items-center space-x-4 p-2 text-sm font-medium" />
-
-        <Button type="button" className="w-full justify-start space-x-4" variant="ghost" onClick={() => mutate()}>
+        <Separator className="my-2" />
+        <Button
+          type="button"
+          className="w-full justify-start space-x-4"
+          variant="ghost"
+          onClick={async () => {
+            await logout();
+            location.replace("/auth/login");
+          }}
+        >
           <LogOut size="18" />
           <span>로그아웃</span>
         </Button>
