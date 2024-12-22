@@ -7,16 +7,18 @@ import { useState } from "react";
 import { FieldValues, useForm, useFormContext, UseFormHandleSubmit } from "react-hook-form";
 import { z } from "zod";
 
+import {
+  SEND_CODE_SCHEMA,
+  SendCodeFormValues,
+  VERIFY_CODE_SCHEMA,
+  VerifyCodeFormValues,
+} from "@/components/auth/common/schema";
 import { LoadingButton } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import apiRequest from "@/lib/api";
 
-const SEND_CODE_SCHEMA = z.object({ email: z.string().email("유효한 email 주소를 입력해주세요.") });
-const VERIFY_CODE_SCHEMA = z.object({
-  code: z.string().length(6, "인증코드는 6자 입니다."),
-});
 const RESET_PASSWORD_SCHEMA = z
   .object({
     password: z
@@ -34,8 +36,6 @@ const RESET_PASSWORD_SCHEMA = z
     path: ["confirmPassword"],
   });
 
-type SendCodeFormValues = z.infer<typeof SEND_CODE_SCHEMA>;
-type VerifyCodeFormValues = z.infer<typeof VERIFY_CODE_SCHEMA>;
 type ResetPwFormValues = z.infer<typeof RESET_PASSWORD_SCHEMA>;
 
 export default function FindPw() {
@@ -46,7 +46,7 @@ export default function FindPw() {
   const sendEmailForm = useForm<SendCodeFormValues>({
     resolver: zodResolver(SEND_CODE_SCHEMA),
     defaultValues: { email: "" },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const verifyEmailForm = useForm<VerifyCodeFormValues>({

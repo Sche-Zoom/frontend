@@ -1,5 +1,5 @@
 import { DefaultError, useMutation } from "@tanstack/react-query";
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -9,7 +9,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CustomFormMessage, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import apiRequest from "@/lib/api";
 import { SERVICE, TERMS } from "@/lib/policy";
 
@@ -29,7 +28,7 @@ export const SIGNUP_SCHEMA = z
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!\"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])[A-Za-z\d!\"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]{8,}$/,
         "비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 하나 이상 포함해야 합니다.",
       ),
-    confirmPassword: z.string().min(8, "비밀번호 확인은 최소 8자 이상이어야 합니다."),
+    confirmPassword: z.string(),
     agreeToTerms: z.boolean().refine((value) => value === true, "약관 동의가 필요합니다."),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -53,21 +52,15 @@ export default function FormFields(props: { openVerifyEmail: () => void }) {
 }
 
 const IdField = () => {
-  const { toast } = useToast();
   const { control, setError, getValues, trigger } = useFormContext<FormValues>();
 
   const { mutate: checkDuplicateIdMutate } = useMutation<CheckIdRes, DefaultError, CheckIdVariables>({
     mutationFn: ({ req }) => apiRequest("checkId", req),
     onSuccess: ({ available }) => {
-      if (!available) setError("id", { type: "duplicate", message: "중복된 아이디입니다." });
+      if (!available)
+        setError("id", { type: "duplicate", message: "사용할 수 없는 아이디입니다 다른 아이디를 입력해 주세요." });
     },
-    onError: () => {
-      setError("id", { type: "server", message: "아이디 확인이 필요합니다." });
-      toast({
-        title: "아이디 확인이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.",
-        variant: "destructive",
-      });
-    },
+    onError: () => setError("id", { type: "server", message: "아이디 확인이 정상적으로 처리되지 않았습니다." }),
   });
 
   const checkIdValidation = async () => {

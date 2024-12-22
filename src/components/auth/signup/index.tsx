@@ -5,8 +5,13 @@ import { DefaultError, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
+import {
+  SEND_CODE_SCHEMA,
+  SendCodeFormValues,
+  VERIFY_CODE_SCHEMA,
+  VerifyCodeFormValues,
+} from "@/components/auth/common/schema";
 import FormFields, { FormValues, SIGNUP_SCHEMA } from "@/components/auth/signup/form-fields";
 import { LoadingButton } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -49,7 +54,11 @@ export default function Signup() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit((data) => mutate({ req: data }))} className="flex w-full flex-col gap-y-4">
             <FormFields openVerifyEmail={() => setIsEmailModalOpen(true)} />
-            <LoadingButton isLoading={isPending} className="w-full">
+            <LoadingButton
+              isLoading={isPending}
+              className="w-full"
+              disabled={!form.formState.isValid || !!form.getFieldState("id").error}
+            >
               회원가입
             </LoadingButton>
           </form>
@@ -70,14 +79,6 @@ export default function Signup() {
   );
 }
 
-const SEND_CODE_SCHEMA = z.object({ email: z.string().email("유효한 email 주소를 입력해주세요.") });
-const VERIFY_CODE_SCHEMA = z.object({
-  code: z.string({ required_error: "인증코드를 입력해주세요" }).max(6, "인증코드는 6자 입니다."),
-});
-
-type SendCodeFormValues = z.infer<typeof SEND_CODE_SCHEMA>;
-type VerifyCodeFormValues = z.infer<typeof VERIFY_CODE_SCHEMA>;
-
 interface VerifyEmailModalProps {
   changeIsOpen: (open: boolean) => void;
   updateEmail: (email: string) => void;
@@ -90,7 +91,7 @@ const VerifyEmailModal = ({ changeIsOpen, updateEmail }: VerifyEmailModalProps) 
   const sendEmailForm = useForm<SendCodeFormValues>({
     resolver: zodResolver(SEND_CODE_SCHEMA),
     defaultValues: { email: "" },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const verifyEmailForm = useForm<VerifyCodeFormValues>({
@@ -107,13 +108,8 @@ const VerifyEmailModal = ({ changeIsOpen, updateEmail }: VerifyEmailModalProps) 
     onSuccess: ({ available }) => {
       if (!available) sendEmailForm.setError("email", { type: "duplicate", message: "사용 불가능한 이메일입니다." });
     },
-    onError: () => {
-      sendEmailForm.setError("email", { type: "server", message: "사용 가능한 이메일인지 확인이 필요합니다." });
-      toast({
-        title: "이메일 확인이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.",
-        variant: "destructive",
-      });
-    },
+    onError: () =>
+      sendEmailForm.setError("email", { type: "server", message: "이메일 확인이 정상적으로 처리되지 않았습니다." }),
   });
 
   const sendCodeMutation = useMutation<null, DefaultError, SendEmailCodeVariables>({
@@ -174,7 +170,11 @@ const VerifyEmailModal = ({ changeIsOpen, updateEmail }: VerifyEmailModalProps) 
                   </FormItem>
                 )}
               />
-              <LoadingButton isLoading={isSendCodePending} className="w-full">
+              <LoadingButton
+                isLoading={isSendCodePending}
+                disabled={!sendEmailForm.formState.isValid || !!sendEmailForm.getFieldState("email").error}
+                className="w-full"
+              >
                 인증번호 발송
               </LoadingButton>
             </form>
@@ -204,7 +204,11 @@ const VerifyEmailModal = ({ changeIsOpen, updateEmail }: VerifyEmailModalProps) 
                   </FormItem>
                 )}
               />
-              <LoadingButton isLoading={isVerifyCodePending} className="w-full">
+              <LoadingButton
+                isLoading={isVerifyCodePending}
+                disabled={!verifyEmailForm.formState.isValid || !!verifyEmailForm.getFieldState("code").error}
+                className="w-full"
+              >
                 인증
               </LoadingButton>
             </form>
