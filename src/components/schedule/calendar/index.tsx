@@ -125,33 +125,25 @@ const ConfirmModal = ({ open, scheduleChange, onOpenChange }: ConfirmModalProps)
 
   // 일정 수정 최종 확인 이벤트 핸들러
   const onConfirmSubmit = () => {
-    const { id, initialIsRepeat, initialStartDate, initialEndDate, ...rest } = scheduleChange;
-    modifyScheduleMutate({ req: rest, pathParam: id.toString() });
+    const { id, startDate, endDate } = scheduleChange;
+    modifyScheduleMutate({
+      req: { start_date: startDate, end_date: endDate },
+      pathParam: id.toString(),
+    });
   };
 
   // 반복 일정 수정 최종 확인 이벤트 핸들러
   const onRepeatConfirmSubmit = (data: RepeatConfirmFormValues) => {
-    if (!scheduleChange) return;
-
+    const { id, initialStartDate, initialEndDate, startDate, endDate } = scheduleChange;
     modifyRepeatScheduleMutate({
       req: {
         modify_type: data.type,
-        start_date: scheduleChange.startDate,
-        end_date: scheduleChange.endDate,
-        before_start_date: scheduleChange.initialStartDate,
-        before_end_date: scheduleChange.initialEndDate,
-        title: scheduleChange.title,
-        description: scheduleChange.description,
-        importance: scheduleChange.importance,
-        color: scheduleChange.color,
-        tags: scheduleChange.tags,
-        is_repeat: scheduleChange.isRepeat,
-        repeat_frequency: scheduleChange.repeatFrequency,
-        repeat_interval: scheduleChange.repeatInterval,
-        repeat_end_date: scheduleChange.repeatEndDate,
-        repeat_end_count: scheduleChange.repeatCount,
+        before_start_date: initialStartDate,
+        before_end_date: initialEndDate,
+        start_date: startDate,
+        end_date: endDate,
       },
-      pathParam: scheduleChange.id.toString(),
+      pathParam: id.toString(),
     });
   };
 

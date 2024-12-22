@@ -10,10 +10,7 @@ import { CustomError } from "@/lib/customError";
 // 통합 에러 핸들링 함수
 const handleError = (error: CustomError, info: ErrorInfo) => {
   // 인증 오류 처리
-  if (error.statusCode === 401) {
-    alert(error.statusCode);
-    location.replace("/login");
-  }
+  if (error.statusCode === 401) location.replace("/auth/login");
 };
 
 // 핸들링 되지 못해서 throw 받은 에러

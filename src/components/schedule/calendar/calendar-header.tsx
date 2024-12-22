@@ -14,7 +14,7 @@ import { useCalendarContext } from "@/contexts/calendar";
 import apiRequest from "@/lib/api";
 import { cn } from "@/lib/utils";
 
-const ViewButtonsData = [
+const VIEW_BUTTONS_DATA = [
   {
     viewText: "월",
     viewType: "month",
@@ -69,7 +69,7 @@ export default function CalendarHeader({ isSideOpen, onClickSideButton }: Props)
       <div className="flex items-center gap-x-2">
         {/* view 모드 변경 버튼 목록 */}
         <div className="flex items-center gap-x-1">
-          {ViewButtonsData.map((data) => (
+          {VIEW_BUTTONS_DATA.map((data) => (
             <Button
               type="button"
               key={data.viewType}

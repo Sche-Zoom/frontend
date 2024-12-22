@@ -3,7 +3,14 @@
 import { ReactNode } from "react";
 import { SubmitErrorHandler, SubmitHandler, useFormContext } from "react-hook-form";
 
-import * as FormFields from "@/components/schedule/common/form-fields";
+import {
+  ColorTitleField,
+  DateRangeField,
+  DescriptionField,
+  ImportanceField,
+  RepeatFieldGroup,
+  TagsField,
+} from "@/components/schedule/common/form-fields";
 import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 
 interface ScheduleFormProps {
@@ -13,8 +20,6 @@ interface ScheduleFormProps {
 }
 
 export default function ScheduleForm({ children, onSubmit, onSubmitError }: ScheduleFormProps) {
-  const { ColorTitleField, DateRangeField, DescriptionField, ImportanceField, RepeatFieldGroup, TagsField } =
-    FormFields;
   const form = useFormContext<FormValues>();
   return (
     <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className="box-border flex w-full flex-col gap-y-4">
