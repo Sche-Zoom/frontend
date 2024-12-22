@@ -5,7 +5,7 @@ import { DefaultError, useMutation } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FieldErrors, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import { FormValues, SCHEDULE_FORM_SCHEMA } from "@/components/schedule/common/form-fields/basic-form-schema";
 import ScheduleForm from "@/components/schedule/common/schedule-form";
@@ -80,8 +80,6 @@ const ScheduleAddForm = () => {
 
   // form 제출 이벤트 핸들러 변경된 form 내용을 토대로 최종 확인 모달 open
   const onSubmit: SubmitHandler<FormValues> = (data, event) => {
-    event?.preventDefault();
-
     const request = {
       start_date: data.start_date,
       end_date: data.end_date,
@@ -101,18 +99,9 @@ const ScheduleAddForm = () => {
     mutate({ req: request });
   };
 
-  // form 제출 시 오류발생시 이벤트 핸들러
-  const onSubmitError: SubmitErrorHandler<FormValues> = (errors) => {
-    // 최종 에러확인
-    for (const key of Object.keys(errors)) {
-      const fieldName = key as keyof FieldErrors<FormValues>;
-      if (errors[fieldName]) return alert(errors[fieldName].message); // 에러메시지 노출
-    }
-    return alert("정상적으로 처리되지않았습니다.");
-  };
   return (
     <Form {...form}>
-      <ScheduleForm onSubmit={onSubmit} onSubmitError={onSubmitError}>
+      <ScheduleForm onSubmit={onSubmit}>
         <LoadingButton isLoading={isPending} size="lg" className="mt-4 self-end">
           완료
         </LoadingButton>

@@ -34,7 +34,7 @@ interface SchedulePathParam {
 type ModifyScheduleParam = SchedulePathParam & {};
 type DeleteScheduleParam = SchedulePathParam & {};
 
-type ModifyScheduleReq = {
+interface ModifyScheduleReq {
   tags?: number[];
   title?: string;
   description?: string;
@@ -48,13 +48,13 @@ type ModifyScheduleReq = {
   repeat_interval?: number;
   repeat_end_date?: string; // ISO8601
   repeat_end_count?: number;
-};
+}
 
-type ModifyRepeatScheduleReq = ModifyScheduleReq & {
+interface ModifyRepeatScheduleReq extends ModifyScheduleReq {
   modify_type: ModifyOptionType;
   before_start_date: string; // ISO8601
   before_end_date: string; // ISO8601
-};
+}
 
 interface DeleteScheduleReq {
   delete_type: DeleteOptionType;
