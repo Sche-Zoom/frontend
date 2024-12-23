@@ -7,12 +7,10 @@ import Link from "next/link";
 import { Suspense, useRef, useState } from "react";
 
 import BasicLoader from "@/components/basic-loader";
-import ScheduleConfirmModal from "@/components/confirm-modal";
 import ErrorBoundary from "@/components/error-boundary";
-import { RepeatScheduleConfirmModal } from "@/components/repeat-confirm-modal";
-import { RepeatConfirmFormValues } from "@/components/repeat-confirm-modal";
 import CalendarHeader from "@/components/schedule/calendar/calendar-header";
 import useCalendar from "@/components/schedule/calendar/useCalendar";
+import ScheduleConfirmModal from "@/components/schedule-confirm-modal";
 import { Separator } from "@/components/ui/separator";
 import { CalendarProvider, useCalendarContext } from "@/contexts/calendar";
 import { useToast } from "@/hooks/use-toast";
@@ -81,20 +79,22 @@ const CalendarContent = () => {
 
       {/* 일정 수정 확인 모달 */}
       {scheduleChange && (
-        <ConfirmModal open={confirmOpen} onOpenChange={onConfirmOpenChange} scheduleChange={scheduleChange} />
+        <ChangeConfirmModal open={confirmOpen} onOpenChange={onConfirmOpenChange} scheduleChange={scheduleChange} />
       )}
     </>
   );
 };
 
-interface ConfirmModalProps {
+interface ChangeConfirmModalProps {
   open: boolean;
   scheduleChange: ScheduleChangeObject;
   onOpenChange: (open: boolean) => void;
 }
 
-const ConfirmModal = ({ open, scheduleChange, onOpenChange }: ConfirmModalProps) => {
+const ChangeConfirmModal = ({ open, scheduleChange, onOpenChange }: ChangeConfirmModalProps) => {
   const { toast } = useToast();
+
+  const { id, initialStartDate, initialEndDate, startDate, endDate, initialIsRepeat } = scheduleChange;
 
   const mutationCallbacks = {
     onSuccess: () => {
@@ -124,8 +124,7 @@ const ConfirmModal = ({ open, scheduleChange, onOpenChange }: ConfirmModalProps)
   const { mutate: modifyRepeatScheduleMutate, isPending: isModifyRepeatLoading } = modifyRepeatMutation;
 
   // 일정 수정 최종 확인 이벤트 핸들러
-  const onConfirmSubmit = () => {
-    const { id, startDate, endDate } = scheduleChange;
+  const onConfirm = () => {
     modifyScheduleMutate({
       req: { start_date: startDate, end_date: endDate },
       pathParam: id.toString(),
@@ -133,11 +132,10 @@ const ConfirmModal = ({ open, scheduleChange, onOpenChange }: ConfirmModalProps)
   };
 
   // 반복 일정 수정 최종 확인 이벤트 핸들러
-  const onRepeatConfirmSubmit = (data: RepeatConfirmFormValues) => {
-    const { id, initialStartDate, initialEndDate, startDate, endDate } = scheduleChange;
+  const onRepeatConfirm = (option: ModifyOptionType) => {
     modifyRepeatScheduleMutate({
       req: {
-        modify_type: data.type,
+        modify_type: option,
         before_start_date: initialStartDate,
         before_end_date: initialEndDate,
         start_date: startDate,
@@ -147,18 +145,20 @@ const ConfirmModal = ({ open, scheduleChange, onOpenChange }: ConfirmModalProps)
     });
   };
 
-  const modalProps = {
-    open,
-    title: "일정을 수정하시겠습니까?",
-    description: "최종확인 후 일정이 수정됩니다.",
-    onOpenChange,
+  const getModalProps = (isRepeat: boolean) => {
+    const basicProps = {
+      open,
+      title: "일정을 수정하시겠습니까?",
+      description: "최종확인 후 일정이 수정됩니다.",
+      onOpenChange,
+    };
+
+    return isRepeat
+      ? { ...basicProps, isScheduleRepeat: isRepeat, isLoading: isModifyRepeatLoading, onAction: onRepeatConfirm }
+      : { ...basicProps, isScheduleRepeat: isRepeat, isLoading: isModifyLoading, onAction: onConfirm };
   };
 
-  return scheduleChange.initialIsRepeat ? (
-    <RepeatScheduleConfirmModal isLoading={isModifyRepeatLoading} onSubmit={onRepeatConfirmSubmit} {...modalProps} />
-  ) : (
-    <ScheduleConfirmModal isLoading={isModifyLoading} onSubmit={onConfirmSubmit} {...modalProps} />
-  );
+  return <ScheduleConfirmModal {...getModalProps(initialIsRepeat)} />;
 };
 
 const CalendarSideMenu = () => {
