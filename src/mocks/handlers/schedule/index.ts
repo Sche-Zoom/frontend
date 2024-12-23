@@ -26,26 +26,22 @@ export const ScheduleHandlers = [
   }),
 
   // 개인 반복 일정 수정
-  http.patch<ModifyScheduleParam, ModifyRepeatScheduleReq, any>(`${API_URL}/repeat/:sid`, ({ params }) => {
-    // const { sid } = params;
+  http.patch<ModifyScheduleParam, ModifyRepeatScheduleReq, any>(`${API_URL}/repeat/:sid`, () => {
     return HttpResponse.text("ok");
   }),
 
   // 개인 일정 수정
-  http.patch<ModifyScheduleParam, ModifyScheduleReq, any>(`${API_URL}/:sid`, ({ params }) => {
-    // const { sid } = params;
+  http.patch<ModifyScheduleParam, ModifyScheduleReq, any>(`${API_URL}/:sid`, () => {
     return HttpResponse.text("ok");
   }),
 
   // 개인 일정 생성
-  http.post<any, CreateScheduleReq, any>(API_URL, ({ params }) => {
-    // const { sid } = params;
+  http.post<any, CreateScheduleReq, any>(API_URL, () => {
     return HttpResponse.text("ok");
   }),
 
   // 개인 일정 삭제
-  http.delete<DeleteScheduleParam, DeleteScheduleReq, any>(`${API_URL}/:sid`, ({ params }) => {
-    // const { sid } = params;
+  http.delete<DeleteScheduleParam, DeleteScheduleReq, any>(`${API_URL}/:sid`, () => {
     return HttpResponse.text("ok");
   }),
 ];

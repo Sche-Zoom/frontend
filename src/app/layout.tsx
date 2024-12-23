@@ -2,7 +2,6 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import React from "react";
 
 import ClientMsw from "@/components/client-msw";
 import Providers from "@/components/providers";

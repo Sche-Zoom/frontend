@@ -81,6 +81,11 @@ interface LoginReq {
   password: string;
 }
 
+interface LoginRes {
+  id: string;
+  email: string;
+}
+
 interface SignupReq {
   id: string;
   email: string;
