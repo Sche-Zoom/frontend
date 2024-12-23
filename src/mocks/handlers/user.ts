@@ -10,4 +10,9 @@ export const UserHandlers = [
       email: "yiccfee@naver.com",
     });
   }),
+
+  // 회원탈퇴
+  http.delete<any, any, any>(`${API_URL}/me`, () => {
+    return HttpResponse.text("ok");
+  }),
 ];

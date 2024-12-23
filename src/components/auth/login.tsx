@@ -12,7 +12,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import apiRequest from "@/lib/api";
-import { useUserStore } from "@/store/user";
 
 const LOGIN_FORM_SCHEMA = z.object({
   id: z
@@ -34,7 +33,6 @@ type FormValues = z.infer<typeof LOGIN_FORM_SCHEMA>;
 
 export default function Login() {
   const { toast } = useToast();
-  const { setUser } = useUserStore();
   const router = useRouter();
 
   const form = useForm<FormValues>({
@@ -42,12 +40,9 @@ export default function Login() {
     defaultValues: { id: "", password: "" },
   });
 
-  const { mutate, isPending } = useMutation<LoginRes, DefaultError, LoginVariables>({
+  const { mutate, isPending } = useMutation<null, DefaultError, LoginVariables>({
     mutationFn: ({ req }) => apiRequest("login", req),
-    onSuccess: (data) => {
-      setUser(data);
-      router.push("/");
-    },
+    onSuccess: () => router.push("/"),
     onError: () =>
       toast({ title: "로그인이 정상적으로 처리되지 않았습니다 잠시 후 다시 시도해 주세요.", variant: "destructive" }),
   });
