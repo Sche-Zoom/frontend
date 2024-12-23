@@ -34,15 +34,15 @@ export const COLORS = [
 
 export const MODIFY_REPEAT_SCHEDULE_OPTIONS = [
   {
-    id: "only",
+    value: "only",
     label: "선택한 일정만 수정",
   },
   {
-    id: "after_all",
+    value: "after_all",
     label: "선택한 일정 이후 모든 일정 수정",
   },
   {
-    id: "all",
+    value: "all",
     label: "모든 일정 수정",
   },
 ] as const;

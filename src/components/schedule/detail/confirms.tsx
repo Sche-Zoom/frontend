@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-import ScheduleConfirmModal from "@/components/confirm-modal";
-import { RepeatConfirmFormValues, RepeatScheduleConfirmModal } from "@/components/repeat-confirm-modal";
 import { FormValues } from "@/components/schedule/common/form-fields/basic-form-schema";
 import { getIsChangeField, getIsChangeTags } from "@/components/schedule/common/form-utils";
+import ScheduleConfirmModal from "@/components/schedule-confirm-modal";
 import { useToast } from "@/hooks/use-toast";
 import apiRequest from "@/lib/api";
 
@@ -70,7 +69,7 @@ const ChangeConfirm = ({ open, scheduleId, defaultValues, onOpenChange }: Change
   const { watch } = useFormContext<FormValues>();
   const formValues = watch();
 
-  const { mutate: modifyMutate, isPending: modifyIsLoading } = useMutation<null, DefaultError, ModifyScheduleVariables>(
+  const { mutate: modifyMutate, isPending: isModifyLoading } = useMutation<null, DefaultError, ModifyScheduleVariables>(
     {
       mutationFn: ({ req, pathParam }) => apiRequest("modifySchedule", req, pathParam),
       ...mutationCallbacks,
@@ -86,14 +85,14 @@ const ChangeConfirm = ({ open, scheduleId, defaultValues, onOpenChange }: Change
     ...mutationCallbacks,
   });
 
-  const onSubmitModify = () => {
+  const onModify = () => {
     const request: ModifyScheduleReq = createCommonModifyFields(formValues, defaultValues);
     modifyMutate({ req: request, pathParam: scheduleId.toString() });
   };
 
-  const onSubmitRepeatModify = (data: RepeatConfirmFormValues) => {
+  const onRepeatModify = (option: ModifyOptionType) => {
     const request: ModifyRepeatScheduleReq = {
-      modify_type: data.type,
+      modify_type: option,
       before_start_date: defaultValues.start_date,
       before_end_date: defaultValues.end_date,
       ...createCommonModifyFields(formValues, defaultValues),
@@ -101,18 +100,20 @@ const ChangeConfirm = ({ open, scheduleId, defaultValues, onOpenChange }: Change
     modifyRepeatMutate({ req: request, pathParam: scheduleId.toString() });
   };
 
-  const modalProps = {
-    open,
-    title: "일정을 수정하시겠습니까?",
-    description: "최종확인 후 일정이 수정됩니다.",
-    onOpenChange,
+  const getModalProps = (isRepeat: boolean) => {
+    const basicProps = {
+      open,
+      title: "일정을 수정하시겠습니까?",
+      description: "최종확인 후 일정이 수정됩니다.",
+      onOpenChange,
+    };
+
+    return isRepeat
+      ? { ...basicProps, isScheduleRepeat: isRepeat, isLoading: isModifyRepeatLoading, onAction: onRepeatModify }
+      : { ...basicProps, isScheduleRepeat: isRepeat, isLoading: isModifyLoading, onAction: onModify };
   };
 
-  return defaultValues.is_repeat === "yes" ? (
-    <RepeatScheduleConfirmModal isLoading={isModifyRepeatLoading} onSubmit={onSubmitRepeatModify} {...modalProps} />
-  ) : (
-    <ScheduleConfirmModal isLoading={modifyIsLoading} onSubmit={onSubmitModify} {...modalProps} />
-  );
+  return <ScheduleConfirmModal {...getModalProps(defaultValues.is_repeat === "yes")} />;
 };
 
 interface DeleteConfirmProps extends BasicConfirmProps {
@@ -123,28 +124,31 @@ const DeleteConfirm = ({ open, scheduleId, isRepeat, onOpenChange }: DeleteConfi
   const mutationCallbacks = useMutationCallback("일정 삭제", onOpenChange);
 
   // 일정 삭제 mutate
-  const { mutate } = useMutation<null, DefaultError, DeleteScheduleVariables>({
+  const { mutate, isPending } = useMutation<null, DefaultError, DeleteScheduleVariables>({
     mutationFn: ({ req, pathParam }) => apiRequest("deleteSchedule", req, pathParam),
     ...mutationCallbacks,
   });
 
-  const onSubmitModify = () => mutate({ req: { delete_type: "only" }, pathParam: scheduleId.toString() });
+  const onDelete = () => mutate({ req: { delete_type: "only" }, pathParam: scheduleId.toString() });
 
-  const onSubmitRepeatModify = (data: RepeatConfirmFormValues) =>
-    mutate({ req: { delete_type: data.type }, pathParam: scheduleId.toString() });
+  const onRepeatDelete = (option: ModifyOptionType) =>
+    mutate({ req: { delete_type: option }, pathParam: scheduleId.toString() });
 
-  const modalProps = {
-    open,
-    title: "일정을 삭제하시겠습니까?",
-    description: "최종확인 후 일정이 삭제됩니다.",
-    onOpenChange,
+  const getModalProps = (isRepeat: boolean) => {
+    const basicProps = {
+      open,
+      title: "일정을 삭제하시겠습니까?",
+      description: "최종확인 후 일정이 삭제됩니다.",
+      isLoading: isPending,
+      onOpenChange,
+    };
+
+    return isRepeat
+      ? { ...basicProps, isScheduleRepeat: isRepeat, onAction: onRepeatDelete }
+      : { ...basicProps, isScheduleRepeat: isRepeat, onAction: onDelete };
   };
 
-  return isRepeat ? (
-    <ScheduleConfirmModal onSubmit={onSubmitModify} {...modalProps} />
-  ) : (
-    <RepeatScheduleConfirmModal onSubmit={onSubmitRepeatModify} {...modalProps} />
-  );
+  return <ScheduleConfirmModal {...getModalProps(isRepeat)} />;
 };
 
 export { ChangeConfirm, DeleteConfirm };
