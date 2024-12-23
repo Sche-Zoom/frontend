@@ -53,8 +53,7 @@
     "react-hook-form": "^7.52.2",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8",
-    "zustand": "^4.5.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@mswjs/http-middleware": "^0.10.1",
@@ -76,7 +75,7 @@
     "express": "^4.19.2",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
-    "msw": "^2.3.1",
+    "msw": "^2.7.0",
     "nodemon": "^3.1.4",
     "postcss": "^8",
     "prettier": "^3.3.0",

@@ -36,7 +36,6 @@ pnpm dev
     │  ├─page # page component
     │  └─"pageName" # page component
     ├─hooks
-    ├─store # global state management
     ├─types # api request, response type
     └─lib # utility
 ```

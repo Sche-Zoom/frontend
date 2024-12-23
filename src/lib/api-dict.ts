@@ -20,7 +20,6 @@ export interface ApiEndpoint {
   deleteSchedule: HttpReqRes<DeleteScheduleReq, null>;
   createSchedule: HttpReqRes<CreateScheduleReq, null>;
   login: HttpReqRes<LoginReq, null>;
-
   signup: HttpReqRes<SignupReq, null>;
   checkId: HttpReqRes<CheckIdReq, CheckIdRes>;
   checkEmail: HttpReqRes<CheckEmailReq, CheckEmailRes>;
@@ -30,6 +29,8 @@ export interface ApiEndpoint {
   sendPwCode: HttpReqRes<SendPwCodeReq, SendPwCodeRes>;
   verifyPwCode: HttpReqRes<VerifyPwCodeReq, VerifyPwCodeRes>;
   resetPw: HttpReqRes<ResetPwReq, null>;
+  getMyInfo: HttpReqRes<null, LoginRes>;
+  withdrawMember: HttpReqRes<null, null>;
 }
 
 // API Endpoint 정보
@@ -114,5 +115,15 @@ export const apiEndpoint: Record<keyof ApiEndpoint, ApiEndpointInfo> = {
   resetPw: {
     url: "/api/auth/password/",
     method: "POST",
+  },
+  getMyInfo: {
+    url: "/api/users/me",
+    method: "GET",
+    withCredentials: true,
+  },
+  withdrawMember: {
+    url: "/api/users/me",
+    method: "DELETE",
+    withCredentials: true,
   },
 };
